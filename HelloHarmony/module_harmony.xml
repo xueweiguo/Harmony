@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_harmony" default="compile.module.harmony">
+  <dirname property="module.harmony.basedir" file="${ant.file.module_harmony}"/>
+  
+  <property name="module.jdk.home.harmony" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.harmony" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.harmony" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.harmony" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="harmony.output.dir" value="${module.harmony.basedir}/build/classes/java/main"/>
+  <property name="harmony.testoutput.dir" value="${module.harmony.basedir}/build/classes/java/test"/>
+  
+  <path id="harmony.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="harmony.module.production.classpath">
+    <path refid="${module.jdk.classpath.harmony}"/>
+  </path>
+  
+  <path id="harmony.runtime.production.module.classpath">
+    <pathelement location="${harmony.output.dir}"/>
+  </path>
+  
+  <path id="harmony.module.classpath">
+    <path refid="${module.jdk.classpath.harmony}"/>
+    <pathelement location="${harmony.output.dir}"/>
+  </path>
+  
+  <path id="harmony.runtime.module.classpath">
+    <pathelement location="${harmony.testoutput.dir}"/>
+    <pathelement location="${harmony.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.harmony">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.harmony">
+    <patternset refid="excluded.from.module.harmony"/>
+  </patternset>
+  
+  
+  <target name="compile.module.harmony" depends="compile.module.harmony.production,compile.module.harmony.tests" description="Compile module Harmony"/>
+  
+  <target name="compile.module.harmony.production" depends="register.custom.compilers" description="Compile module Harmony; production classes"/>
+  
+  <target name="compile.module.harmony.tests" depends="register.custom.compilers,compile.module.harmony.production" description="compile module Harmony; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.harmony" description="cleanup module">
+    <delete dir="${harmony.output.dir}"/>
+    <delete dir="${harmony.testoutput.dir}"/>
+  </target>
+</project>

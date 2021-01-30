@@ -1,0 +1,52 @@
+{
+  "app": {
+    "bundleName": "com.example.helloharmony",
+    "vendor": "example",
+    "version": {
+      "code": 1,
+      "name": "1.0"
+    },
+    "apiVersion": {
+      "compatible": 3,
+      "target": 4,
+      "releaseType": "Beta1"
+    }
+  },
+  "deviceConfig": {},
+  "module": {
+    "package": "com.example.helloharmony",
+    "name": ".MyApplication",
+    "deviceType": [
+      "phone"
+    ],
+    "distro": {
+      "deliveryWithInstall": true,
+      "moduleName": "entry",
+      "moduleType": "entry"
+    },
+    "abilities": [
+      {
+        "skills": [
+          {
+            "entities": [
+              "entity.system.home"
+            ],
+            "actions": [
+              "action.system.home",
+              "action.component",
+              "action.list",
+              "action.tab"
+            ]
+          }
+        ],
+        "orientation": "unspecified",
+        "name": "com.example.helloharmony.MainAbility",
+        "icon": "$media:icon",
+        "description": "$string:mainability_description",
+        "label": "HelloHarmony",
+        "type": "page",
+        "launchType": "standard"
+      }
+    ]
+  }
+}

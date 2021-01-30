@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:ohos="http://schemas.huawei.com/res/ohos"
+                ohos:oneshot="false">
+    <item ohos:element="$media:video01" ohos:duration="100"/>
+    <item ohos:element="$media:video02" ohos:duration="100"/>
+    <item ohos:element="$media:video03" ohos:duration="100"/>
+    <item ohos:element="$media:video04" ohos:duration="100"/>
+    <item ohos:element="$media:video05" ohos:duration="100"/>
+    <item ohos:element="$media:video06" ohos:duration="100"/>
+    <item ohos:element="$media:video07" ohos:duration="100"/>
+    <item ohos:element="$media:video08" ohos:duration="100"/>
+    <item ohos:element="$media:video09" ohos:duration="100"/>
+    <item ohos:element="$media:video10" ohos:duration="100"/>
+    <item ohos:element="$media:video11" ohos:duration="100"/>
+    <item ohos:element="$media:video12" ohos:duration="100"/>
+    <item ohos:element="$media:video13" ohos:duration="100"/>
+    <item ohos:element="$media:video14" ohos:duration="100"/>
+    <item ohos:element="$media:video15" ohos:duration="100"/>
+    <item ohos:element="$media:video16" ohos:duration="100"/>
+    <item ohos:element="$media:video17" ohos:duration="100"/>
+    <item ohos:element="$media:video18" ohos:duration="100"/>
+    <item ohos:element="$media:video19" ohos:duration="100"/>
+    <item ohos:element="$media:video20" ohos:duration="100"/>
+    <item ohos:element="$media:video21" ohos:duration="100"/>
+    <item ohos:element="$media:video22" ohos:duration="100"/>
+    <item ohos:element="$media:video23" ohos:duration="100"/>
+    <item ohos:element="$media:video24" ohos:duration="100"/>
+    <item ohos:element="$media:video25" ohos:duration="100"/>
+    <item ohos:element="$media:video26" ohos:duration="100"/>
+    <item ohos:element="$media:video27" ohos:duration="100"/>
+    <item ohos:element="$media:video28" ohos:duration="100"/>
+    <item ohos:element="$media:video29" ohos:duration="100"/>
+    <item ohos:element="$media:video30" ohos:duration="100"/>
+    <item ohos:element="$media:video31" ohos:duration="100"/>
+    <item ohos:element="$media:video32" ohos:duration="100"/>
+    <item ohos:element="$media:video33" ohos:duration="100"/>
+    <item ohos:element="$media:video34" ohos:duration="100"/>
+    <item ohos:element="$media:video35" ohos:duration="100"/>
+    <item ohos:element="$media:video36" ohos:duration="100"/>
+    <item ohos:element="$media:video37" ohos:duration="100"/>
+    <item ohos:element="$media:video38" ohos:duration="100"/>
+    <item ohos:element="$media:video39" ohos:duration="100"/>
+    <item ohos:element="$media:video40" ohos:duration="100"/>
+</animation-list>

@@ -1,0 +1,17 @@
+
+{
+  "string": [
+    {
+      "name": "app_name",
+      "value": "HelloHarmony"
+    },
+    {
+      "name": "mainability_description",
+      "value": "Java_Phone_Empty Feature Ability"
+    },
+    {
+      "name": "hello_message",
+      "value": "你好，鸿蒙!!!"
+    }
+  ]
+}
