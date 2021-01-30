@@ -1,0 +1,104 @@
+{
+  "string": [
+    {
+      "name": "app_name",
+      "value": "HarmonyCalulator"
+    },
+    {
+      "name": "mainability_description",
+      "value": "Java_Phone_Empty Feature Ability"
+    },
+    {
+      "name": "error_self_call",
+      "value":"error_self_call"
+    },
+    {
+      "name":"memory_recall_dialog",
+      "value":"Memory Recall"
+    },
+    {
+      "name": "memory_clear_dialog",
+      "value": "Memory Clear"
+    },
+    {
+      "name":"function_set_dialog",
+      "value":"Function Set"
+    },
+    {
+      "name":"error_invalid_parameter_count",
+      "value":"Param count error."
+    },
+    {
+      "name": "error_invalid_date_type",
+      "value": "Date type error."
+    },
+    {
+      "name":"error_mathmatic_error",
+      "value":"Mathmatic error"
+    },
+    {
+      "name":"error_invalid_input",
+      "value":"Invalid input."
+    },
+    {
+      "name":"error_undefined_custom_function",
+      "value":"Undefined custom function"
+    },
+    {
+      "name":"error_self_call",
+      "value":"Self call"
+    },
+    {
+      "name":"const_select_dialog",
+      "value":"Select const"
+    },
+    {
+      "name":"error_unknown_keyword",
+      "value":"Unknown keyword:"
+    },
+    {
+      "name":"error_unnecessary_keyword",
+      "value":"Unnecessary keyword:"
+    },
+    {
+      "name":"character_angle",
+      "value":"∠"
+    },
+    {
+      "name":"character_degree",
+      "value":"°"
+    },
+    {
+      "name":"character_sqrt",
+      "value":"√"
+    },
+    {
+      "name":"character_pi",
+      "value":"π"
+    },
+    {
+      "name":"input_fun_name_dlg",
+      "value":"Input function name"
+    },
+    {
+      "name":"error_invalid_fun_name",
+      "value":"Function name error."
+    },
+    {
+      "name":"error_program_error",
+      "value":"Program Error."
+    },
+    {
+      "name":"error_msg_dialog",
+      "value":"Error"
+    },
+    {
+      "name":"error_used_fun_name",
+      "value":"Used name."
+    },
+    {
+      "name":"error_invalid_token",
+      "value":"Invalid input."
+    }
+  ]
+}

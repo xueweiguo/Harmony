@@ -1,0 +1,706 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:height="match_parent"
+    ohos:width="match_parent"
+    ohos:padding="5vp"
+    ohos:background_element="$media:Plastic"
+    ohos:orientation="vertical">
+    <DirectionalLayout
+        ohos:id="$+id:display_area"
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:background_element="#000000"
+        ohos:orientation="vertical"
+        ohos:top_margin="5vp"
+        ohos:bottom_margin="5vp">
+        <TextField
+            ohos:id="$+id:question_field"
+            ohos:width="match_parent"
+            ohos:height="28fp"
+            ohos:text = ""
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_lcd"
+            ohos:scrollable="true"
+            />
+        <TextField
+            ohos:id="$+id:answer_field"
+            ohos:width="match_parent"
+            ohos:height="match_content"
+            ohos:text = "0"
+            ohos:text_size="40fp"
+            ohos:text_alignment="right"
+            ohos:background_element="$graphic:background_lcd"
+            />
+    </DirectionalLayout>
+    <DirectionalLayout
+        ohos:id="$+id:control_area"
+        ohos:height="0vp"
+        ohos:weight="12"
+        ohos:width="match_parent"
+        ohos:orientation="horizontal"
+        ohos:layout_alignment="horizontal_center"
+        ohos:top_margin="5vp"
+        ohos:bottom_margin="5vp">
+        <Checkbox
+            ohos:id="$+id:check_box"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "5"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="Inv"
+            ohos:text_size="20fp"
+            ohos:text_color_on="#00FF00"
+            ohos:text_color_off="#FFFFFF"
+            ohos:background_element="$graphic:background_checkbox"/>
+        <Button
+            ohos:id="$+id:ms_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "4"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="MS"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_function_button"
+            />
+        <Button
+            ohos:id="$+id:ms_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "4"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="MS"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_function_button"
+            />
+        <Button
+            ohos:id="$+id:mr_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "4"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="MR"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_function_button"
+            />
+        <Button
+            ohos:id="$+id:mc_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "4"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="MC"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_function_button"
+            />
+        <Button
+            ohos:id="$+id:fs_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "4"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="FS"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_function_button"
+            />
+        <Button
+            ohos:id="$+id:const_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "4"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="CN"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_function_button"
+            />
+    </DirectionalLayout>
+    <DirectionalLayout
+        ohos:id="$+id:token_area"
+        ohos:height="0vp"
+        ohos:weight="12"
+        ohos:width="match_parent"
+        ohos:orientation="horizontal"
+        ohos:layout_alignment="horizontal_center"
+        ohos:top_margin="5vp"
+        ohos:bottom_margin="5vp">
+        <Button
+            ohos:id="$+id:i_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "1"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="i"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_function_button"
+            />
+        <Button
+            ohos:id="$+id:angle_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "1"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="∠"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_function_button"
+            />
+        <Button
+            ohos:id="$+id:degree_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "1"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="°"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_function_button"
+            />
+        <Button
+            ohos:id="$+id:left_parentheses_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "1"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="("
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_function_button"
+            />
+        <Button
+            ohos:id="$+id:comma_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "1"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text=","
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_function_button"
+            />
+        <Button
+            ohos:id="$+id:right_parentheses_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "1"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text=")"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_function_button"
+            />
+        <Button
+            ohos:id="$+id:sharp_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "1"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="#"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_function_button"
+            />
+    </DirectionalLayout>
+    <DirectionalLayout
+        ohos:id="$+id:fun_area1"
+        ohos:height="0vp"
+        ohos:weight="12"
+        ohos:width="match_parent"
+        ohos:orientation="horizontal"
+        ohos:layout_alignment="horizontal_center"
+        ohos:top_margin="5vp"
+        ohos:bottom_margin="5vp"
+        >
+        <Button
+            ohos:id="$+id:sin_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "1"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="sin"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_function_button"
+            />
+        <Button
+            ohos:id="$+id:cos_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "1"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="cos"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_function_button"
+            />
+        <Button
+            ohos:id="$+id:tan_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "1"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="tan"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_function_button"
+            />
+        <Button
+            ohos:id="$+id:asin_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "1"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="asin"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_function_button"
+            />
+        <Button
+            ohos:id="$+id:acos_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "1"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="acos"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_function_button"
+            />
+        <Button
+            ohos:id="$+id:atan_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "1"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="atan"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_function_button"
+            />
+    </DirectionalLayout>
+    <DirectionalLayout
+        ohos:id="$+id:fun_area2"
+        ohos:height="0vp"
+        ohos:weight="12"
+        ohos:width="match_parent"
+        ohos:orientation="horizontal"
+        ohos:layout_alignment="horizontal_center"
+        ohos:top_margin="5vp"
+        ohos:bottom_margin="5vp"
+        >
+        <Button
+            ohos:id="$+id:x2_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "1"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="X²"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_function_button"
+            />
+        <Button
+            ohos:id="$+id:x3_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "1"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="X³"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_function_button"
+            />
+        <Button
+            ohos:id="$+id:sqrt_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "1"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="²√"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_function_button"
+            />
+        <Button
+            ohos:id="$+id:subtriplicate_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "1"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="³√"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_function_button"
+            />
+        <Button
+            ohos:id="$+id:power_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "1"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="pow"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_function_button"
+            />
+        <Button
+            ohos:id="$+id:root_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "1"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="root"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_function_button"
+            />
+    </DirectionalLayout>
+    <DirectionalLayout
+        ohos:id="$+id:fun_area3"
+        ohos:height="0vp"
+        ohos:weight="12"
+        ohos:width="match_parent"
+        ohos:orientation="horizontal"
+        ohos:layout_alignment="horizontal_center"
+        ohos:top_margin="5vp"
+        ohos:bottom_margin="5vp"
+        >
+        <Button
+            ohos:id="$+id:f1_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "1"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="F1"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_function_button"
+            />
+        <Button
+            ohos:id="$+id:f2_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "1"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="F2"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_function_button"
+            />
+        <Button
+            ohos:id="$+id:f3_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "1"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="F3"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_function_button"
+            />
+        <Button
+            ohos:id="$+id:f4_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "1"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="F4"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_function_button"
+            />
+        <Button
+            ohos:id="$+id:f5_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "1"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="F5"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_function_button"
+            />
+        <Button
+            ohos:id="$+id:f6_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "1"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="F6"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_function_button"
+            />
+    </DirectionalLayout>
+    <DirectionalLayout
+        ohos:id="$+id:number_area1"
+        ohos:height="0vp"
+        ohos:weight="20"
+        ohos:width="match_parent"
+        ohos:orientation="horizontal"
+        ohos:layout_alignment="horizontal_center"
+        ohos:top_margin="5vp"
+        ohos:bottom_margin="5vp"
+        >
+        <Button
+            ohos:id="$+id:number7_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "2"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="7"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_number_button"
+            />
+        <Button
+            ohos:id="$+id:number8_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "2"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="8"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_number_button"
+            />
+        <Button
+            ohos:id="$+id:number9_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "2"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="9"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_number_button"
+            />
+        <Button
+            ohos:id="$+id:back_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "2"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="←"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_red_button"
+            />
+        <Button
+            ohos:id="$+id:ac_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "2"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="AC"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_red_button"
+            />
+    </DirectionalLayout>
+    <DirectionalLayout
+        ohos:id="$+id:number_area2"
+        ohos:height="0vp"
+        ohos:weight="20"
+        ohos:width="match_parent"
+        ohos:orientation="horizontal"
+        ohos:layout_alignment="horizontal_center"
+        ohos:top_margin="5vp"
+        ohos:bottom_margin="5vp"
+        >
+        <Button
+            ohos:id="$+id:number4_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "2"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="4"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_number_button"
+            />
+        <Button
+            ohos:id="$+id:number5_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "2"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="5"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_number_button"
+            />
+        <Button
+            ohos:id="$+id:number6_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "2"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="6"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_number_button"
+            />
+        <Button
+            ohos:id="$+id:mul_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "2"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="×"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_function_button"
+            />
+        <Button
+            ohos:id="$+id:div_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "2"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="/"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_function_button"
+            />
+    </DirectionalLayout>
+    <DirectionalLayout
+        ohos:id="$+id:number_area3"
+        ohos:height="0vp"
+        ohos:weight="20"
+        ohos:width="match_parent"
+        ohos:orientation="horizontal"
+        ohos:layout_alignment="horizontal_center"
+        ohos:top_margin="5vp"
+        ohos:bottom_margin="5vp"
+        >
+        <Button
+            ohos:id="$+id:number1_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "2"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="1"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_number_button"
+            />
+        <Button
+            ohos:id="$+id:number2_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "2"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="2"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_number_button"
+            />
+        <Button
+            ohos:id="$+id:number3_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "2"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="3"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_number_button"
+            />
+        <Button
+            ohos:id="$+id:plus_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "2"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="+"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_function_button"
+            />
+        <Button
+            ohos:id="$+id:minus_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "2"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="-"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_function_button"
+            />
+    </DirectionalLayout>
+    <DirectionalLayout
+        ohos:id="$+id:number_area4"
+        ohos:height="0vp"
+        ohos:weight="20"
+        ohos:width="match_parent"
+        ohos:orientation="horizontal"
+        ohos:layout_alignment="horizontal_center"
+        ohos:top_margin="5vp"
+        ohos:bottom_margin="5vp"
+        >
+        <Button
+            ohos:id="$+id:number0_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "2"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="0"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_number_button"
+            />
+        <Button
+            ohos:id="$+id:dot_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "2"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="."
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_number_button"
+            />
+        <Button
+            ohos:id="$+id:exp_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "2"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="exp"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_number_button"
+            />
+        <Button
+            ohos:id="$+id:percent_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "2"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="%"
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_number_button"
+            />
+        <Button
+            ohos:id="$+id:calucate_button"
+            ohos:height="match_parent"
+            ohos:width = "0vp"
+            ohos:weight = "2"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:text="="
+            ohos:text_size="20fp"
+            ohos:background_element="$graphic:background_green_button"
+            />
+    </DirectionalLayout>
+</DirectionalLayout>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_harmonycalculator" default="compile.module.harmonycalculator">
+  <dirname property="module.harmonycalculator.basedir" file="${ant.file.module_harmonycalculator}"/>
+  
+  <property name="module.jdk.home.harmonycalculator" value="${jdk.home.1.8}"/>
+  <property name="module.jdk.bin.harmonycalculator" value="${jdk.bin.1.8}"/>
+  <property name="module.jdk.classpath.harmonycalculator" value="jdk.classpath.1.8"/>
+  
+  <property name="compiler.args.harmonycalculator" value="-encoding UTF-8 -source 12 -target 12 ${compiler.args}"/>
+  
+  <property name="harmonycalculator.output.dir" value="${module.harmonycalculator.basedir}/build/classes/production/HarmonyCalculator"/>
+  <property name="harmonycalculator.testoutput.dir" value="${module.harmonycalculator.basedir}/build/classes/test/HarmonyCalculator"/>
+  
+  <path id="harmonycalculator.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="harmonycalculator.module.production.classpath">
+    <path refid="${module.jdk.classpath.harmonycalculator}"/>
+  </path>
+  
+  <path id="harmonycalculator.runtime.production.module.classpath">
+    <pathelement location="${harmonycalculator.output.dir}"/>
+  </path>
+  
+  <path id="harmonycalculator.module.classpath">
+    <path refid="${module.jdk.classpath.harmonycalculator}"/>
+    <pathelement location="${harmonycalculator.output.dir}"/>
+  </path>
+  
+  <path id="harmonycalculator.runtime.module.classpath">
+    <pathelement location="${harmonycalculator.testoutput.dir}"/>
+    <pathelement location="${harmonycalculator.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.harmonycalculator">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.harmonycalculator">
+    <patternset refid="excluded.from.module.harmonycalculator"/>
+  </patternset>
+  
+  
+  <target name="compile.module.harmonycalculator" depends="compile.module.harmonycalculator.production,compile.module.harmonycalculator.tests" description="Compile module HarmonyCalculator"/>
+  
+  <target name="compile.module.harmonycalculator.production" depends="register.custom.compilers" description="Compile module HarmonyCalculator; production classes"/>
+  
+  <target name="compile.module.harmonycalculator.tests" depends="register.custom.compilers,compile.module.harmonycalculator.production" description="compile module HarmonyCalculator; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.harmonycalculator" description="cleanup module">
+    <delete dir="${harmonycalculator.output.dir}"/>
+    <delete dir="${harmonycalculator.testoutput.dir}"/>
+  </target>
+</project>
