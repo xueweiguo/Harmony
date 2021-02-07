@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:height="match_parent"
+    ohos:width="match_parent"
+    ohos:alignment="center"
+    ohos:padding="5vp"
+    ohos:orientation="vertical">
+    <DirectionalLayout
+        ohos:height="match_content"
+        ohos:width="match_content"
+        ohos:alignment="center"
+        ohos:padding="5vp"
+        ohos:orientation="vertical"
+        ohos:background_element="$graphic:background_dialog">
+        <Text
+            ohos:id="$+id:text"
+            ohos:width="match_content"
+            ohos:height="match_content"
+            ohos:layout_alignment="horizontal_center"
+            ohos:text="Please click OK button!"
+            ohos:text_size="28fp"
+            ohos:text_color="#0000FF"
+            ohos:right_padding="15vp"
+            ohos:left_padding="15vp"
+            />
+        <Button
+            ohos:id="$+id:ok_button"
+            ohos:height="match_content"
+            ohos:width="match_content"
+            ohos:layout_alignment="center"
+            ohos:margin="1vp"
+            ohos:padding="10vp"
+            ohos:text="OK"
+            ohos:text_size="20fp"
+            />
+    </DirectionalLayout>
+</DirectionalLayout>

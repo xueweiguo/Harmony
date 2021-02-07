@@ -35,7 +35,8 @@
               "action.system.home",
               "action.component",
               "action.list",
-              "action.tab"
+              "action.tab",
+              "action.dialog"
             ]
           }
         ],

@@ -1,21 +1,20 @@
 package com.example.helloharmony.slice;
 
-        import com.example.helloharmony.ResourceTable;
-        import ohos.aafwk.ability.AbilitySlice;
-        import ohos.aafwk.content.Intent;
-        import ohos.agp.components.Button;
-        import ohos.agp.components.Component;
-        import ohos.agp.components.Text;
-        import ohos.agp.utils.LayoutAlignment;
-        import ohos.agp.window.dialog.ToastDialog;
-        import ohos.data.DatabaseHelper;
-        import ohos.data.preferences.Preferences;
-        import ohos.global.resource.NotExistException;
-        import ohos.global.resource.WrongTypeException;
-        import ohos.hiviewdfx.HiLog;
-        import ohos.hiviewdfx.HiLogLabel;
-
-        import java.io.IOException;
+import com.example.helloharmony.ResourceTable;
+import ohos.aafwk.ability.AbilitySlice;
+import ohos.aafwk.content.Intent;
+import ohos.agp.components.Button;
+import ohos.agp.components.Component;
+import ohos.agp.components.Text;
+import ohos.agp.utils.LayoutAlignment;
+import ohos.agp.window.dialog.ToastDialog;
+import ohos.data.DatabaseHelper;
+import ohos.data.preferences.Preferences;
+import ohos.global.resource.NotExistException;
+import ohos.global.resource.WrongTypeException;
+import ohos.hiviewdfx.HiLog;
+import ohos.hiviewdfx.HiLogLabel;
+import java.io.IOException;
 
 public class MainAbilitySlice extends AbilitySlice {
     static final HiLogLabel label = new HiLogLabel(HiLog.LOG_APP, 0x12345, "MainAbilitySlice");
@@ -52,6 +51,9 @@ public class MainAbilitySlice extends AbilitySlice {
         //标签页画面迁移按钮
         Button tab_button = (Button) findComponentById(ResourceTable.Id_tab_view);
         tab_button.setClickedListener(listener -> present(new TablistAbilitySlice(), new Intent()));
+        //对话框画面迁移按钮
+        Button dlg_button = (Button) findComponentById(ResourceTable.Id_dlg_view);
+        dlg_button.setClickedListener(listener -> present(new DialogAbilitySlice(), new Intent()));
         // 打印一条日志
         HiLog.info(label, "MainAbilitySlice.onStart!");
     }

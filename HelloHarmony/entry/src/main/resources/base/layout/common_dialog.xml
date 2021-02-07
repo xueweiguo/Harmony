@@ -1,0 +1,70 @@
+<?xml version="1.0"   encoding="utf-8"?>
+<DirectionalLayout xmlns:ohos="http://schemas.huawei.com/res/ohos"
+                   ohos:width="match_parent"
+                   ohos:height="match_content"
+                   ohos:alignment="center"
+                   ohos:orientation="vertical">
+        <DirectionalLayout
+            ohos:width="match_content"
+            ohos:height="match_content"
+            ohos:top_padding="10vp"
+            ohos:bottom_padding="10vp"
+            ohos:left_padding="10vp"
+            ohos:right_padding="10vp"
+            ohos:background_element="#FFFFFF"
+            ohos:orientation="vertical">
+                <Text
+                    ohos:width="match_content"
+                    ohos:height="match_content"
+                    ohos:text="你觉得这个对话框怎么样？"
+                    ohos:text_color="#000000"
+                    ohos:text_size="20fp"/>
+                <DirectionalLayout
+                    ohos:height="match_content"
+                    ohos:width="match_parent"
+                    ohos:top_margin="10vp"
+                    ohos:orientation="horizontal">
+                        <Button
+                            ohos:id="$+id:good"
+                            ohos:width="0vp"
+                            ohos:weight = "5"
+                            ohos:height="match_content"
+                            ohos:text="很好"
+                            ohos:text_size="20fp"
+                            ohos:text_color="#000000"
+                            ohos:background_element="#AAFFAA"
+                            />
+                        <Component
+                            ohos:width="0vp"
+                            ohos:weight = "1"
+                            ohos:height="match_parent"/>
+                        <Button
+                            ohos:id="$+id:ordinary"
+                            ohos:width="0vp"
+                            ohos:weight = "5"
+                            ohos:height="match_content"
+                            ohos:text="一般"
+                            ohos:text_size="20fp"
+                            ohos:text_color="#000000"
+                            ohos:background_element="#AAAAFF"
+                            />
+                        <Component
+                            ohos:width="0vp"
+                            ohos:weight = "1"
+                            ohos:height="match_parent"/>
+                        <Button
+                            ohos:id="$+id:bad"
+                            ohos:width="0vp"
+                            ohos:weight = "5"
+                            ohos:height="match_content"
+                            ohos:text="不好"
+                            ohos:text_size="20fp"
+                            ohos:text_color="#000000"
+                            ohos:background_element="#FFFF00"
+                            />
+                        <Component
+                            ohos:width="20vp"
+                            ohos:height="match_parent"/>
+                </DirectionalLayout>
+        </DirectionalLayout>
+</DirectionalLayout>
