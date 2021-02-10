@@ -12,8 +12,7 @@ ohos:orientation="vertical">
     ohos:width="match_content"
     ohos:padding="4vp"
     ohos:text="Item0"
-    ohos:text_size="50fp"
+    ohos:text_size="25fp"
     ohos:text_color="#007F00"
-    ohos:italic="true"
-    ohos:layout_alignment="center"/>
+    ohos:italic="true"/>
 </DirectionalLayout>

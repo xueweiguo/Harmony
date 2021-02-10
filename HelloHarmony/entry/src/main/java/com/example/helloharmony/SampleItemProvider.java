@@ -4,10 +4,11 @@ package com.example.helloharmony;
         import ohos.agp.components.*;
         import java.util.List;
 
-public class SampleItemProvider extends RecycleItemProvider {
+public class SampleItemProvider extends BaseItemProvider {
     private List<SampleItem> list;
     private AbilitySlice slice;
     public SampleItemProvider(List<SampleItem> list, AbilitySlice slice) {
+
         this.list = list;
         this.slice = slice;
     }
