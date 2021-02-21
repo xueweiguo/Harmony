@@ -16,6 +16,7 @@ import ohos.global.resource.NotExistException;
 import ohos.global.resource.WrongTypeException;
 import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
+import ohos.miscservices.wallpaper.IWallpaperColorsChangedListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -149,8 +150,15 @@ public class DialogAbilitySlice extends AbilitySlice {
         SampleItemProvider sampleItemProvider = new SampleItemProvider(list,this);
         dlg.setProvider(sampleItemProvider);
         dlg.show();
-
-
+        ((ListContainer)dlg.getListContainer()).setItemSelectedListener(new ListContainer.ItemSelectedListener() {
+            @Override
+            public void onItemSelected(ListContainer listContainer, Component component, int i, long l) {
+                new ToastDialog(getContext())
+                    .setText(((SampleItem)sampleItemProvider.getItem(i)).getName())
+                    .show();
+                dlg.destroy();
+            }
+        });
     }
     private ArrayList<SampleItem> getData() {
         ArrayList<SampleItem> list = new ArrayList<>();
