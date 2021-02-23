@@ -22,10 +22,8 @@ public class CustomListDialog{
 
     static final HiLogLabel label = new HiLogLabel(HiLog.LOG_APP, 0x00203, "CustomListDialog");
     ohos.global.resource.ResourceManager resManager = null;
-    AbilitySlice ownerSlice = null;
     IListListener listListener = null;
-    ListDialog dialog = null;
-    String[] listItems;
+    private ListDialog dialog = null;
 
 
     public CustomListDialog(Context context) {
@@ -38,7 +36,7 @@ public class CustomListDialog{
     }
 
     public void setTitle(int id){
-        dialog.setTitleText(getText(ResourceTable.String_const_select_dialog));
+        dialog.setTitleText(getText(id));
     }
 
     public void setItems(String[] items){
