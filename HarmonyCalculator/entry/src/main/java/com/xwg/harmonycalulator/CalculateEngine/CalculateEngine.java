@@ -148,7 +148,7 @@ public class CalculateEngine
 		}
 	}
 	
-	ConstManager getConstManager(){
+	public ConstManager getConstManager(){
 		return constManager;
 	}
 	
