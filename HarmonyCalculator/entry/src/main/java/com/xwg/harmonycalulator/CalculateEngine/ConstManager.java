@@ -10,7 +10,7 @@ public class ConstManager {
 		constMap.put(key, value);
 	}
 	
-	Set<String> consts(){
+	public Set<String> consts(){
 		return constMap.keySet();
 	}
 	
