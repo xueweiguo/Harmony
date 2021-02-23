@@ -45,14 +45,6 @@
       "value":"Undefined custom function"
     },
     {
-      "name":"error_self_call",
-      "value":"Self call"
-    },
-    {
-      "name":"const_select_dialog",
-      "value":"Select const"
-    },
-    {
       "name":"error_unknown_keyword",
       "value":"Unknown keyword:"
     },
@@ -99,6 +91,18 @@
     {
       "name":"error_invalid_token",
       "value":"Invalid input."
+    },
+    {
+      "name":"OK_BUTTON",
+      "value":"确定"
+    },
+    {
+      "name":"CANCEL_BUTTON",
+      "value":"取消"
+    },
+    {
+      "name":"SelectConst",
+      "value":"常数选择"
     }
   ]
 }
