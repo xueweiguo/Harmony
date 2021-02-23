@@ -8,6 +8,9 @@ import ohos.agp.colors.RgbPalette;
 import ohos.agp.components.*;
 import ohos.agp.components.element.ShapeElement;
 import ohos.agp.components.element.StateElement;
+import ohos.agp.window.dialog.CommonDialog;
+import ohos.agp.window.dialog.IDialog;
+import ohos.agp.window.dialog.ListDialog;
 import ohos.global.resource.NotExistException;
 import ohos.global.resource.WrongTypeException;
 import ohos.hiviewdfx.HiLog;
@@ -41,6 +44,24 @@ public class MainAbilitySlice extends AbilitySlice {
         Checkbox checkbox = (Checkbox) findComponentById(ResourceTable.Id_check_box);
         checkbox.setButtonElement(checkElement);
 
+        Button const_button = (Button)findComponentById(ResourceTable.Id_const_button);
+        MainAbilitySlice This = this;
+        const_button.setClickedListener(new Component.ClickedListener() {
+            public void onClick(Component v) {
+                CustomListDialog dialog = new CustomListDialog(This);
+                dialog.setTitle(ResourceTable.String_SelectConst);
+                String[] items = calculator.getConstManager().consts().toArray(new String[0]);
+                dialog.setItems(items);
+                dialog.setListener(new CustomListDialog.IListListener() {
+                    @Override
+                    public void onSelect(int index, String text) {
+                        appendQuestionString(text);
+                    }
+                });
+                dialog.show();
+            }
+        });
+
         prepareDirectionButtons();
         prepareFunButtons();
         prepareCustomizeFunButtons();
@@ -68,14 +89,55 @@ public class MainAbilitySlice extends AbilitySlice {
         });
     }
 
+    private void showCommonDialog()
+    {
+        CommonDialog dialog = new CommonDialog(this);
+        dialog.setTitleText("$string:const_select_dialog");
+        HiLog.warn(label, "setContentComponent!");
+        Component  component = LayoutScatter.getInstance(this).parse(ResourceTable.Layout_list_dialog, null, true);
+        dialog.setContentCustomComponent(component);
+        dialog.setTransparent(true);
+        dialog.show();
+        Button button = (Button)(dialog.searchComponentViaId(ResourceTable.Id_ok_button));
+        button.setClickedListener(new Component.ClickedListener() {
+            public void onClick(Component v) {
+                HiLog.warn(label, "OK button clicked!");
+                dialog.destroy();
+            }
+        });
+    }
+
+    private void showDialog() throws NotExistException, WrongTypeException, IOException {
+        CustomListDialog dialog = new CustomListDialog(this);
+        String[] items = {"Item1", "Item2", "Item3"};
+        dialog.setItems(items);
+        dialog.setListener(new CustomListDialog.IListListener() {
+            @Override
+            public void onSelect(int index, String text) {
+                appendQuestionString(text);
+            }
+        });
+        dialog.show();
+    }
+
     @Override
     public void onActive() {
+        HiLog.warn(label, "onActive!!!");
         super.onActive();
     }
 
     @Override
     public void onForeground(Intent intent) {
+        HiLog.warn(label, "onForeground!!!");
         super.onForeground(intent);
+    }
+
+    @Override
+    protected void onResult(int requestCode, Intent resultIntent) {
+        HiLog.warn(label, "onResult!!!");
+        if (requestCode == 0) {
+            // Process resultIntent here.
+        }
     }
 
     private void prepareDirectionButtons(){
