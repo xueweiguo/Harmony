@@ -66,17 +66,6 @@
             ohos:background_element="$graphic:background_function_button"
             />
         <Button
-            ohos:id="$+id:ms_button"
-            ohos:height="match_parent"
-            ohos:width = "0vp"
-            ohos:weight = "4"
-            ohos:layout_alignment="center"
-            ohos:margin="1vp"
-            ohos:text="MS"
-            ohos:text_size="20fp"
-            ohos:background_element="$graphic:background_function_button"
-            />
-        <Button
             ohos:id="$+id:mr_button"
             ohos:height="match_parent"
             ohos:width = "0vp"
