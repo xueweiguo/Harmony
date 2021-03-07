@@ -14,71 +14,129 @@ import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
 import ohos.multimodalinput.event.TouchEvent;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MultiRoundProgressBar extends Component implements Component.DrawTask {
     // HiLogLabel
     private static final HiLogLabel Label = new HiLogLabel(HiLog.LOG_APP, 0x00101, "MultiRoundProgressBar");
     private float minAngle = 30;
     private float maxAngle = 360;
+    List<RoundProgressBar> barList;
+    private int active_bar = 0;
+
+    class RoundProgressBar{
+        MultiRoundProgressBar ownerBar;
+        private Color edgeColor;
+        private Color barColor;
+        private float minValue;
+        private float maxValue;
+        private float progressValue;
+
+        RoundProgressBar(MultiRoundProgressBar owner, Color edge, Color bar, float min, float max){
+            ownerBar = owner;
+            edgeColor = edge;
+            barColor = bar;
+            minValue = min;
+            maxValue = max;
+            progressValue = 0;
+        }
+
+        void setValue(float value){
+            progressValue = value;
+        }
+
+        void onDraw(Canvas canvas, Paint paint, RectFloat rect, float width, boolean active){
+            float startAngle = ownerBar.minAngle - 90;
+            float sweepAngle = (progressValue - minValue)/(maxValue - minValue) * (ownerBar.maxAngle - ownerBar.minAngle);
+            if(active){
+                width *= 0.8f;
+            }
+            else{
+                width *= 0.6f;
+            }
+
+            paint.setColor(edgeColor);
+            paint.setStrokeWidth(width);
+            canvas.drawArc(rect, new Arc(startAngle, sweepAngle, false), paint);
+
+            paint.setColor(barColor);
+            paint.setStrokeWidth(width * 0.8f);
+            canvas.drawArc(rect, new Arc(startAngle, sweepAngle, false), paint);
+        }
+    }
 
     public MultiRoundProgressBar(Context context) {
         super(context);
         addDrawTask(this);
-     }
+        barList = new ArrayList<RoundProgressBar>();
+    }
 
     public MultiRoundProgressBar(Context context, AttrSet attrSet) {
         super(context, attrSet);
         addDrawTask(this);
+        barList = new ArrayList<RoundProgressBar>();
     }
 
     public MultiRoundProgressBar(Context context, AttrSet attrSet, String styleName) {
         super(context, attrSet, styleName);
         addDrawTask(this);
+        barList = new ArrayList<RoundProgressBar>();
     }
 
     public MultiRoundProgressBar(Context context, AttrSet attrSet, int resId) {
         super(context, attrSet, resId);
         addDrawTask(this);
+        barList = new ArrayList<RoundProgressBar>();
+    }
+
+    public void addBar(Color edge, Color bar, float min, float max){
+        barList.add(new RoundProgressBar(this, edge, bar, min, max));
+    }
+
+    public void setValue(int index, float value){
+        barList.get(index).setValue(value);
     }
 
     @Override
     public void onDraw(Component component, Canvas canvas) {
         Paint paint = new Paint();
         paint.setColor(Color.WHITE);
-        canvas.drawRect(getProgressRect(0), paint);
+        canvas.drawRect(getBoundRect(), paint);
 
         paint.setStyle(Paint.Style.STROKE_STYLE);
         paint.setStrokeCap(Paint.StrokeCap.SQUARE_CAP);
-        drawProgressBar(canvas, paint, 1, Color.BLACK, Color.LTGRAY, 25, 0, 100);
-        drawProgressBar(canvas, paint, 2, Color.BLACK, Color.RED, 50, 0, 100);
-        drawProgressBar(canvas, paint, 3, Color.BLACK, Color.CYAN, 100, 0, 100);
+        for(int i = 0; i < barList.size(); i++){
+            barList.get(i).onDraw(canvas, paint, getProgressRect(i), barWidth(), i==active_bar);
+        }
     }
 
-    private RectFloat getProgressRect(int round_index)
-    {
+    private RectFloat getBoundRect(){
         int width = getWidth();
         int height = getHeight();
         int size = Math.min(width, height);
         int x_padding = (width - size) / 2;
         int y_padding = (height - size) / 2;
-        int stoke_width = 20;
-        RectFloat arcRect = new RectFloat(x_padding, y_padding, width - x_padding, height - y_padding);
-        arcRect.shrink(stoke_width * round_index * 2 * 2, stoke_width * round_index * 2 * 2);
+        return new RectFloat(x_padding, y_padding, width - x_padding, height - y_padding);
+    }
+
+    private float barWidth()
+    {
+        RectFloat bound = getBoundRect();
+        if(barList.size() > 0) {
+            return bound.getWidth() / 2 * 0.7f / barList.size();
+        }
+        else{
+            return 0;
+        }
+    }
+
+    private RectFloat getProgressRect(int round_index)
+    {
+        RectFloat arcRect = getBoundRect();
+        arcRect.shrink(barWidth(), barWidth());
+        arcRect.shrink(barWidth() * round_index, barWidth() * round_index);
         return arcRect;
     }
-
-    private void drawProgressBar(Canvas canvas, Paint paint, int index, Color edge, Color bar, float value, float min, float max)
-    {
-        float startAngle = minAngle - 90;
-        float sweepAngle = (value - min)/(max - min) * (maxAngle - minAngle);
-        RectFloat arc_rect = getProgressRect(index);
-        paint.setColor(edge);
-        paint.setStrokeWidth(50);
-        canvas.drawArc(arc_rect, new Arc(startAngle, sweepAngle, false), paint);
-
-        paint.setColor(bar);
-        paint.setStrokeWidth(40);
-        canvas.drawArc(arc_rect, new Arc(startAngle, sweepAngle, false), paint);
-    }
-
 }
 
