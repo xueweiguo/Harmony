@@ -13,10 +13,73 @@
         ohos:text="$string:HelloWorld"
         ohos:text_size="50"
         />
-    <com.components.cusomized.MultiRoundProgressBar
+    <com.components.cusomized.ArcProgressBarContainer
         ohos:id="$+id:mrprogressId"
-        ohos:height="match_parent"
+        ohos:height="500vp"
         ohos:width="match_parent"
-        ohos:background_element="#00FF00"
-        />
+        ohos:background_element="#FFEEE20D">
+        <com.components.cusomized.ArcProgressBar
+            ohos:id="$+id:red_bar"
+            ohos:height="match_parent"
+            ohos:width="match_parent"
+            ohos:progress_element="#FF0000"
+            ohos:start_angle="45"
+            ohos:max_angle="270"
+            ohos:progress="20"
+            ohos:min = "0"
+            ohos:max = "100"
+            />
+        <com.components.cusomized.ArcProgressBar
+            ohos:id="$+id:green_bar"
+            ohos:height="match_parent"
+            ohos:width="match_parent"
+            ohos:progress_element="#00FF00"
+            ohos:start_angle="45"
+            ohos:max_angle="270"
+            ohos:progress="100"
+            ohos:min = "0"
+            ohos:max = "100"
+            />
+        <com.components.cusomized.ArcProgressBar
+            ohos:id="$+id:blue_bar"
+            ohos:height="match_parent"
+            ohos:width="match_parent"
+            ohos:progress_element="#00FFFF"
+            ohos:start_angle="45"
+            ohos:max_angle="270"
+            ohos:progress="50"
+            ohos:min = "0"
+            ohos:max = "100"
+            />
+    </com.components.cusomized.ArcProgressBarContainer>
+    <DirectionalLayout
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:orientation="horizontal"
+        >
+        <Button
+            ohos:id="$+id:increase"
+            ohos:width="0"
+            ohos:weight="1"
+            ohos:height="match_content"
+            ohos:text_size="27fp"
+            ohos:text="+1"
+            ohos:text_color="#FFFFFF"
+            ohos:background_element="#00007F"
+            />
+        <Button
+            ohos:id="$+id:decrease"
+            ohos:width="0"
+            ohos:weight="1"
+            ohos:height="match_content"
+            ohos:text_size="27fp"
+            ohos:text="-1"
+            ohos:text_color="#FFFFFF"
+            ohos:background_element="#00007F"
+            ohos:left_margin="15vp"
+            ohos:bottom_margin="15vp"
+            ohos:right_padding="8vp"
+            ohos:left_padding="8vp"
+            />
+    </DirectionalLayout>
 </DirectionalLayout>
