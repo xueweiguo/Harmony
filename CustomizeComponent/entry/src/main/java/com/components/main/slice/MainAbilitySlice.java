@@ -1,6 +1,7 @@
 package com.components.main.slice;
 
 import com.components.cusomized.ArcProgressBar;
+import com.components.cusomized.ArcProgressBarContainer;
 import com.components.main.ResourceTable;
 import ohos.aafwk.ability.AbilitySlice;
 import ohos.aafwk.content.Intent;
@@ -13,19 +14,25 @@ public class MainAbilitySlice extends AbilitySlice {
         super.onStart(intent);
         super.setUIContent(ResourceTable.Layout_ability_main);
 
-        ArcProgressBar bar = (ArcProgressBar) findComponentById(ResourceTable.Id_green_bar);
+        ArcProgressBarContainer container = (ArcProgressBarContainer) findComponentById(ResourceTable.Id_container);
         Button increase = (Button)findComponentById(ResourceTable.Id_increase);
         increase.setClickedListener(new Component.ClickedListener(){
             @Override
             public void onClick(Component component) {
-                bar.setValue(bar.getValue() + 1);
+                ArcProgressBar bar = container.getActiveProgress();
+                if(bar != null) {
+                    bar.setValue(bar.getValue() + 1);
+                }
             }
         });
         Button decrease = (Button)findComponentById(ResourceTable.Id_decrease);
         decrease.setClickedListener(new Component.ClickedListener(){
             @Override
             public void onClick(Component component) {
-                bar.setValue(bar.getValue() - 1);
+                ArcProgressBar bar = container.getActiveProgress();
+                if(bar != null) {
+                    bar.setValue(bar.getValue() - 1);
+                }
             }
         });
     }

@@ -51,19 +51,29 @@ public class ArcProgressBar extends Component{
     void onDraw(Canvas canvas, Paint paint, RectFloat rect, float width, boolean active){
         float minAngle = startAngle - 90;
         float sweepAngle = (progressValue - minValue)/(maxValue - minValue) * (maxAngle - minAngle);
+
+        paint.setStrokeWidth(1);
+        paint.setColor(Color.BLACK);
+        canvas.drawRect(rect, paint);
+
         if(active){
             width *= 0.8f;
         }
         else{
             width *= 0.6f;
         }
-        paint.setColor(edgeColor);
-        paint.setStrokeWidth(width);
-        canvas.drawArc(rect, new Arc(minAngle, sweepAngle, false), paint);
 
-        paint.setColor(barColor);
+        rect.shrink(width/ 2, width /2);
+
+        paint.setStrokeWidth(width);
+        paint.setColor(edgeColor);
+        canvas.drawArc(rect, new Arc(minAngle, maxAngle - minAngle, false), paint);
+
         paint.setStrokeWidth(width * 0.8f);
+        paint.setColor(barColor);
         canvas.drawArc(rect, new Arc(minAngle, sweepAngle, false), paint);
+        paint.setColor(Color.WHITE);
+        canvas.drawArc(rect, new Arc(minAngle + sweepAngle, maxAngle - sweepAngle - minAngle, false), paint);
     }
 
     private void Initialize(AttrSet attrSet){

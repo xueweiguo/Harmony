@@ -14,7 +14,7 @@
         ohos:text_size="50"
         />
     <com.components.cusomized.ArcProgressBarContainer
-        ohos:id="$+id:mrprogressId"
+        ohos:id="$+id:container"
         ohos:height="500vp"
         ohos:width="match_parent"
         ohos:background_element="#FFEEE20D">
