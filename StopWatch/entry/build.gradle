@@ -1,0 +1,37 @@
+apply plugin: 'com.huawei.ohos.hap'
+apply plugin: 'com.huawei.ohos.decctest'
+ohos {
+    signingConfigs {
+        debug {
+            storeFile file('D:\\Harmony\\key\\StopWatch.p12')
+            storePassword '000000194AF437990316B26FAAF2C62AA1474972CA4C1B64E9860F7BAB2D6BEA92E0CA806FA7A83B88'
+            keyAlias = 'StopWatch'
+            keyPassword '000000190EBD2369228E4CFB966C2F6A3B668B30FAC3A009D058E4FF59934EA7FF29F147437B398AA6'
+            signAlg = 'SHA256withECDSA'
+            profile file('D:\\Harmony\\key\\StopWatchDebug.p7b')
+            certpath file('D:\\Harmony\\key\\StopWatch.cer')
+        }
+    }
+    compileSdkVersion 5
+    defaultConfig {
+        compatibleSdkVersion 4
+    }
+    buildTypes {
+        release {
+            proguardOpt {
+                proguardEnabled false
+                rulesFiles 'proguard-rules.pro'
+            }
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar', '*.har'])
+    testImplementation 'junit:junit:4.13'
+    ohosTestImplementation 'com.huawei.ohos.testkit:runner:1.0.0.100'
+}
+decc {
+    supportType = ['html', 'xml']
+}

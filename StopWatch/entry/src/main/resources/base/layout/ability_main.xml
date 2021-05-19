@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:height="match_parent"
+    ohos:width="match_parent"
+    ohos:orientation="vertical"
+    ohos:alignment="center">
+
+    <Text
+        ohos:id="$+id:gui_thread_time"
+        ohos:height="match_content"
+        ohos:width="match_content"
+        ohos:background_element="$graphic:background_ability_main"
+        ohos:layout_alignment="horizontal_center"
+        ohos:text="22:20:20.123"
+        ohos:text_size="50fp"
+        ohos:text_color="#0000FF"
+        />
+    <xwg.harmony.stopwatch.AnalogStopWatch
+        ohos:id="$+id:analog_stop_watch"
+        ohos:height="400vp"
+        ohos:width="match_parent"
+        />
+</DirectionalLayout>
+
