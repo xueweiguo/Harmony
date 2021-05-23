@@ -4,22 +4,60 @@
     ohos:height="match_parent"
     ohos:width="match_parent"
     ohos:orientation="vertical"
-    ohos:alignment="center">
-
-    <Text
-        ohos:id="$+id:gui_thread_time"
-        ohos:height="match_content"
-        ohos:width="match_content"
-        ohos:background_element="$graphic:background_ability_main"
-        ohos:layout_alignment="horizontal_center"
-        ohos:text="22:20:20.123"
-        ohos:text_size="50fp"
-        ohos:text_color="#0000FF"
-        />
+    ohos:alignment="top">
     <xwg.harmony.stopwatch.AnalogStopWatch
         ohos:id="$+id:analog_stop_watch"
-        ohos:height="400vp"
+        ohos:height="300vp"
         ohos:width="match_parent"
+        />
+    <DirectionalLayout
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:orientation="horizontal"
+        ohos:alignment="center"
+        ohos:top_margin="5vp">
+        <Component
+            ohos:height="match_parent"
+            ohos:width="0"
+            ohos:weight="1"/>
+        <Button
+            ohos:id="$+id:reset_lap"
+            ohos:height="match_content"
+            ohos:width="0"
+            ohos:weight="5"
+            ohos:text_size="27fp"
+            ohos:text="$string:Reset"
+            ohos:background_element="$graphic:background_button"
+            />
+        <Component
+            ohos:height="match_parent"
+            ohos:width="0"
+            ohos:weight="1"/>
+        <Button
+            ohos:id="$+id:start_stop"
+            ohos:height="match_content"
+            ohos:width="0"
+            ohos:weight="5"
+            ohos:text_size="27fp"
+            ohos:text="$string:Start"
+            ohos:background_element="$graphic:background_button"
+            />
+        <Component
+            ohos:height="match_parent"
+            ohos:width="0"
+            ohos:weight="1"/>
+    </DirectionalLayout>
+    <Text
+        ohos:id="$+id:lap_times"
+        ohos:width="match_parent"
+        ohos:height="match_parent"
+        ohos:text_alignment="horizontal_center"
+        ohos:text_size="30fp"
+        ohos:multiple_lines="true"
+        ohos:scrollable="true"
+        ohos:top_margin="5vp"
+        ohos:left_margin="5vp"
+        ohos:right_margin="5vp"
         />
 </DirectionalLayout>
 

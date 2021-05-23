@@ -11,6 +11,22 @@
     {
       "name": "mainability_HelloWorld",
       "value": "Hello World"
+    },
+    {
+      "name": "Reset",
+      "value": "Reset"
+    },
+    {
+      "name": "Lap",
+      "value": "Lap"
+    },
+    {
+      "name": "Start",
+      "value": "Start"
+    },
+    {
+      "name": "Stop",
+      "value": "Stop"
     }
   ]
 }

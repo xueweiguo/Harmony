@@ -4,61 +4,149 @@ import ohos.agp.components.AttrSet;
 import ohos.agp.components.Component;
 import ohos.agp.render.Canvas;
 import ohos.agp.render.Paint;
+import ohos.agp.text.Font;
 import ohos.agp.utils.Color;
 import ohos.agp.utils.Point;
-import ohos.agp.utils.Rect;
 import ohos.agp.utils.RectFloat;
 import ohos.app.Context;
+import ohos.app.dispatcher.TaskDispatcher;
+import ohos.app.dispatcher.task.Revocable;
+import ohos.global.icu.util.Calendar;
 
+//指针式秒表组件类
 public class AnalogStopWatch extends Component implements Component.DrawTask {
-    double second = 0;
+    private long start_time = 0;    //计时开始时刻，毫秒单位
+    private long millisecond = 0;   //计时时间，毫秒单位
+    private boolean running = false;//执行状态
+    //构造函数
     public AnalogStopWatch(Context context) {
         super(context);
         Initialize(null);
     }
-
+    //构造函数
     public AnalogStopWatch(Context context, AttrSet attrSet) {
         super(context, attrSet);
         Initialize(attrSet);
     }
-
+    //构造函数
     public AnalogStopWatch(Context context, AttrSet attrSet, String styleName) {
         super(context, attrSet, styleName);
         Initialize(attrSet);
     }
-
+    //构造函数
     public AnalogStopWatch(Context context, AttrSet attrSet, int resId) {
         super(context, attrSet, resId);
         Initialize(attrSet);
     }
 
-    @Override
-    public void onDraw(Component component, Canvas canvas) {
-        drawPanel(canvas);
-
+    //获取运行状态
+    public boolean isRunning(){
+        return running;
     }
 
-    public void setSecond(double sec)
-    {
-        second = sec;
+    //获取当前计时时长
+    public long getMiliseconds(){
+        return millisecond;
+    }
+
+    //根据目前的运行状态，开始或停止计时
+    public void start_stop(){
+        if(!running) {
+            start_time = Calendar.getInstance().getTimeInMillis();
+            millisecond = 0;
+            running = true;
+            onRunTimer();
+        }
+        else{
+            running = false;
+        }
+    }
+
+    //计时Timer
+    void onRunTimer(){
+        final long delayTime = 100L;  //延时时间，毫秒单位
+        millisecond = Calendar.getInstance().getTimeInMillis() - start_time;
+        invalidate();  //更新画面表示
+        if(running) {
+            //如果处于运行状态，触发下一次延时执行
+            TaskDispatcher uiTaskDispatcher = mContext.getUITaskDispatcher();
+            Revocable revocable = uiTaskDispatcher.delayDispatch(new Runnable() {
+                @Override
+                public void run() {
+                    onRunTimer();
+                }
+            }, delayTime);
+        }
+    }
+
+    //归零
+    public void reset(){
+        if(!running && millisecond > 0) {
+            onResetTimer();  //启动归零处理
+        }
+    }
+
+    //归零处理
+    void onResetTimer(){
+        final long delayTime = 10L;
+        long second_value = millisecond / 1000 % 60;
+        long minute_value = millisecond / 1000 / 60;
+        if(second_value > 0){
+            millisecond -= 1000;   //秒针反转
+        }
+        if(minute_value > 0){
+            millisecond -= 1000 * 60;  //分针反转
+        }
+        if(second_value > 0 || minute_value >0) {
+            //如果反转未到位，触发下次延时处理
+            TaskDispatcher uiTaskDispatcher = mContext.getUITaskDispatcher();
+            Revocable revocable = uiTaskDispatcher.delayDispatch(new Runnable() {
+                @Override
+                public void run() {
+                    onResetTimer();
+                }
+            }, delayTime);
+        }
+        else{
+            millisecond = 0;
+        }
         invalidate();
     }
 
-    private void drawPanel(Canvas canvas){
+    @Override
+    public void onDraw(Component component, Canvas canvas)
+    {
         Paint paint = new Paint();
-        paint.setColor(Color.WHITE);
         RectFloat bound = getBoundRect();
-        float radius = bound.getWidth() / 2;
-        float len5sec = radius / 5;
-        float len1sec = radius / 10;
-        float len02sec = radius / 20;
-        Point center = bound.getCenter();
+        Point main_center = bound.getCenter();
+        drawScale(canvas, paint, main_center, getRadius(), 1);
+        drawScaleValue(canvas, paint, main_center, getRadius() * 0.8f,
+                12, 5, (int)(getRadius() * 0.2f));
 
-        canvas.drawOval(bound, paint);
+        Point center = new Point(main_center.getPointX(),
+                                bound.top + getRadius() * 0.6f);
+        float radius = getRadius() / 3;
+        drawScale(canvas, paint, center, radius, 5);
+        drawScaleValue(canvas, paint, center, radius * 0.7f,
+                12, 5, (int)(radius * 0.25f));
+
+        drawDigitalTime(canvas, paint, main_center.getPointX(),main_center.getPointY() + getRadius() * 0.4f);
+
+        drawMinute(canvas, center, radius);
+        drawSecond(canvas, bound);
+
+    }
+
+    //描画刻度线
+    private void drawScale(Canvas canvas, Paint paint, Point center, float radius, int scale_interval){
+        paint.setColor(Color.WHITE);
+        float len5sec = radius / 8;
+        float len1sec = radius / 12;
+        float len02sec = radius / 20;
         paint.setColor(Color.BLACK);
-        for(int i = 0; i < 360; i++){
+        for(int i = 0; i < 300; i+= scale_interval){
             float insideRaduis = radius;
-            if ((i % 30)==0){
+            if ((i % 25)==0){
                 insideRaduis -= len5sec;
                 paint.setStrokeWidth(radius / 60);
             }
@@ -70,24 +158,49 @@ public class AnalogStopWatch extends Component implements Component.DrawTask {
                 insideRaduis -= len02sec;
                 paint.setStrokeWidth(radius / 120);
             }
-            drawRadius(canvas, paint, insideRaduis, radius, i);
+            drawRadius(canvas, paint, center, insideRaduis, radius, i * Math.PI / 150);
         }
+    }
+
+    //描画全部刻度值
+    private void drawScaleValue(Canvas canvas, Paint paint, Point center, float radius, int count, int offset, int font_size){
+        for(int i = 1; i <= count; i++){
+            drawScaleText(canvas, paint, center, radius, Math.PI * 2 / count * i, offset * i, font_size);
+        }
+    }
+
+    //描画秒针
+    private void drawMinute(Canvas canvas, Point center, float radius){
+        Paint paint = new Paint();
+        paint.setColor(Color.RED);
+        paint.setStrokeWidth(radius / 20);
+        paint.setStrokeCap(Paint.StrokeCap.ROUND_CAP);
+        drawRadius(canvas, paint, center, 0, radius * 0.9f, millisecond / 60 * Math.PI * 2 / 60000);
+        float oval_radius = radius / 10;
+        canvas.drawOval(new RectFloat(center.getPointX() - oval_radius, center.getPointY() - oval_radius,
+                        center.getPointX() + oval_radius, center.getPointY() + oval_radius),
+                paint);
+    }
+
+    //描画分针
+    private void drawSecond(Canvas canvas, RectFloat bound){
+        float radius = getRadius();
+        Paint paint = new Paint();
         paint.setColor(Color.RED);
         paint.setStrokeWidth(radius / 40);
         paint.setStrokeCap(Paint.StrokeCap.ROUND_CAP);
-        drawRadius(canvas, paint, 0, radius * 0.9f, second * 6);
+        drawRadius(canvas, paint, bound.getCenter(), 0, radius * 0.9f, millisecond * Math.PI * 2 / 60000);
         float oval_radius = radius / 20;
+        Point center = bound.getCenter();
         canvas.drawOval(new RectFloat(center.getPointX() - oval_radius, center.getPointY() - oval_radius,
-                                    center.getPointX() + oval_radius, center.getPointY() + oval_radius),
-                        paint);
-
+                        center.getPointX() + oval_radius, center.getPointY() + oval_radius),
+                paint);
     }
 
-    private void drawRadius(Canvas canvas, Paint paint, float from, float to, double degree){
-        double angle = Math.PI * degree / 180;
+    //描画径向直线
+    private void drawRadius(Canvas canvas, Paint paint, Point center, float from, float to, double angle){
         double sin = Math.sin(angle);
         double cos = Math.cos(angle);
-        Point center = getBoundRect().getCenter();
         canvas.drawLine(new Point(center.getPointX() + (float)(from * sin),
                         center.getPointY() - (float)(from * cos)),
                         new Point(center.getPointX() + (float)(to * sin),
@@ -95,6 +208,38 @@ public class AnalogStopWatch extends Component implements Component.DrawTask {
                         paint);
     }
 
+    //描画单一刻度值
+    private void drawScaleText(Canvas canvas, Paint paint, Point center, float radius, double angle, int value, int font_size){
+        double sin = Math.sin(angle);
+        double cos = Math.cos(angle);
+        Font.Builder builder = new Font.Builder("Arial");
+        builder.setWeight(Font.REGULAR);
+        paint.setFont(builder.build());
+        paint.setTextSize(font_size);
+        String text = String.format("%d", value);
+        float width = paint.measureText(text);      //计算字符串显示宽度
+        canvas.drawText(paint, text,
+                center.getPointX() + (float)(radius * sin) - width / 2,
+                center.getPointY() - (float)(radius * cos) + font_size / 3);
+    }
+
+    //描画数字时间
+    private void drawDigitalTime(Canvas canvas, Paint paint, float x, float y){
+        Font.Builder builder = new Font.Builder("Arial");
+        builder.setWeight(Font.REGULAR);
+        paint.setFont(builder.build());
+        int font_size = (int)(getRadius() / 4);
+        paint.setColor(Color.BLUE);
+        paint.setTextSize(font_size);
+        String now = String.format("%02d:%02d:%02d",
+                        millisecond/1000/3600,   //hour
+                        millisecond/1000/60%60,  //minute
+                        millisecond/1000%60);     //second
+        float width = paint.measureText(now);           //计算字符串显示宽度
+        canvas.drawText(paint, now, x - width / 2 , y);
+    }
+
+    //获取秒表显示区域
     private RectFloat getBoundRect(){
         float width = getWidth();
         float height = getHeight();
@@ -104,6 +249,17 @@ public class AnalogStopWatch extends Component implements Component.DrawTask {
         return new RectFloat(x_padding, y_padding, width - x_padding, height - y_padding);
     }
 
+    //获取显示半径
+    private float getRadius(){
+        return getBoundRect().getWidth() / 2;
+    }
+
+    //获取圆心位置
+    private Point getCenter(){
+        return getBoundRect().getCenter();
+    }
+
+    //初始化
     private void Initialize(AttrSet attrSet){
         addDrawTask(this);
     }
