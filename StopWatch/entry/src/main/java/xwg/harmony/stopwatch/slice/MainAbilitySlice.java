@@ -9,6 +9,8 @@ import ohos.app.dispatcher.task.Revocable;
 import ohos.global.icu.util.Calendar;
 import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
+import ohos.media.audio.AudioManager;
+import ohos.media.audio.SoundPlayer;
 import ohos.utils.Stopwatch;
 import xwg.harmony.stopwatch.AnalogStopWatch;
 import xwg.harmony.stopwatch.ResourceTable;
@@ -41,9 +43,10 @@ public class MainAbilitySlice extends AbilitySlice {
                     clearTime();
                 }
                 else{
+                    recordTime();
                     start_stop.setText(ResourceTable.String_Start);
                     reset_lap.setText(ResourceTable.String_Reset);
-                    recordTime();
+
                 }
             }
         });
@@ -80,4 +83,6 @@ public class MainAbilitySlice extends AbilitySlice {
         lap_time.setText(lap_string + "\n" + current_time);
         record_count++;
     }
+
+
 }
