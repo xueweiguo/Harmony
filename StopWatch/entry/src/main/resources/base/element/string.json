@@ -27,6 +27,11 @@
     {
       "name": "Stop",
       "value": "Stop"
+    },
+    {
+      "name": "permreason_audio",
+      "value": "permreason_audio"
     }
+
   ]
 }
