@@ -12,12 +12,18 @@ import ohos.app.Context;
 import ohos.app.dispatcher.TaskDispatcher;
 import ohos.app.dispatcher.task.Revocable;
 import ohos.global.icu.util.Calendar;
+import ohos.media.audio.AudioManager;
+import ohos.media.audio.SoundPlayer;
 
 //指针式秒表组件类
 public class AnalogStopWatch extends Component implements Component.DrawTask {
     private long start_time = 0;    //计时开始时刻，毫秒单位
     private long millisecond = 0;   //计时时间，毫秒单位
     private boolean running = false;//执行状态
+    SoundPlayer soundPlayer = null;
+    int taskId = 0;
+    int soundId = 0;
+
     //构造函数
     public AnalogStopWatch(Context context) {
         super(context);
@@ -56,8 +62,10 @@ public class AnalogStopWatch extends Component implements Component.DrawTask {
             millisecond = 0;
             running = true;
             onRunTimer();
+            startSound(1.8f, null);
         }
         else{
+            stopSound();
             running = false;
         }
     }
@@ -82,13 +90,13 @@ public class AnalogStopWatch extends Component implements Component.DrawTask {
     //归零
     public void reset(){
         if(!running && millisecond > 0) {
-            onResetTimer();  //启动归零处理
+            startSound(2.0f, ()->onResetTimer());
         }
     }
 
     //归零处理
     void onResetTimer(){
-        final long delayTime = 10L;
+        final long delayTime = 50L;
         long second_value = millisecond / 1000 % 60;
         long minute_value = millisecond / 1000 / 60;
         if(second_value > 0){
@@ -109,6 +117,7 @@ public class AnalogStopWatch extends Component implements Component.DrawTask {
         }
         else{
             millisecond = 0;
+            stopSound();
         }
         invalidate();
     }
@@ -247,6 +256,38 @@ public class AnalogStopWatch extends Component implements Component.DrawTask {
         float x_padding = (width - size) / 2;
         float y_padding = (height - size) / 2;
         return new RectFloat(x_padding, y_padding, width - x_padding, height - y_padding);
+    }
+
+    interface OnPlayListener{
+        void onPlay();
+    }
+
+    private void startSound(float speed, OnPlayListener listener) {
+        //实例化音频播放器对象
+        soundPlayer = new SoundPlayer(AudioManager.AudioVolumeType.STREAM_MUSIC.getValue());
+        // 指定音频资源加载并创建短音
+        soundId = soundPlayer.createSound(getContext(), ResourceTable.Media_1tick);
+        soundPlayer.setOnCreateCompleteListener((soundPlayer1, i, i1) -> {
+            // 短音播放，设置音量、循环次数和播放速度
+            taskId = soundPlayer.play(soundId);
+            soundPlayer.setVolume(taskId, 1.0f);
+            soundPlayer.setLoop(taskId, -1); // “-1”表示一直循环播放
+            soundPlayer.setPlaySpeedRate(taskId, speed);
+            if(listener != null){
+                listener.onPlay();
+            }
+        });
+    }
+
+    private void stopSound(){
+        //停止播放
+        soundPlayer.stop(taskId);
+        taskId = 0;
+        // 释放短音资源
+        soundPlayer.deleteSound(soundId);
+        soundId = 0;
+        // 释放播放器
+        soundPlayer = null;
     }
 
     //获取显示半径
