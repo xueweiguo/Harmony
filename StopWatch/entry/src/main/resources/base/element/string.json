@@ -29,8 +29,28 @@
       "value": "Stop"
     },
     {
-      "name": "permreason_audio",
-      "value": "permreason_audio"
+      "name": "permreason_keepbackround",
+      "value": "permreason_keepbackround"
+    },
+    {
+      "name": "stopwatchservice_description",
+      "value": "hap sample empty service"
+    },
+    {
+      "name": "on",
+      "value": "ON"
+    },
+    {
+      "name": "off",
+      "value": "OFF"
+    },
+    {
+      "name": "sound",
+      "value": "秒表音效"
+    },
+    {
+      "name": "volume",
+      "value": "秒表音量"
     }
 
   ]

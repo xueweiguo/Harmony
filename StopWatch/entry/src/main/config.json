@@ -32,7 +32,8 @@
               "entity.system.home"
             ],
             "actions": [
-              "action.system.home"
+              "action.system.home",
+              "action.setting"
             ]
           }
         ],
@@ -43,7 +44,32 @@
         "description": "$string:mainability_description",
         "label": "$string:app_name",
         "type": "page",
-        "launchType": "standard"
+        "launchType": "standard",
+        "permissions": [
+          "ohos.permission.KEEP_BACKGROUND_RUNNING"
+        ]
+      },
+      {
+        "backgroundModes": [
+          "dataTransfer",
+          "audioPlayback"
+        ],
+        "name": "xwg.harmony.stopwatch.StopWatchService",
+        "icon": "$media:icon",
+        "description": "$string:stopwatchservice_description",
+        "type": "service"
+      }
+    ],
+    "reqPermissions": [
+      {
+        "name": "ohos.permission.KEEP_BACKGROUND_RUNNING",
+        "reason": "$string:permreason_keepbackround",
+        "usedScene": {
+          "ability": [
+            "xwg.harmony.stopwatch.MainAbility"
+          ],
+          "when": "always"
+        }
       }
     ]
   }

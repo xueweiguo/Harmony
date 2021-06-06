@@ -1,5 +1,6 @@
 package xwg.harmony.stopwatch;
 
+import ohos.aafwk.content.Intent;
 import ohos.agp.components.AttrSet;
 import ohos.agp.components.Component;
 import ohos.agp.render.Canvas;
@@ -12,17 +13,32 @@ import ohos.app.Context;
 import ohos.app.dispatcher.TaskDispatcher;
 import ohos.app.dispatcher.task.Revocable;
 import ohos.global.icu.util.Calendar;
+import ohos.hiviewdfx.HiLog;
+import ohos.hiviewdfx.HiLogLabel;
 import ohos.media.audio.AudioManager;
 import ohos.media.audio.SoundPlayer;
 
 //指针式秒表组件类
 public class AnalogStopWatch extends Component implements Component.DrawTask {
+    static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0x00901, "AnalogStopWatch");
+
+    public enum PlayStatus{
+        STOP,
+        PLAYING,
+        PSUSE
+    }
+
     private long start_time = 0;    //计时开始时刻，毫秒单位
     private long millisecond = 0;   //计时时间，毫秒单位
     private boolean running = false;//执行状态
+
+    //音频播放状态
     SoundPlayer soundPlayer = null;
     int taskId = 0;
     int soundId = 0;
+    PlayStatus playStatus = PlayStatus.STOP;
+
+    float padding = 0;
 
     //构造函数
     public AnalogStopWatch(Context context) {
@@ -45,29 +61,63 @@ public class AnalogStopWatch extends Component implements Component.DrawTask {
         Initialize(attrSet);
     }
 
+    @Override
+    protected void finalize(){
+        stopSound();
+    }
+
+    public void onForeground(Intent intent){
+        resumeSound();
+    }
+
+    public void onBackground(){
+        pauseSound();
+    }
+
     //获取运行状态
     public boolean isRunning(){
         return running;
     }
 
     //获取当前计时时长
-    public long getMiliseconds(){
+    public long getMilliseconds(){
         return millisecond;
+    }
+
+    public void setMilliseconds(long time){
+        millisecond = time;
+    }
+
+    public long getStartTime(){
+        return start_time;
+    }
+
+    public void setStartTime(long start){
+        start_time = start;
     }
 
     //根据目前的运行状态，开始或停止计时
     public void start_stop(){
         if(!running) {
-            start_time = Calendar.getInstance().getTimeInMillis();
-            millisecond = 0;
-            running = true;
-            onRunTimer();
-            startSound(1.8f, null);
+            if(millisecond == 0) {
+                start_time = Calendar.getInstance().getTimeInMillis();
+                start();
+            }
         }
         else{
-            stopSound();
-            running = false;
+            stop();
         }
+    }
+
+    public void start(){
+        running = true;
+        onRunTimer();
+        startSound(1.8f, null);
+    }
+
+    private void stop(){
+        stopSound();
+        running = false;
     }
 
     //计时Timer
@@ -255,7 +305,8 @@ public class AnalogStopWatch extends Component implements Component.DrawTask {
         float size = Math.min(width, height);
         float x_padding = (width - size) / 2;
         float y_padding = (height - size) / 2;
-        return new RectFloat(x_padding, y_padding, width - x_padding, height - y_padding);
+        return new RectFloat(x_padding + padding, y_padding + padding,
+                width - x_padding - padding, height - y_padding - padding);
     }
 
     interface OnPlayListener{
@@ -263,31 +314,56 @@ public class AnalogStopWatch extends Component implements Component.DrawTask {
     }
 
     private void startSound(float speed, OnPlayListener listener) {
-        //实例化音频播放器对象
-        soundPlayer = new SoundPlayer(AudioManager.AudioVolumeType.STREAM_MUSIC.getValue());
-        // 指定音频资源加载并创建短音
-        soundId = soundPlayer.createSound(getContext(), ResourceTable.Media_1tick);
-        soundPlayer.setOnCreateCompleteListener((soundPlayer1, i, i1) -> {
-            // 短音播放，设置音量、循环次数和播放速度
-            taskId = soundPlayer.play(soundId);
-            soundPlayer.setVolume(taskId, 1.0f);
-            soundPlayer.setLoop(taskId, -1); // “-1”表示一直循环播放
-            soundPlayer.setPlaySpeedRate(taskId, speed);
-            if(listener != null){
-                listener.onPlay();
-            }
-        });
+        if(playStatus == PlayStatus.STOP) {
+            //实例化音频播放器对象
+            soundPlayer = new SoundPlayer(AudioManager.AudioVolumeType.STREAM_MUSIC.getValue());
+            // 指定音频资源加载并创建短音
+            soundId = soundPlayer.createSound(getContext(), ResourceTable.Media_1tick);
+            soundPlayer.setOnCreateCompleteListener((soundPlayer1, i, i1) -> {
+                // 短音播放，设置音量、循环次数和播放速度
+                taskId = soundPlayer.play(soundId);
+                soundPlayer.setVolume(taskId, 1.0f);
+                soundPlayer.setLoop(taskId, -1); // “-1”表示一直循环播放
+                soundPlayer.setPlaySpeedRate(taskId, speed);
+                if (listener != null) {
+                    listener.onPlay();
+                }
+                playStatus = PlayStatus.PLAYING;
+            });
+        }
     }
 
     private void stopSound(){
-        //停止播放
-        soundPlayer.stop(taskId);
-        taskId = 0;
-        // 释放短音资源
-        soundPlayer.deleteSound(soundId);
-        soundId = 0;
-        // 释放播放器
-        soundPlayer = null;
+        if (playStatus != PlayStatus.STOP) {
+            //停止播放
+            soundPlayer.stop(taskId);
+            taskId = 0;
+            // 释放短音资源
+            soundPlayer.deleteSound(soundId);
+            soundId = 0;
+            // 释放播放器
+            soundPlayer = null;
+            playStatus = PlayStatus.STOP;
+        }
+    }
+
+    public void pauseSound()
+    {
+        if(playStatus == PlayStatus.PLAYING){
+            soundPlayer.pause(taskId);
+            playStatus = PlayStatus.PSUSE;
+        }
+    }
+
+    public void resumeSound(){
+        if(playStatus == PlayStatus.PSUSE){
+            soundPlayer.resume(taskId);
+            playStatus = PlayStatus.PLAYING;
+        }
+    }
+
+    public boolean isPlaying(){
+        return (taskId != 0);
     }
 
     //获取显示半径
@@ -302,6 +378,10 @@ public class AnalogStopWatch extends Component implements Component.DrawTask {
 
     //初始化
     private void Initialize(AttrSet attrSet){
+        padding = 0;
+        if(attrSet.getAttr("padding").isPresent()) {
+            padding = attrSet.getAttr("padding").get().getDimensionValue();
+        }
         addDrawTask(this);
     }
 }
