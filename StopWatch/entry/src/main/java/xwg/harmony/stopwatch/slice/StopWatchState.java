@@ -12,7 +12,7 @@ import xwg.harmony.stopwatch.AnalogStopWatch;
 import xwg.harmony.stopwatch.ResourceTable;
 
 public class StopWatchState extends SliceState {
-    static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0x00102, "StopWatchState");
+    static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0x00202, "StopWatchState");
     AnalogStopWatch stopwatch = null;
     Text lap_time = null;
     int record_count = 0;

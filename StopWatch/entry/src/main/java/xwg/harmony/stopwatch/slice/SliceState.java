@@ -22,7 +22,9 @@ public abstract class SliceState {
 
     public void onStart(Intent intent)
     {
-        Component state_layout = LayoutScatter.getInstance(owner_slice).parse(getLayoutId(), null, false);
+        Component state_layout = LayoutScatter.getInstance(owner_slice).parse(getLayoutId(),
+                                                                        null,
+                                                                        false);
         component_container.addComponent(state_layout);
     }
     public void onStop(){
@@ -37,5 +39,4 @@ public abstract class SliceState {
     public void onBackground(){
         component_container.removeAllComponents();
     }
-
 }

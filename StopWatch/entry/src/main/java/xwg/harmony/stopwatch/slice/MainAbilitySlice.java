@@ -9,7 +9,7 @@ import ohos.hiviewdfx.HiLogLabel;
 import xwg.harmony.stopwatch.ResourceTable;
 
 public class MainAbilitySlice extends AbilitySlice {
-    static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0x00101, "MainAbilitySlice");
+    static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0x00201, "MainAbilitySlice");
     TabList.Tab stopwatchTab = null;
     TabList.Tab mapTab = null;
     TabList.Tab settingTab = null;
@@ -37,6 +37,10 @@ public class MainAbilitySlice extends AbilitySlice {
                 ComponentContainer container = (ComponentContainer) findComponentById(ResourceTable.Id_tab_container);
                 if(tab == stopwatchTab) {
                     current_state = new StopWatchState(slice, container);
+                    current_state.onStart(intent);
+                }
+                else if(tab == mapTab) {
+                    current_state = new MapState(slice, container);
                     current_state.onStart(intent);
                 }
                 else

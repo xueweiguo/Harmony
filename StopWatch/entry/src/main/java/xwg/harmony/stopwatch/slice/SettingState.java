@@ -9,7 +9,7 @@ import ohos.aafwk.ability.AbilitySlice;
 import ohos.aafwk.content.Intent;
 
 public class SettingState extends SliceState {
-    static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0x00104, "SettingState");
+    static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0x00204, "SettingState");
 
     public SettingState(AbilitySlice slice, ComponentContainer container) {
         super(slice, container);
