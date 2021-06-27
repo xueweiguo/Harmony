@@ -8,7 +8,7 @@
         ohos:id="$+id:map"
         ohos:layout_alignment="center"
         ohos:height="300vp"
-        ohos:width="300vp"
+        ohos:width="match_parent"
         />
 
     <Button
@@ -17,7 +17,6 @@
         ohos:width="match_parent"
         ohos:layout_alignment="center"
         ohos:background_element="#BBBBBB"
-        ohos:top_margin="20vp"
         ohos:text_size="24fp"
         ohos:text="放大"/>
 

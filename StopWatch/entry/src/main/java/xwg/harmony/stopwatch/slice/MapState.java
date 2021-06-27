@@ -18,6 +18,7 @@ import ohos.location.RequestParam;
 import xwg.harmony.stopwatch.ResourceTable;
 import ohos.aafwk.ability.AbilitySlice;
 import ohos.aafwk.content.Intent;
+import xwg.harmony.stopwatch.Tile;
 import xwg.harmony.stopwatch.TileMap;
 
 
@@ -72,16 +73,16 @@ public class MapState extends SliceState {
             @Override
             public void onClick(Component component) {
                 ListDialog listDialog = new ListDialog(owner_slice, ListDialog.SINGLE);
-                listDialog.setItems(new String[]{"高德地图 - 道路", "高德地图 - 矢量", "高德地图 - 栅格"});
+                listDialog.setItems(new String[]{"高德地图 - 矢量", "高德地图 - "});
                 listDialog.setOnSingleSelectListener(new IDialog.ClickedListener() {
                     @Override
                     public void onClick(IDialog iDialog, int i) {
                         if (i == 0)
-                            tileMap.setMapSource(TileMap.MapSource.GAODE_ROAD);
+                            tileMap.setMapSource(Tile.MapSource.GAODE_ROAD);
                         if (i == 1)
-                            tileMap.setMapSource(TileMap.MapSource.GAODE_VECTOR);
+                            tileMap.setMapSource(Tile.MapSource.GAODE_VECTOR);
                         if (i == 2)
-                            tileMap.setMapSource(TileMap.MapSource.GAODE_SATELLITE);
+                            tileMap.setMapSource(Tile.MapSource.GAODE_SATELLITE);
                         listDialog.hide();
                     }
                 });
@@ -99,7 +100,7 @@ public class MapState extends SliceState {
         register(owner_slice);
         registerLocationEvent();
 
-        tileMap.loadMapTile();
+        tileMap.loadMapTile(true);
         HiLog.info(LABEL, "onStart End!");
     }
 
@@ -115,7 +116,7 @@ public class MapState extends SliceState {
             locator = new Locator(context);
             //requestParam = new RequestParam(RequestParam.PRIORITY_ACCURACY, timeInterval, distanceInterval);
             requestParam = new RequestParam(RequestParam.SCENE_NAVIGATION);
-            locator.startLocating(requestParam, locatorCallback);
+            locator.requestOnce(requestParam, locatorCallback);
         }
     }
 
@@ -139,14 +140,13 @@ public class MapState extends SliceState {
         @Override
         public void onLocationReport(Location location) {
             HiLog.info(LABEL, "onLocationReport");
-            //如果处于运行状态，触发下一次延时执行
             TaskDispatcher uiTaskDispatcher = owner_slice.getUITaskDispatcher();
-            Revocable revocable = uiTaskDispatcher.delayDispatch(new Runnable() {
+            Revocable revocable = uiTaskDispatcher.asyncDispatch(new Runnable() {
                 @Override
                 public void run() {
                     tileMap.setLocation(location.getLongitude(), location.getLatitude());
                 }
-            }, 10);
+            });
         }
 
         @Override
