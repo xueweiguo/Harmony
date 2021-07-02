@@ -6,6 +6,7 @@ import ohos.agp.render.Canvas;
 import ohos.agp.render.Paint;
 import ohos.app.Context;
 import ohos.app.dispatcher.task.TaskPriority;
+import ohos.data.orm.OrmContext;
 import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
 import ohos.media.image.common.Size;
@@ -26,9 +27,13 @@ public class TileMap extends Component implements Component.DrawTask, Component.
         this.setTouchEventListener(this);
     }
 
+    public void setDbContext(OrmContext context){
+        mapData.setDbContext(context);
+    }
+
     @Override
     public void onDraw(Component component, Canvas canvas) {
-        HiLog.info(LABEL, "TileMap.onDraw!");
+        HiLog.info(LABEL, "TileMap.onDraw Start!");
         int tileCol = Tile.getTileX(longitude, zoom);
         int tileRow = Tile.getTileY(latitude, zoom);
         boolean need_load = false;
@@ -59,6 +64,7 @@ public class TileMap extends Component implements Component.DrawTask, Component.
             //HiLog.info(LABEL,"onDraw,loadMapTile();");
             loadMapTile(false);
         }
+        HiLog.info(LABEL, "TileMap.onDraw End!");
     }
 
     @Override
@@ -69,22 +75,19 @@ public class TileMap extends Component implements Component.DrawTask, Component.
     public void setMapSource(Tile.MapSource src){
         mapSource = src;
         mapData.clear();
-        loadMapTile(true);
+        invalidate();
     }
 
     public void setLocation(double long_deg, double lat_deg){
-        /*
         longitude = long_deg;
         latitude = lat_deg;
-        loadMapTile(true);
         invalidate();
-         */
-    }
+   }
 
     public void zoomIn(){
         if(zoom < 17) {
             zoom++;
-            loadMapTile(true);
+            invalidate();
          }
         HiLog.info(LABEL, "TileMap.zoomIn,zoom=%{public}d", zoom);
     }
@@ -99,10 +102,10 @@ public class TileMap extends Component implements Component.DrawTask, Component.
     }
 
     public void loadMapTile(boolean invalidate){
+        HiLog.info(LABEL, "TileMap.loadMapTile Start!");
         getContext().getGlobalTaskDispatcher(TaskPriority.DEFAULT).asyncDispatch(new Runnable() {
             @Override
-            public void run() {
-                HiLog.info(LABEL, "TileMap.loadMapTile.run!");
+            public synchronized void run() {
                 int tileCol = Tile.getTileX(longitude, zoom);
                 int tileRow = Tile.getTileY(latitude, zoom);
                 boolean need_update = false;
@@ -132,5 +135,7 @@ public class TileMap extends Component implements Component.DrawTask, Component.
                 }
             }
         });
+        HiLog.info(LABEL, "TileMap.loadMapTile End!");
     }
+
 }

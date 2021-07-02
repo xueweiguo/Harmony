@@ -4,9 +4,12 @@ import ohos.aafwk.ability.AbilitySlice;
 import ohos.aafwk.content.Intent;
 import ohos.agp.components.ComponentContainer;
 import ohos.agp.components.TabList;
+import ohos.data.DatabaseHelper;
+import ohos.data.orm.OrmContext;
 import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
 import xwg.harmony.stopwatch.ResourceTable;
+import xwg.harmony.stopwatch.StopWatchDB;
 
 public class MainAbilitySlice extends AbilitySlice {
     static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0x00201, "MainAbilitySlice");
@@ -20,6 +23,8 @@ public class MainAbilitySlice extends AbilitySlice {
         HiLog.info(LABEL, "onStart");
         super.onStart(intent);
         super.setUIContent(ResourceTable.Layout_ability_main);
+        DatabaseHelper helper = new DatabaseHelper(this);
+        OrmContext dbContext = helper.getOrmContext("StopWatch", "StopWatch.db", StopWatchDB.class);
         TabList tabList = (TabList) findComponentById(ResourceTable.Id_tab_list);
         stopwatchTab = tabList.new Tab(getContext());
         stopwatchTab.setText("秒表");
@@ -40,7 +45,7 @@ public class MainAbilitySlice extends AbilitySlice {
                     current_state.onStart(intent);
                 }
                 else if(tab == mapTab) {
-                    current_state = new MapState(slice, container);
+                    current_state = new MapState(slice, container, dbContext);
                     current_state.onStart(intent);
                 }
                 else

@@ -24,6 +24,9 @@ ohos {
             }
         }
     }
+    compileOptions{
+        annotationEnabled true
+    }
 }
 
 dependencies {
@@ -34,3 +37,4 @@ dependencies {
 decc {
     supportType = ['html', 'xml']
 }
+

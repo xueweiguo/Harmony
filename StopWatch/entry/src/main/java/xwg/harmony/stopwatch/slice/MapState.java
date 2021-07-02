@@ -9,6 +9,8 @@ import ohos.app.Context;
 import ohos.app.dispatcher.TaskDispatcher;
 import ohos.app.dispatcher.task.Revocable;
 import ohos.bundle.IBundleManager;
+import ohos.data.DatabaseHelper;
+import ohos.data.orm.OrmContext;
 import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
 import ohos.location.Location;
@@ -18,6 +20,7 @@ import ohos.location.RequestParam;
 import xwg.harmony.stopwatch.ResourceTable;
 import ohos.aafwk.ability.AbilitySlice;
 import ohos.aafwk.content.Intent;
+import xwg.harmony.stopwatch.StopWatchDB;
 import xwg.harmony.stopwatch.Tile;
 import xwg.harmony.stopwatch.TileMap;
 
@@ -32,9 +35,11 @@ public class MapState extends SliceState {
     private RequestParam requestParam;
 
     private TileMap tileMap = null;
+    private OrmContext dbContext = null;
 
-    public MapState(AbilitySlice slice, ComponentContainer container) {
+    public MapState(AbilitySlice slice, ComponentContainer container, OrmContext context) {
         super(slice, container);
+        dbContext = context;
     }
 
     @Override
@@ -48,6 +53,7 @@ public class MapState extends SliceState {
         super.onStart(intent);
         // obtain the map object
         tileMap = (TileMap)owner_slice.findComponentById(ResourceTable.Id_map);
+        tileMap.setDbContext(dbContext);
 
         // zoom in
         Button btnZoomIn = (Button) owner_slice.findComponentById(ResourceTable.Id_btn_zoomin);
@@ -111,10 +117,7 @@ public class MapState extends SliceState {
 
     private void registerLocationEvent() {
         if (hasPermissionGranted(PERM_LOCATION)) {
-            int timeInterval = 0;
-            int distanceInterval = 0;
             locator = new Locator(context);
-            //requestParam = new RequestParam(RequestParam.PRIORITY_ACCURACY, timeInterval, distanceInterval);
             requestParam = new RequestParam(RequestParam.SCENE_NAVIGATION);
             locator.requestOnce(requestParam, locatorCallback);
         }
