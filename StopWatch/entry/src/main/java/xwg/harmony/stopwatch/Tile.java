@@ -41,11 +41,11 @@ public class Tile extends PixelMapHolder {
             return tile;
         }
         else {
-            //HiLog.info(LABEL,"createTile Fail: zoom=%{public}d,row=%{public}d,col=%{public}d", zoom, tile_y, tile_x);
             return null;
         }
     }
 
+    //从longitude和latitude指定的位置计算当前瓦片显示位置的偏移量
     public Size calculateOffset(double longitude, double latitude){
         //获取位图尺寸
         Size imageSize = getPixelMap().getImageInfo().size;
@@ -59,11 +59,11 @@ public class Tile extends PixelMapHolder {
         double lat_from = getTileLatitude(tile_y, z);
         double lat_to = getTileLatitude(tile_y + 1, z);
         //计算Tile内偏移量
-        int offset_x = (int)((longitude - long_from) / (long_to - long_from) * (imageSize.width));
-        int offset_y = (int)((latitude - lat_from) / (lat_to - lat_from) * (imageSize.height));
+        int offset_x = -(int)((longitude - long_from) / (long_to - long_from) * (imageSize.width));
+        int offset_y = -(int)((latitude - lat_from) / (lat_to - lat_from) * (imageSize.height));
 
-        offset_x -= (x - tile_x) * imageSize.width;
-        offset_y -= (y - tile_y) * imageSize.height;
+        offset_x += (x - tile_x) * imageSize.width;
+        offset_y += (y - tile_y) * imageSize.height;
         //HiLog.info(LABEL,"calculateOffset: x=%{public}d,y=%{public}d,offset_x=%{public}d,offset_y=%{public}d", x, y, offset_x, offset_y);
         //HiLog.info(LABEL,"calculateOffset: x=%{public}d,y=%{public}d", x, y);
         return new Size(offset_x, offset_y);
@@ -117,7 +117,7 @@ public class Tile extends PixelMapHolder {
         try {
             URL url = new URL(urlString);
             URLConnection con = url.openConnection();
-            con.setConnectTimeout(500*1000);
+            con.setConnectTimeout(5*1000);
             InputStream is = con.getInputStream();
             ImageSource source = ImageSource.create(is, new ImageSource.SourceOptions());
             ImageSource.DecodingOptions options = new ImageSource.DecodingOptions();

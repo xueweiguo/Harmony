@@ -79,7 +79,7 @@ public class MapState extends SliceState {
             @Override
             public void onClick(Component component) {
                 ListDialog listDialog = new ListDialog(owner_slice, ListDialog.SINGLE);
-                listDialog.setItems(new String[]{"高德地图 - 矢量", "高德地图 - "});
+                listDialog.setItems(new String[]{"高德地图 - 矢量", "高德地图 - 卫星"});
                 listDialog.setOnSingleSelectListener(new IDialog.ClickedListener() {
                     @Override
                     public void onClick(IDialog iDialog, int i) {
