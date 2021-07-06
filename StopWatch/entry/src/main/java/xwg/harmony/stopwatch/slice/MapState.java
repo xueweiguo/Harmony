@@ -11,6 +11,7 @@ import ohos.app.dispatcher.task.Revocable;
 import ohos.bundle.IBundleManager;
 import ohos.data.DatabaseHelper;
 import ohos.data.orm.OrmContext;
+import ohos.data.preferences.Preferences;
 import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
 import ohos.location.Location;
@@ -84,10 +85,8 @@ public class MapState extends SliceState {
                     @Override
                     public void onClick(IDialog iDialog, int i) {
                         if (i == 0)
-                            tileMap.setMapSource(Tile.MapSource.GAODE_ROAD);
-                        if (i == 1)
                             tileMap.setMapSource(Tile.MapSource.GAODE_VECTOR);
-                        if (i == 2)
+                        if (i == 1)
                             tileMap.setMapSource(Tile.MapSource.GAODE_SATELLITE);
                         listDialog.hide();
                     }
@@ -106,8 +105,22 @@ public class MapState extends SliceState {
         register(owner_slice);
         registerLocationEvent();
 
-        tileMap.loadMapTile(true);
+        //tileMap.loadMapTile(true);
         HiLog.info(LABEL, "onStart End!");
+    }
+
+    @Override
+    public void onForeground(Intent intent){
+        HiLog.info(LABEL, "MapState.onForeground");
+        super.onForeground(intent);
+        loadLocation();
+    }
+
+    @Override
+    public void onBackground(){
+        HiLog.info(LABEL, "MapState.onBackground");
+        super.onBackground();
+        saveLocation();
     }
 
     private void register(Context ability) {
@@ -147,7 +160,7 @@ public class MapState extends SliceState {
             Revocable revocable = uiTaskDispatcher.asyncDispatch(new Runnable() {
                 @Override
                 public void run() {
-                    tileMap.setLocation(location.getLongitude(), location.getLatitude());
+                    tileMap.setWgs84Location(location);
                 }
             });
         }
@@ -159,5 +172,25 @@ public class MapState extends SliceState {
         @Override
         public void onErrorReport(int type) {
         }
+    }
+
+    private void loadLocation(){
+        HiLog.info(LABEL, "MapState.loadLocation");
+        DatabaseHelper databaseHelper = new DatabaseHelper(owner_slice); // context入参类型为ohos.app.Context。
+        Preferences preferences = databaseHelper.getPreferences("TileMap");
+        double latitude = preferences.getFloat("latitude", 0);
+        double longitude = preferences.getFloat("longitude", 0);
+        if(latitude != 0 && longitude != 0){
+            tileMap.setGcj02Location(new Location(latitude, longitude));
+        }
+    }
+
+    private void saveLocation(){
+        HiLog.info(LABEL, "MapState.saveLocation");
+        DatabaseHelper databaseHelper = new DatabaseHelper(owner_slice); // context入参类型为ohos.app.Context。
+        Preferences preferences = databaseHelper.getPreferences("TileMap");
+        Location location = tileMap.getGcj02Location();
+        preferences.putFloat("latitude", (float)location.getLatitude());
+        preferences.putFloat("longitude", (float)location.getLongitude());
     }
 }
