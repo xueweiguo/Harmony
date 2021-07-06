@@ -10,16 +10,16 @@ import ohos.app.dispatcher.task.TaskPriority;
 import ohos.data.orm.OrmContext;
 import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
+import ohos.location.Location;
 import ohos.media.image.common.Size;
 import ohos.multimodalinput.event.TouchEvent;
 
 public class TileMap extends Component implements Component.DrawTask, Component.TouchEventListener{
     static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0x00205, "TileMap");
-    TileMapData mapData = new TileMapData();
+    TileDataStorage mapData = new TileDataStorage();
 
     Tile.MapSource mapSource = Tile.MapSource.GAODE_VECTOR;
-    double longitude = 121.547792;
-    double latitude = 38.875539;
+    Location location = null;
     int zoom = 15;
 
     boolean loading = false;
@@ -36,31 +36,32 @@ public class TileMap extends Component implements Component.DrawTask, Component.
 
     @Override
     public void onDraw(Component component, Canvas canvas) {
-        //HiLog.info(LABEL, "TileMap.onDraw Start!");
-        int tileCol = Tile.getTileX(longitude, zoom);
-        int tileRow = Tile.getTileY(latitude, zoom);
-        boolean need_load = false;
-        for(int col = tileCol - 1; col <= tileCol + 1; col++){
-            for(int row = tileRow - 1; row <= tileRow + 1; row++){
-                Tile tile = mapData.getData(zoom, col, row);
-                if(tile != null) {
-                    Size imageSize = tile.getPixelMap().getImageInfo().size;
-                    Size offset = tile.calculateOffset(longitude, latitude);
-                    /*
-                    HiLog.info(LABEL,"onDraw, tile!=null: zoom=%{public}d,row=%{public}d,col=%{public}d, " +
-                                    "offset.width=%{public}d, offset.height=%{public}d",
-                                    zoom, row, col, offset.width, offset.height);
-                     */
-                    canvas.drawPixelMapHolder(tile,
-                            getWidth() / 2 + offset.width,
-                            getHeight() / 2 + offset.height,
-                            new Paint());
-                }
-                else{
-                    //HiLog.info(LABEL,"onDraw,need:zoom=%{public}d,row=%{public}d,col=%{public}d", zoom, row, col);
-                    need_load = true;
-                }
+        HiLog.info(LABEL, "TileMap.onDraw Start!");
+        if(location != null) {
+            int tileCol = Tile.getTileX(location.getLongitude(), zoom);
+            int tileRow = Tile.getTileY(location.getLatitude(), zoom);
+            boolean need_load = false;
+            for (int col = tileCol - 1; col <= tileCol + 1; col++) {
+                for (int row = tileRow - 1; row <= tileRow + 1; row++) {
+                    Tile tile = mapData.getData(mapSource, zoom, col, row);
+                    if (tile != null) {
+                        Size offset = tile.calculateOffset(location);
+                        HiLog.info(LABEL,"onDraw, tile!=null: zoom=%{public}d,row=%{public}d,col=%{public}d, " +
+                                        "offset.width=%{public}d, offset.height=%{public}d",
+                                        zoom, row, col, offset.width, offset.height);
+                        canvas.drawPixelMapHolder(tile,
+                                getWidth() / 2 + offset.width,
+                                getHeight() / 2 + offset.height,
+                                new Paint());
+                    } else {
+                        //HiLog.info(LABEL,"onDraw,need:zoom=%{public}d,row=%{public}d,col=%{public}d", zoom, row, col);
+                        need_load = true;
+                    }
 
+                }
+            }
+            if(need_load){
+                loadMapTile(false);
             }
         }
         Paint linePaint = new Paint();
@@ -73,11 +74,7 @@ public class TileMap extends Component implements Component.DrawTask, Component.
         canvas.drawLine(getWidth() / 2, getHeight()/2 - line_size,
                         getWidth() / 2, getHeight() / 2 + line_size,
                         linePaint);
-        if(need_load){
-            //HiLog.info(LABEL,"onDraw,loadMapTile();");
-            loadMapTile(false);
-        }
-        //HiLog.info(LABEL, "TileMap.onDraw End!");
+        HiLog.info(LABEL, "TileMap.onDraw End!");
     }
 
     @Override
@@ -91,13 +88,23 @@ public class TileMap extends Component implements Component.DrawTask, Component.
         invalidate();
     }
 
-    public void setLocation(double long_deg, double lat_deg){
-        //longitude = GCJ2WGSUtils.GCJLon(lat_deg, long_deg);
-        //latitude = GCJ2WGSUtils.GCJLat(lat_deg, long_deg);
-        double ret[] = GpsUtil.toGCJ02Point(lat_deg, long_deg);
-        latitude = ret[0];
-        longitude = ret[1];
+    public void setWgs84Location(Location loc){
+        HiLog.info(LABEL, "TileMap.setWgs84Location Start!");
+        double ret[] = GpsUtil.toGCJ02Point(loc.getLatitude(), loc.getLongitude());
+        location = new Location(ret[0], ret[1]);
         invalidate();
+        HiLog.info(LABEL, "TileMap.setWgs84Location End!");
+    }
+
+    public void setGcj02Location(Location loc){
+        location = loc;
+        invalidate();
+        HiLog.info(LABEL, "TileMap.setLocation End!");
+    }
+
+    public Location getGcj02Location()
+    {
+        return location;
     }
 
     public void zoomIn(){
@@ -118,23 +125,27 @@ public class TileMap extends Component implements Component.DrawTask, Component.
     }
 
     public void loadMapTile(boolean invalidate){
-        if(loading) return;
+        HiLog.info(LABEL, "TileMap.loadMapTile Start!");
+        if((location == null) || loading) {
+            HiLog.info(LABEL, "TileMap.loadMapTile About!");
+            return;
+        }
         loading = true;
         getContext().getGlobalTaskDispatcher(TaskPriority.HIGH).asyncDispatch(new Runnable() {
             @Override
             public void run() {
-                int tileCol = Tile.getTileX(longitude, zoom);
-                int tileRow = Tile.getTileY(latitude, zoom);
+                int tileCol = Tile.getTileX(location.getLongitude(), zoom);
+                int tileRow = Tile.getTileY(location.getLatitude(), zoom);
                 boolean need_update = false;
                 for(int col = tileCol - 1; col <= tileCol + 1; col++) {
                     for (int row = tileRow - 1; row <= tileRow + 1; row++) {
-                        Tile tile = mapData.getData(zoom, col, row);
+                        Tile tile = mapData.getData(mapSource, zoom, col, row);
                         if (tile == null) {
-                            //HiLog.info(LABEL,"loadMapTile: zoom=%{public}d,row=%{public}d,col=%{public}d", zoom, row, col);
+                            HiLog.info(LABEL,"loadMapTile: zoom=%{public}d,row=%{public}d,col=%{public}d", zoom, row, col);
                             tile = Tile.createTile(mapSource, col, row, zoom);
                             if(tile != null) {
                                 //HiLog.info(LABEL,"createTile Succefully!: zoom=%{public}d,row=%{public}d,col=%{public}d", zoom, row, col);
-                                mapData.setData(zoom, col, row, tile);
+                                mapData.setData(mapSource, zoom, col, row, tile);
                                 need_update = true;
                             }
                         }
@@ -152,7 +163,7 @@ public class TileMap extends Component implements Component.DrawTask, Component.
                     });
                 }
             }
-
         });
+        HiLog.info(LABEL, "TileMap.loadMapTile End!");
     }
 }
