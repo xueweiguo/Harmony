@@ -1,9 +1,9 @@
 package xwg.harmony.stopwatch;
 
 import ohos.agp.render.PixelMapHolder;
-import ohos.agp.utils.Point;
 import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
+import ohos.location.Location;
 import ohos.media.image.ImageSource;
 import ohos.media.image.PixelMap;
 import ohos.media.image.common.Size;
@@ -46,12 +46,12 @@ public class Tile extends PixelMapHolder {
     }
 
     //从longitude和latitude指定的位置计算当前瓦片显示位置的偏移量
-    public Size calculateOffset(double longitude, double latitude){
+    public Size calculateOffset(Location loc){
         //获取位图尺寸
         Size imageSize = getPixelMap().getImageInfo().size;
         //获取当前坐标所处瓦片位置
-        int tile_x = getTileX(longitude, z);
-        int tile_y = getTileY(latitude, z);
+        int tile_x = getTileX(loc.getLongitude(), z);
+        int tile_y = getTileY(loc.getLatitude(), z);
         //计算瓦片经度范围
         double long_from = getTileLongitude(tile_x, z);
         double long_to = getTileLongitude(tile_x + 1, z);
@@ -59,8 +59,8 @@ public class Tile extends PixelMapHolder {
         double lat_from = getTileLatitude(tile_y, z);
         double lat_to = getTileLatitude(tile_y + 1, z);
         //计算Tile内偏移量
-        int offset_x = -(int)((longitude - long_from) / (long_to - long_from) * (imageSize.width));
-        int offset_y = -(int)((latitude - lat_from) / (lat_to - lat_from) * (imageSize.height));
+        int offset_x = -(int)((loc.getLongitude() - long_from) / (long_to - long_from) * (imageSize.width));
+        int offset_y = -(int)((loc.getLatitude() - lat_from) / (lat_to - lat_from) * (imageSize.height));
 
         offset_x += (x - tile_x) * imageSize.width;
         offset_y += (y - tile_y) * imageSize.height;
