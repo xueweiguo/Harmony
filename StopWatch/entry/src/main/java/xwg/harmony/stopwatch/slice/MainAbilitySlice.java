@@ -43,15 +43,18 @@ public class MainAbilitySlice extends AbilitySlice {
                 if(tab == stopwatchTab) {
                     current_state = new StopWatchState(slice, container);
                     current_state.onStart(intent);
+                    current_state.onForeground(intent);
                 }
                 else if(tab == mapTab) {
                     current_state = new MapState(slice, container, dbContext);
                     current_state.onStart(intent);
+                    current_state.onForeground(intent);
                 }
                 else
                 {
                     current_state = new SettingState(slice, container);
                     current_state.onStart(intent);
+                    current_state.onForeground(intent);
                 }
             }
 
@@ -78,7 +81,7 @@ public class MainAbilitySlice extends AbilitySlice {
     public void onForeground(Intent intent) {
         HiLog.info(LABEL, "MainAbilitySlice.onForeground");
         super.onForeground(intent);
-        current_state.onBackground();
+        current_state.onForeground(intent);
     }
 
     @Override
