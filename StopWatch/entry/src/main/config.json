@@ -52,12 +52,13 @@
       {
         "backgroundModes": [
           "dataTransfer",
-          "audioPlayback"
+          "location"
         ],
         "name": "xwg.harmony.stopwatch.StopWatchService",
         "icon": "$media:icon",
         "description": "$string:stopwatchservice_description",
-        "type": "service"
+        "type": "service",
+        "visible": true
       }
     ],
     "reqPermissions": [
@@ -83,6 +84,9 @@
       },
       {
         "name": "ohos.permission.INTERNET"
+      },
+      {
+        "name": "ohos.permission.DISTRIBUTED_DATASYNC"
       }
     ]
   }

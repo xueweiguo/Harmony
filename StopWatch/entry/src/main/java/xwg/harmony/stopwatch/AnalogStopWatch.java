@@ -3,6 +3,7 @@ package xwg.harmony.stopwatch;
 import ohos.aafwk.content.Intent;
 import ohos.agp.components.AttrSet;
 import ohos.agp.components.Component;
+import ohos.agp.components.Text;
 import ohos.agp.render.Canvas;
 import ohos.agp.render.Paint;
 import ohos.agp.text.Font;
@@ -17,10 +18,15 @@ import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
 import ohos.media.audio.AudioManager;
 import ohos.media.audio.SoundPlayer;
+import ohos.rpc.RemoteException;
 
 //指针式秒表组件类
 public class AnalogStopWatch extends Component implements Component.DrawTask {
-    static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0x00901, "AnalogStopWatch");
+    static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0x00206, "AnalogStopWatch");
+    StopWatchAgentProxy stopWatchService = null;
+    long millisecond = 0;
+    boolean runnable = false;
+
 
     public enum PlayStatus{
         STOP,
@@ -28,16 +34,11 @@ public class AnalogStopWatch extends Component implements Component.DrawTask {
         PSUSE
     }
 
-    private long start_time = 0;    //计时开始时刻，毫秒单位
-    private long millisecond = 0;   //计时时间，毫秒单位
-    private boolean running = false;//执行状态
-
     //音频播放状态
     SoundPlayer soundPlayer = null;
     int taskId = 0;
     int soundId = 0;
     PlayStatus playStatus = PlayStatus.STOP;
-
     float padding = 0;
 
     //构造函数
@@ -67,65 +68,130 @@ public class AnalogStopWatch extends Component implements Component.DrawTask {
     }
 
     public void onForeground(Intent intent){
+        runnable = true;
+        millisecond = getMilliseconds();
+        if(isRunning()){
+            onRunTimer();
+        }
         resumeSound();
     }
 
     public void onBackground(){
         pauseSound();
+        runnable = false;
+    }
+
+    public void setStopWatchService(StopWatchAgentProxy proxy){
+        stopWatchService = proxy;
+        millisecond = getMilliseconds();
+        if(isRunning()){
+            onRunTimer();
+        }
+        resumeSound();
     }
 
     //获取运行状态
     public boolean isRunning(){
-        return running;
+        if(stopWatchService == null) return false;
+        try {
+            return stopWatchService.isRunning();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            return false;
+        }
+
     }
 
     //获取当前计时时长
     public long getMilliseconds(){
-        return millisecond;
-    }
-
-    public void setMilliseconds(long time){
-        millisecond = time;
+        if(stopWatchService == null) return 0;
+        try {
+            return stopWatchService.getTime();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 
     public long getStartTime(){
-        return start_time;
+        if(stopWatchService == null) return 0;
+        try {
+            return stopWatchService.getStartTime();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 
-    public void setStartTime(long start){
-        start_time = start;
-    }
 
     //根据目前的运行状态，开始或停止计时
-    public void start_stop(){
-        if(!running) {
-            if(millisecond == 0) {
-                start_time = Calendar.getInstance().getTimeInMillis();
-                start();
+    public void start_stop() {
+        if(stopWatchService == null) return;
+        try {
+            if (!stopWatchService.isRunning()) {
+                if (stopWatchService.getTime() == 0) {
+                    start();
+                }
+            } else {
+                stop();
             }
-        }
-        else{
-            stop();
+        } catch (RemoteException e) {
+            e.printStackTrace();
         }
     }
 
     public void start(){
-        running = true;
-        onRunTimer();
-        startSound(1.8f, null);
+        if(stopWatchService == null) return;
+        try {
+            boolean running = stopWatchService.start();
+            if(running){
+                onRunTimer();
+                startSound(1.8f, null);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     private void stop(){
         stopSound();
-        running = false;
+        if(stopWatchService == null) return;
+        try {
+            stopWatchService.stop();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
+
+    public void recordTime()
+    {
+        if(stopWatchService == null) return;
+        try {
+            stopWatchService.recordTime();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String[] getLapTimes()
+    {
+        if(stopWatchService == null) return null;
+        try {
+            return stopWatchService.getLapTimes();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
     //计时Timer
     void onRunTimer(){
+        //HiLog.info(LABEL, "AnalogStopWatch.onRunTimer!");
         final long delayTime = 100L;  //延时时间，毫秒单位
-        millisecond = Calendar.getInstance().getTimeInMillis() - start_time;
+        millisecond = getMilliseconds();
         invalidate();  //更新画面表示
-        if(running) {
+        if(runnable && isRunning()) {
             //如果处于运行状态，触发下一次延时执行
             TaskDispatcher uiTaskDispatcher = mContext.getUITaskDispatcher();
             Revocable revocable = uiTaskDispatcher.delayDispatch(new Runnable() {
@@ -139,7 +205,7 @@ public class AnalogStopWatch extends Component implements Component.DrawTask {
 
     //归零
     public void reset(){
-        if(!running && millisecond > 0) {
+        if(!isRunning() && getMilliseconds() > 0) {
             startSound(2.0f, ()->onResetTimer());
         }
     }
@@ -168,6 +234,11 @@ public class AnalogStopWatch extends Component implements Component.DrawTask {
         else{
             millisecond = 0;
             stopSound();
+            try {
+                stopWatchService.resetTime();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         }
         invalidate();
     }
@@ -360,6 +431,11 @@ public class AnalogStopWatch extends Component implements Component.DrawTask {
             soundPlayer.resume(taskId);
             playStatus = PlayStatus.PLAYING;
         }
+        else if(playStatus == PlayStatus.STOP){
+            if(isRunning()) {
+                startSound(1.8f, null);
+            }
+        }
     }
 
     public boolean isPlaying(){
@@ -383,5 +459,6 @@ public class AnalogStopWatch extends Component implements Component.DrawTask {
             padding = attrSet.getAttr("padding").get().getDimensionValue();
         }
         addDrawTask(this);
+        runnable = true;
     }
 }

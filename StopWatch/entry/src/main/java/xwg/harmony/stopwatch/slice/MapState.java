@@ -132,7 +132,8 @@ public class MapState extends SliceState {
         if (hasPermissionGranted(PERM_LOCATION)) {
             locator = new Locator(context);
             requestParam = new RequestParam(RequestParam.SCENE_NAVIGATION);
-            locator.requestOnce(requestParam, locatorCallback);
+            //locator.requestOnce(requestParam, locatorCallback);
+            locator.startLocating(requestParam, locatorCallback);
         }
     }
 
@@ -155,7 +156,7 @@ public class MapState extends SliceState {
     private class MyLocatorCallback implements LocatorCallback {
         @Override
         public void onLocationReport(Location location) {
-            HiLog.info(LABEL, "onLocationReport");
+            HiLog.info(LABEL, "onLocationReport Start!");
             TaskDispatcher uiTaskDispatcher = owner_slice.getUITaskDispatcher();
             Revocable revocable = uiTaskDispatcher.asyncDispatch(new Runnable() {
                 @Override
@@ -163,6 +164,7 @@ public class MapState extends SliceState {
                     tileMap.setWgs84Location(location);
                 }
             });
+            HiLog.info(LABEL, "onLocationReport End!");
         }
 
         @Override

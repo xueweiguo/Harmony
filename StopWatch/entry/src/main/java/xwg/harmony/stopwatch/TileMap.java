@@ -46,9 +46,9 @@ public class TileMap extends Component implements Component.DrawTask, Component.
                     Tile tile = mapData.getData(mapSource, zoom, col, row);
                     if (tile != null) {
                         Size offset = tile.calculateOffset(location);
-                        HiLog.info(LABEL,"onDraw, tile!=null: zoom=%{public}d,row=%{public}d,col=%{public}d, " +
-                                        "offset.width=%{public}d, offset.height=%{public}d",
-                                        zoom, row, col, offset.width, offset.height);
+                        //HiLog.info(LABEL,"onDraw, tile!=null: zoom=%{public}d,row=%{public}d,col=%{public}d, " +
+                        //                "offset.width=%{public}d, offset.height=%{public}d",
+                        //                zoom, row, col, offset.width, offset.height);
                         canvas.drawPixelMapHolder(tile,
                                 getWidth() / 2 + offset.width,
                                 getHeight() / 2 + offset.height,
@@ -84,7 +84,6 @@ public class TileMap extends Component implements Component.DrawTask, Component.
 
     public void setMapSource(Tile.MapSource src){
         mapSource = src;
-        mapData.clear();
         invalidate();
     }
 
@@ -97,9 +96,10 @@ public class TileMap extends Component implements Component.DrawTask, Component.
     }
 
     public void setGcj02Location(Location loc){
+        HiLog.info(LABEL, "TileMap.setGcj02Location Start!");
         location = loc;
         invalidate();
-        HiLog.info(LABEL, "TileMap.setLocation End!");
+        HiLog.info(LABEL, "TileMap.setGcj02Location End!");
     }
 
     public Location getGcj02Location()
@@ -134,34 +134,45 @@ public class TileMap extends Component implements Component.DrawTask, Component.
         getContext().getGlobalTaskDispatcher(TaskPriority.HIGH).asyncDispatch(new Runnable() {
             @Override
             public void run() {
+                HiLog.info(LABEL, "TileMap.loadMapTile.run Start!");
                 int tileCol = Tile.getTileX(location.getLongitude(), zoom);
                 int tileRow = Tile.getTileY(location.getLatitude(), zoom);
                 boolean need_update = false;
                 for(int col = tileCol - 1; col <= tileCol + 1; col++) {
                     for (int row = tileRow - 1; row <= tileRow + 1; row++) {
+                        HiLog.info(LABEL, "TileMap.loadMapTile.run 1!");
                         Tile tile = mapData.getData(mapSource, zoom, col, row);
+                        HiLog.info(LABEL, "TileMap.loadMapTile.run 1.5!");
                         if (tile == null) {
                             HiLog.info(LABEL,"loadMapTile: zoom=%{public}d,row=%{public}d,col=%{public}d", zoom, row, col);
                             tile = Tile.createTile(mapSource, col, row, zoom);
+                            HiLog.info(LABEL, "TileMap.loadMapTile.run 2!");
                             if(tile != null) {
+                                HiLog.info(LABEL, "TileMap.loadMapTile.run 3!");
                                 //HiLog.info(LABEL,"createTile Succefully!: zoom=%{public}d,row=%{public}d,col=%{public}d", zoom, row, col);
                                 mapData.setData(mapSource, zoom, col, row, tile);
+                                HiLog.info(LABEL, "TileMap.loadMapTile.run 4!");
                                 need_update = true;
                             }
                         }
+                        HiLog.info(LABEL, "TileMap.loadMapTile.run 5!");
                     }
                 }
+                HiLog.info(LABEL, "TileMap.loadMapTile.run 6!");
                 if(need_update || invalidate)
                 {
                     getContext().getUITaskDispatcher().asyncDispatch(new Runnable() {
                         @Override
                         public void run() {
+                            HiLog.info(LABEL, "TileMap.loadMapTile.run 7!");
                             //HiLog.info(LABEL, "TileMap.loadMapTile.run.TileMap.this.invalidate!");
                             TileMap.this.invalidate();
                             loading = false;
+                            HiLog.info(LABEL, "TileMap.loadMapTile.run 8!");
                         }
                     });
                 }
+                HiLog.info(LABEL, "TileMap.loadMapTile.run End!");
             }
         });
         HiLog.info(LABEL, "TileMap.loadMapTile End!");

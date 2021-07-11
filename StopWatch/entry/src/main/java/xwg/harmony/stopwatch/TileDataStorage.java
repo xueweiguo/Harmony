@@ -19,7 +19,7 @@ public class TileDataStorage {
         put(Tile.MapSource.GAODE_VECTOR, 2);
     }};
 
-    Map<Long, Tile> mapData = new HashMap<Long, Tile>();
+    Map<String, Tile> mapData = new HashMap<String, Tile>();
     OrmContext db;
 
     void setDbContext(OrmContext context){
@@ -75,7 +75,8 @@ public class TileDataStorage {
         mapData.clear();
     }
 
-    private Long getKey(int type, int zoom, int tile_x, int tile_y){
-        return new Long((type << 60) + (zoom  << 50) + (tile_x << 20) + tile_y);
+    private String getKey(int type, int zoom, int tile_x, int tile_y){
+        String key = String.format("%d.%d.%d.%d", type, zoom, tile_x, tile_y);
+        return key;
     }
 }
