@@ -6,6 +6,8 @@ interface xwg.harmony.stopwatch.StopWatchAgent {
     /*
      * Example of a service method that uses some parameters
      */
+    void setCurrentTab([in] int index);
+    int getCurrentTab();
     boolean start();
     void stop();
     boolean isRunning();
@@ -14,5 +16,6 @@ interface xwg.harmony.stopwatch.StopWatchAgent {
     void resetTime();
     void recordTime();
     String[] getLapTimes();
+    void registerLocationEvent();
     double[] getCurrentLocation();
 }

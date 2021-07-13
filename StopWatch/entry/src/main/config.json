@@ -58,28 +58,44 @@
         "icon": "$media:icon",
         "description": "$string:stopwatchservice_description",
         "type": "service",
-        "visible": true
+        "visible": false,
+        "permissions": [
+          "ohos.permission.KEEP_BACKGROUND_RUNNING",
+          "ohos.permission.LOCATION_IN_BACKGROUND",
+          "ohos.permission.LOCATION"
+        ]
       }
     ],
     "reqPermissions": [
-      {
-        "name": "ohos.permission.KEEP_BACKGROUND_RUNNING",
-        "reason": "$string:permreason_keepbackround",
-        "usedScene": {
-          "ability": [
-            "xwg.harmony.stopwatch.MainAbility"
-          ],
-          "when": "always"
-        }
-      },
       {
         "name": "ohos.permission.LOCATION",
         "reason": "$string:reason_location",
         "usedScene": {
           "ability": [
-            "com.myapplication.LocationAbility"
+            "xwg.harmony.stopwatch.MainAbility",
+            "xwg.harmony.stopwatch.StopWatchService"
           ],
-          "when": "always"
+          "when": "inuse"
+        }
+      },
+      {
+        "name": "ohos.permission.LOCATION_IN_BACKGROUND",
+        "reason": "$string:reason_location",
+        "usedScene": {
+          "ability": [
+            "xwg.harmony.stopwatch.StopWatchService"
+          ],
+          "when": "inuse"
+        }
+      },
+      {
+        "name": "ohos.permission.KEEP_BACKGROUND_RUNNING",
+        "reason": "$string:reason_location",
+        "usedScene": {
+          "ability": [
+            "xwg.harmony.stopwatch.StopWatchService"
+          ],
+          "when": "inuse"
         }
       },
       {

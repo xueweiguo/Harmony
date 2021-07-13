@@ -9,6 +9,7 @@ import ohos.agp.components.TabList;
 import ohos.agp.window.dialog.ToastDialog;
 import ohos.app.Context;
 import ohos.bundle.ElementName;
+import ohos.bundle.IBundleManager;
 import ohos.data.DatabaseHelper;
 import ohos.data.orm.OrmContext;
 import ohos.eventhandler.EventHandler;
@@ -16,11 +17,11 @@ import ohos.eventhandler.EventRunner;
 import ohos.eventhandler.InnerEvent;
 import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
+import ohos.location.RequestParam;
 import ohos.rpc.IRemoteObject;
 import ohos.rpc.RemoteException;
-import xwg.harmony.stopwatch.ResourceTable;
-import xwg.harmony.stopwatch.StopWatchDB;
-import xwg.harmony.stopwatch.StopWatchAgentProxy;
+import xwg.harmony.stopwatch.*;
+import xwg.harmony.stopwatch.MainAbility.IRequestPermissionListener;
 
 public class MainAbilitySlice extends AbilitySlice {
     static final HiLogLabel LOG_LABEL = new HiLogLabel(HiLog.LOG_APP, 0x00201, "MainAbilitySlice");
@@ -34,12 +35,17 @@ public class MainAbilitySlice extends AbilitySlice {
     TabList.Tab current_tab = null;
     private SliceState current_state = null;
     StopWatchAgentProxy stopWatchProxy = null;
+    StopWatchServiceConnection connection = null;
+
+    private static final String PERM_LOCATION = "ohos.permission.LOCATION";
+    private RequestParam requestParam;
+
 
     @Override
     public void onStart(Intent intent) {
         //HiLog.warn(LABEL, "Failed to visit %{private}s, reason:%{public}d.", url, errno);
         HiLog.info(LOG_LABEL, "MainAbilitySlice.onStart");
-        super.onStart(intent);
+         super.onStart(intent);
         super.setUIContent(ResourceTable.Layout_ability_main);
         DatabaseHelper helper = new DatabaseHelper(this);
         OrmContext dbContext = helper.getOrmContext("StopWatch", "StopWatch.db", StopWatchDB.class);
@@ -59,17 +65,20 @@ public class MainAbilitySlice extends AbilitySlice {
             public void onSelected(TabList.Tab tab) {
                 HiLog.info(LOG_LABEL, "MainAbilitySlice.onSelected");
                 ComponentContainer container = (ComponentContainer) findComponentById(ResourceTable.Id_tab_container);
+                int tab_index = -1;
                 if(tab == stopwatchTab) {
                     if(stopWatchState == null) {
                         stopWatchState = new StopWatchState(slice, container);
                     }
                     current_state = stopWatchState;
+                    tab_index = 0;
                 }
                 else if(tab == mapTab) {
                     if(mapState == null) {
                         mapState = new MapState(slice, container, dbContext);
                     }
                     current_state = mapState;
+                    tab_index = 1;
                 }
                 else
                 {
@@ -77,11 +86,17 @@ public class MainAbilitySlice extends AbilitySlice {
                         settingState = new SettingState(slice, container);
                     }
                     current_state = settingState;
+                    tab_index = 2;
                 }
                 HiLog.info(LOG_LABEL, "MainAbilitySlice.current_state.onStart(intent);");
                 current_state.onStart(intent);
                 current_state.onForeground(intent);
                 current_tab = tab;
+                try {
+                    stopWatchProxy.setCurrentTab(tab_index);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -97,7 +112,6 @@ public class MainAbilitySlice extends AbilitySlice {
         });
         //最开始选选择tab1
         HiLog.info(LOG_LABEL, "MainAbilitySlice.tabList.selectTab(stopwatchTab);");
-        tabList.selectTab(stopwatchTab);
         startLocalService(LOCAL_BUNDLE, FOREGROUND_SERVICE);
         connectService();
     }
@@ -139,15 +153,67 @@ public class MainAbilitySlice extends AbilitySlice {
 
     }
 
-    private static final int EVENT_ABILITY_CONNECT_DONE = 0x1000001;
+    StopWatchServiceConnection.StopWatchEventListener listener = new StopWatchServiceConnection.StopWatchEventListener(){
+        @Override
+        public void onConnectDone(StopWatchAgentProxy proxy) {
+            stopWatchProxy = proxy;
+            ((MainAbility)getAbility()).setRequestPermissionListener(new IRequestPermissionListener() {
+                @Override
+                public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+                    try {
+                        stopWatchProxy.registerLocationEvent();
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            int tab_idnex = 0;
+            try {
+                tab_idnex = stopWatchProxy.getCurrentTab();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+            switch(tab_idnex){
+                case 0:
+                    tabList.selectTab(stopwatchTab);
+                    break;
+                case 1:
+                    tabList.selectTab(mapTab);
+                    break;
+                case 2:
+                    tabList.selectTab(settingTab);
+                    break;
+                default:
+                    tabList.selectTab(stopwatchTab);
+            }
+        }
 
-    private static final int EVENT_ABILITY_DISCONNECT_DONE = 0x1000002;
+        @Override
+        public void onDisconnectDone() {
+            stopWatchProxy = null;
+        }
+
+        @Override
+        public void onLocationReported() {
+            if(tabList.getSelectedTab() == mapTab){
+                try {
+                    double[] loc =stopWatchProxy.getCurrentLocation();
+                    mapState.setLocation(loc[0], loc[1]);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    };
 
     private static final String LOCAL_BUNDLE = "xwg.harmony.stopwatch";
 
     private static final String FOREGROUND_SERVICE = "StopWatchService";
 
-    StopWatchAgentProxy getStopWatchService(){
+    private static final int EVENT_ABILITY_CONNECT_DONE = 0x1000001;
+    private static final int EVENT_ABILITY_DISCONNECT_DONE = 0x1000002;
+
+    public StopWatchAgentProxy getStopWatchService(){
         return stopWatchProxy;
     }
 
@@ -158,13 +224,24 @@ public class MainAbilitySlice extends AbilitySlice {
                 case EVENT_ABILITY_CONNECT_DONE:
                     showTips(MainAbilitySlice.this, "Service connect succeeded23");
                     HiLog.info(LOG_LABEL, "Service connect succeeded");
-                    if(tabList != null && tabList.getSelectedTab() == stopwatchTab) {
-                        ((StopWatchState) current_state).setStopWatchService(stopWatchProxy);
-                        try {
-                            HiLog.info(LOG_LABEL, "stopWatchProxy.isRunning() == %{public}b", stopWatchProxy.isRunning());
-                        } catch (RemoteException e) {
-                            e.printStackTrace();
-                        }
+                    int tab_idnex = 0;
+                    try {
+                        tab_idnex = stopWatchProxy.getCurrentTab();
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                    switch(tab_idnex){
+                        case 0:
+                            tabList.selectTab(stopwatchTab);
+                            break;
+                        case 1:
+                            tabList.selectTab(mapTab);
+                            break;
+                        case 2:
+                            tabList.selectTab(settingTab);
+                            break;
+                        default:
+                            tabList.selectTab(stopwatchTab);
                     }
                     break;
                 case EVENT_ABILITY_DISCONNECT_DONE:
@@ -177,6 +254,7 @@ public class MainAbilitySlice extends AbilitySlice {
         }
     };
 
+    /*
     private IAbilityConnection connection = new IAbilityConnection() {
         @Override
         public void onAbilityConnectDone(ElementName elementName, IRemoteObject iRemoteObject, int resultCode) {
@@ -192,7 +270,7 @@ public class MainAbilitySlice extends AbilitySlice {
             stopWatchProxy = null;
         }
     };
-
+*/
     private void startLocalService(String bundleName, String serviceName) {
         Intent intent = getLocalServiceIntent(LOCAL_BUNDLE, FOREGROUND_SERVICE);
         startAbility(intent);
@@ -201,12 +279,15 @@ public class MainAbilitySlice extends AbilitySlice {
     private void connectService() {
         HiLog.info(LOG_LABEL, "MainAbilitySlice.connectService!");
         Intent intent = getLocalServiceIntent(LOCAL_BUNDLE, FOREGROUND_SERVICE);
+        connection = new StopWatchServiceConnection();
+        connection.setStopWatchEventListener(listener);
         connectAbility(intent, connection);
     }
 
     private void disConnectService() {
         HiLog.info(LOG_LABEL, "MainAbilitySlice.disConnectService!");
         disconnectAbility(connection);
+        connection = null;
     }
 
     private void stopService() {

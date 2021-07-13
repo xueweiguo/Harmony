@@ -5,11 +5,18 @@ import ohos.aafwk.content.Intent;
 import ohos.agp.components.Text;
 import ohos.agp.window.dialog.ToastDialog;
 import ohos.app.Context;
+import ohos.app.dispatcher.TaskDispatcher;
+import ohos.app.dispatcher.task.Revocable;
+import ohos.bundle.IBundleManager;
 import ohos.event.notification.NotificationRequest;
 import ohos.eventhandler.InnerEvent;
 import ohos.global.icu.util.Calendar;
 import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
+import ohos.location.Location;
+import ohos.location.Locator;
+import ohos.location.LocatorCallback;
+import ohos.location.RequestParam;
 import ohos.rpc.IRemoteObject;
 import ohos.rpc.RemoteException;
 
@@ -21,13 +28,30 @@ public class StopWatchService extends Ability {
     private static final HiLogLabel LABEL_LOG = new HiLogLabel(3, 0x00209, TAG);
     private static final String DESCRIPTOR = "xwg.harmony.stopwatch.StopWatchService";
 
+    private int current_tab = 0;
+
     private boolean running = false;//执行状态
     private long start_time = 0;    //计时开始时刻，毫秒单位
     private long millisecond = 0;   //计时时间，毫秒单位
-
     ArrayList<String> lap_times = new ArrayList<String>();
 
+    private MyLocatorCallback locatorCallback = new MyLocatorCallback();
+    private Locator locator;
+    Location lastLocation;
+    private static final String PERM_LOCATION = "ohos.permission.LOCATION";
+    private RequestParam requestParam;
+
     StopWatchAgentStub remoteAgentStub = new StopWatchAgentStub(DESCRIPTOR) {
+        @Override
+        public void setCurrentTab(int index) throws RemoteException {
+            current_tab = index;
+        }
+
+        @Override
+        public int getCurrentTab() throws RemoteException {
+            return current_tab;
+        }
+
         @Override
         public boolean isRunning() throws RemoteException {
             //HiLog.info(LABEL_LOG, "StopWatchService.isRunning=%{public}b!", running);
@@ -92,7 +116,12 @@ public class StopWatchService extends Ability {
         @Override
         public double[] getCurrentLocation() throws RemoteException {
             HiLog.info(LABEL_LOG, "StopWatchService.getCurrentLocation!");
-            return new double[0];
+            return new double[]{lastLocation.getLatitude(), lastLocation.getLongitude()};
+        }
+
+        @Override
+        public void registerLocationEvent() throws RemoteException {
+            StopWatchService.this.registerLocationEvent();
         }
     };
 
@@ -101,6 +130,8 @@ public class StopWatchService extends Ability {
         HiLog.info(LABEL_LOG, "StopWatchService.onStart!");
         startForeground();
         super.onStart(intent);
+        //requestPermission(PERM_LOCATION);
+        registerLocationEvent();
     }
 
     @Override
@@ -136,5 +167,66 @@ public class StopWatchService extends Ability {
                 content);
         request.setContent(notificationContent);
         keepBackgroundRunning(NOTIFICATION_ID, request);
+    }
+
+    private void register(Context ability) {
+        //context = ability;
+        requestPermission(PERM_LOCATION);
+    }
+
+    private void registerLocationEvent() {
+        if (hasPermissionGranted(PERM_LOCATION)) {
+            HiLog.info(LABEL_LOG, "hasPermissionGranted = true");
+            locator = new Locator(this);
+            requestParam = new RequestParam(RequestParam.SCENE_NAVIGATION);
+            locator.startLocating(requestParam, locatorCallback);
+        }else{
+            HiLog.info(LABEL_LOG, "hasPermissionGranted = false");
+        }
+    }
+
+    private void unregisterLocationEvent() {
+        if (locator != null) {
+            locator.stopLocating(locatorCallback);
+        }
+    }
+
+    private boolean hasPermissionGranted(String permission) {
+        return verifySelfPermission(permission) == IBundleManager.PERMISSION_GRANTED;
+    }
+
+    private void requestPermission(String permission) {
+        if (verifySelfPermission(permission) != IBundleManager.PERMISSION_GRANTED) {
+            HiLog.info(LABEL_LOG, "requestPermissionsFromUser!");
+            this.requestPermissionsFromUser(new String[] {permission}, 1);
+        }
+    }
+
+    private class MyLocatorCallback implements LocatorCallback {
+        @Override
+        public void onLocationReport(Location location) {
+            HiLog.info(LABEL_LOG, "onLocationReport Start!");
+            lastLocation = location;
+            StopWatchServiceConnection.getEventHandler().sendEvent(StopWatchServiceConnection.EVENT_LOCATION_REPORTED);
+            /*
+            TaskDispatcher uiTaskDispatcher = owner_slice.getUITaskDispatcher();
+            Revocable revocable = uiTaskDispatcher.asyncDispatch(new Runnable() {
+                @Override
+                public void run() {
+                    tileMap.setWgs84Location(location);
+                }
+            });
+
+             */
+            HiLog.info(LABEL_LOG, "onLocationReport End!");
+        }
+
+        @Override
+        public void onStatusChanged(int type) {
+        }
+
+        @Override
+        public void onErrorReport(int type) {
+        }
     }
 }

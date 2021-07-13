@@ -18,12 +18,10 @@ import ohos.location.Location;
 import ohos.location.Locator;
 import ohos.location.LocatorCallback;
 import ohos.location.RequestParam;
-import xwg.harmony.stopwatch.ResourceTable;
+import ohos.rpc.RemoteException;
+import xwg.harmony.stopwatch.*;
 import ohos.aafwk.ability.AbilitySlice;
 import ohos.aafwk.content.Intent;
-import xwg.harmony.stopwatch.StopWatchDB;
-import xwg.harmony.stopwatch.Tile;
-import xwg.harmony.stopwatch.TileMap;
 
 
 public class MapState extends SliceState {
@@ -37,10 +35,16 @@ public class MapState extends SliceState {
 
     private TileMap tileMap = null;
     private OrmContext dbContext = null;
+    private StopWatchAgentProxy service = null;
 
     public MapState(AbilitySlice slice, ComponentContainer container, OrmContext context) {
         super(slice, container);
         dbContext = context;
+    }
+
+    public void setStopWatchService(StopWatchAgentProxy proxy){
+        service = proxy;
+        updateLocation();
     }
 
     @Override
@@ -102,8 +106,13 @@ public class MapState extends SliceState {
             }
         });
 
-        register(owner_slice);
-        registerLocationEvent();
+        if(!updateLocation()){
+            loadLocation();
+        }
+
+
+        //register(owner_slice);
+        //registerLocationEvent();
 
         //tileMap.loadMapTile(true);
         HiLog.info(LABEL, "onStart End!");
@@ -121,6 +130,13 @@ public class MapState extends SliceState {
         HiLog.info(LABEL, "MapState.onBackground");
         super.onBackground();
         saveLocation();
+    }
+
+    public void setLocation(double lat, double lon){
+        Location location = new Location(lat, lon);
+        if(tileMap != null) {
+            tileMap.setWgs84Location(location);
+        }
     }
 
     private void register(Context ability) {
@@ -174,6 +190,19 @@ public class MapState extends SliceState {
         @Override
         public void onErrorReport(int type) {
         }
+    }
+
+    private boolean updateLocation(){
+        if(service != null) {
+            try {
+                double[] loc = service.getCurrentLocation();
+                setLocation(loc[0], loc[1]);
+                return true;
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
     }
 
     private void loadLocation(){

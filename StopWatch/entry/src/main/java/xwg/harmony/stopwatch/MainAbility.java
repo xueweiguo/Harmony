@@ -11,13 +11,15 @@ import xwg.harmony.stopwatch.slice.SettingState;
 
 public class MainAbility extends Ability {
     static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0x00101, "MainAbility");
+    private static final String PERM_LOCATION = "ohos.permission.LOCATION";
     @Override
     public void onStart(Intent intent) {
         HiLog.info(LABEL, "MainAbility.onStart");
         super.onStart(intent);
+        super.onStart(intent);
         super.setMainRoute(MainAbilitySlice.class.getName());
         addActionRoute("action.setting", SettingState.class.getName());
-        requestPermission();
+        requestPermission(PERM_LOCATION);
     }
     @Override
     public void onStop(){
@@ -37,21 +39,28 @@ public class MainAbility extends Ability {
         super.onBackground();
     }
 
-    private void requestPermission() {
-        if (verifySelfPermission(SystemPermission.DISTRIBUTED_DATASYNC) != IBundleManager.PERMISSION_GRANTED) {
-            requestPermissionsFromUser(new String[] {SystemPermission.DISTRIBUTED_DATASYNC}, 0);
+    private void requestPermission(String permission) {
+        if (verifySelfPermission(permission) != IBundleManager.PERMISSION_GRANTED) {
+            HiLog.info(LABEL, "requestPermissionsFromUser!");
+            requestPermissionsFromUser(new String[] {permission}, 1);
         }
+    }
+
+    public interface IRequestPermissionListener{
+        void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults);
+    }
+
+    IRequestPermissionListener listener = null;
+    public void setRequestPermissionListener(IRequestPermissionListener _listener){
+        listener = _listener;
     }
 
     @Override
     public void onRequestPermissionsFromUserResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (permissions == null || permissions.length == 0 || grantResults == null || grantResults.length == 0) {
-            return;
-        }
-        if (requestCode == 0) {
-            if (grantResults[0] == IBundleManager.PERMISSION_DENIED) {
-                terminateAbility();
-            }
+        HiLog.info(LABEL, "onRequestPermissionsFromUserResult Start!");
+        super.onRequestPermissionsFromUserResult(requestCode, permissions, grantResults);
+        if(listener != null){
+            listener.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 }
