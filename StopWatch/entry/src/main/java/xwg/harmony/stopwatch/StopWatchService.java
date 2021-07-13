@@ -130,7 +130,6 @@ public class StopWatchService extends Ability {
         HiLog.info(LABEL_LOG, "StopWatchService.onStart!");
         startForeground();
         super.onStart(intent);
-        //requestPermission(PERM_LOCATION);
         registerLocationEvent();
     }
 
@@ -169,11 +168,6 @@ public class StopWatchService extends Ability {
         keepBackgroundRunning(NOTIFICATION_ID, request);
     }
 
-    private void register(Context ability) {
-        //context = ability;
-        requestPermission(PERM_LOCATION);
-    }
-
     private void registerLocationEvent() {
         if (hasPermissionGranted(PERM_LOCATION)) {
             HiLog.info(LABEL_LOG, "hasPermissionGranted = true");
@@ -208,17 +202,7 @@ public class StopWatchService extends Ability {
             HiLog.info(LABEL_LOG, "onLocationReport Start!");
             lastLocation = location;
             StopWatchServiceConnection.getEventHandler().sendEvent(StopWatchServiceConnection.EVENT_LOCATION_REPORTED);
-            /*
-            TaskDispatcher uiTaskDispatcher = owner_slice.getUITaskDispatcher();
-            Revocable revocable = uiTaskDispatcher.asyncDispatch(new Runnable() {
-                @Override
-                public void run() {
-                    tileMap.setWgs84Location(location);
-                }
-            });
-
-             */
-            HiLog.info(LABEL_LOG, "onLocationReport End!");
+              HiLog.info(LABEL_LOG, "onLocationReport End!");
         }
 
         @Override

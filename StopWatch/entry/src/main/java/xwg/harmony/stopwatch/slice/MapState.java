@@ -27,12 +27,6 @@ import ohos.aafwk.content.Intent;
 public class MapState extends SliceState {
     static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0x00203, "MapState");
 
-    private MyLocatorCallback locatorCallback = new MyLocatorCallback();
-    private Context context;
-    private Locator locator;
-    private static final String PERM_LOCATION = "ohos.permission.LOCATION";
-    private RequestParam requestParam;
-
     private TileMap tileMap = null;
     private OrmContext dbContext = null;
     private StopWatchAgentProxy service = null;
@@ -109,12 +103,6 @@ public class MapState extends SliceState {
         if(!updateLocation()){
             loadLocation();
         }
-
-
-        //register(owner_slice);
-        //registerLocationEvent();
-
-        //tileMap.loadMapTile(true);
         HiLog.info(LABEL, "onStart End!");
     }
 
@@ -136,59 +124,6 @@ public class MapState extends SliceState {
         Location location = new Location(lat, lon);
         if(tileMap != null) {
             tileMap.setWgs84Location(location);
-        }
-    }
-
-    private void register(Context ability) {
-        context = ability;
-        requestPermission(PERM_LOCATION);
-    }
-
-    private void registerLocationEvent() {
-        if (hasPermissionGranted(PERM_LOCATION)) {
-            locator = new Locator(context);
-            requestParam = new RequestParam(RequestParam.SCENE_NAVIGATION);
-            //locator.requestOnce(requestParam, locatorCallback);
-            locator.startLocating(requestParam, locatorCallback);
-        }
-    }
-
-    private void unregisterLocationEvent() {
-        if (locator != null) {
-            locator.stopLocating(locatorCallback);
-        }
-    }
-
-    private boolean hasPermissionGranted(String permission) {
-        return context.verifySelfPermission(permission) == IBundleManager.PERMISSION_GRANTED;
-    }
-
-    private void requestPermission(String permission) {
-        if (context.verifySelfPermission(permission) != IBundleManager.PERMISSION_GRANTED) {
-            context.requestPermissionsFromUser(new String[] {permission}, 0);
-        }
-    }
-
-    private class MyLocatorCallback implements LocatorCallback {
-        @Override
-        public void onLocationReport(Location location) {
-            HiLog.info(LABEL, "onLocationReport Start!");
-            TaskDispatcher uiTaskDispatcher = owner_slice.getUITaskDispatcher();
-            Revocable revocable = uiTaskDispatcher.asyncDispatch(new Runnable() {
-                @Override
-                public void run() {
-                    tileMap.setWgs84Location(location);
-                }
-            });
-            HiLog.info(LABEL, "onLocationReport End!");
-        }
-
-        @Override
-        public void onStatusChanged(int type) {
-        }
-
-        @Override
-        public void onErrorReport(int type) {
         }
     }
 

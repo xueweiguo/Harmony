@@ -39,7 +39,6 @@ public class StopWatchState extends SliceState {
 
     @Override
     public void onStart(Intent intent) {
-        //HiLog.warn(LABEL, "Failed to visit %{private}s, reason:%{public}d.", url, errno);
         HiLog.info(LABEL, "StopWatchState.onStart");
         super.onStart(intent);
         //秒表组件

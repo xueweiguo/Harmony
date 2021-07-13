@@ -46,12 +46,6 @@ public class StopWatchServiceConnection  implements IAbilityConnection {
                     stopWatchEventListener.onLocationReported();
                     break;
             }
-            /*
-            if (event.eventId == Const.HANDLER_EVENT_ID && event.object instanceof String) {
-                String message = (String) event.object;
-                downloadStateChangeListener.onDownloadStateChange(message);
-            }
-            */
         }
     };
 

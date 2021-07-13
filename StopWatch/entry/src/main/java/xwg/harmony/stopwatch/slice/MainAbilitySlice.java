@@ -157,7 +157,8 @@ public class MainAbilitySlice extends AbilitySlice {
         @Override
         public void onConnectDone(StopWatchAgentProxy proxy) {
             stopWatchProxy = proxy;
-            ((MainAbility)getAbility()).setRequestPermissionListener(new IRequestPermissionListener() {
+            MainAbility ability = (MainAbility)getAbility();
+            ability.setRequestPermissionListener(new IRequestPermissionListener() {
                 @Override
                 public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
                     try {
@@ -167,6 +168,8 @@ public class MainAbilitySlice extends AbilitySlice {
                     }
                 }
             });
+            ability.requestPermission();
+
             int tab_idnex = 0;
             try {
                 tab_idnex = stopWatchProxy.getCurrentTab();
@@ -222,30 +225,28 @@ public class MainAbilitySlice extends AbilitySlice {
         protected void processEvent(InnerEvent event) {
             switch (event.eventId) {
                 case EVENT_ABILITY_CONNECT_DONE:
-                    showTips(MainAbilitySlice.this, "Service connect succeeded23");
                     HiLog.info(LOG_LABEL, "Service connect succeeded");
-                    int tab_idnex = 0;
                     try {
-                        tab_idnex = stopWatchProxy.getCurrentTab();
+                        int tab_idnex = stopWatchProxy.getCurrentTab();
+                        switch(tab_idnex){
+                            case 0:
+                                tabList.selectTab(stopwatchTab);
+                                break;
+                            case 1:
+                                tabList.selectTab(mapTab);
+                                break;
+                            case 2:
+                                tabList.selectTab(settingTab);
+                                break;
+                            default:
+                                tabList.selectTab(stopwatchTab);
+                        }
                     } catch (RemoteException e) {
+                        tabList.selectTab(stopwatchTab);
                         e.printStackTrace();
-                    }
-                    switch(tab_idnex){
-                        case 0:
-                            tabList.selectTab(stopwatchTab);
-                            break;
-                        case 1:
-                            tabList.selectTab(mapTab);
-                            break;
-                        case 2:
-                            tabList.selectTab(settingTab);
-                            break;
-                        default:
-                            tabList.selectTab(stopwatchTab);
                     }
                     break;
                 case EVENT_ABILITY_DISCONNECT_DONE:
-                    //showTips(MainAbilitySlice.this, "Service disconnect succeeded");
                     HiLog.info(LOG_LABEL, "Service disconnect succeeded");
                     break;
                 default:
@@ -254,23 +255,6 @@ public class MainAbilitySlice extends AbilitySlice {
         }
     };
 
-    /*
-    private IAbilityConnection connection = new IAbilityConnection() {
-        @Override
-        public void onAbilityConnectDone(ElementName elementName, IRemoteObject iRemoteObject, int resultCode) {
-            HiLog.info(LOG_LABEL, "%{public}s", "onAbilityConnectDone resultCode : " + resultCode);
-            stopWatchProxy = new StopWatchAgentProxy(iRemoteObject);
-            eventHandler.sendEvent(EVENT_ABILITY_CONNECT_DONE);
-        }
-
-        @Override
-        public void onAbilityDisconnectDone(ElementName elementName, int resultCode) {
-            HiLog.info(LOG_LABEL, "%{public}s", "onAbilityDisconnectDone resultCode : " + resultCode);
-            eventHandler.sendEvent(EVENT_ABILITY_DISCONNECT_DONE);
-            stopWatchProxy = null;
-        }
-    };
-*/
     private void startLocalService(String bundleName, String serviceName) {
         Intent intent = getLocalServiceIntent(LOCAL_BUNDLE, FOREGROUND_SERVICE);
         startAbility(intent);
@@ -303,9 +287,5 @@ public class MainAbilitySlice extends AbilitySlice {
         Intent intent = new Intent();
         intent.setOperation(operation);
         return intent;
-    }
-
-    private void showTips(Context context, String msg) {
-        //new ToastDialog(context).setText(msg).show();
     }
 }

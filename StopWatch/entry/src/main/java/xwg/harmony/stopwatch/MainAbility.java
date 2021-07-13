@@ -19,7 +19,6 @@ public class MainAbility extends Ability {
         super.onStart(intent);
         super.setMainRoute(MainAbilitySlice.class.getName());
         addActionRoute("action.setting", SettingState.class.getName());
-        requestPermission(PERM_LOCATION);
     }
     @Override
     public void onStop(){
@@ -39,10 +38,10 @@ public class MainAbility extends Ability {
         super.onBackground();
     }
 
-    private void requestPermission(String permission) {
-        if (verifySelfPermission(permission) != IBundleManager.PERMISSION_GRANTED) {
+    public void requestPermission() {
+        if (verifySelfPermission(PERM_LOCATION) != IBundleManager.PERMISSION_GRANTED) {
             HiLog.info(LABEL, "requestPermissionsFromUser!");
-            requestPermissionsFromUser(new String[] {permission}, 1);
+            requestPermissionsFromUser(new String[] {PERM_LOCATION}, 1);
         }
     }
 
