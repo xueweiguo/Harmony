@@ -34,6 +34,7 @@ public class StopWatchService extends Ability {
     private long start_time = 0;    //计时开始时刻，毫秒单位
     private long millisecond = 0;   //计时时间，毫秒单位
     ArrayList<String> lap_times = new ArrayList<String>();
+    ArrayList<Double> locations = new ArrayList<Double>();
 
     private MyLocatorCallback locatorCallback = new MyLocatorCallback();
     private Locator locator;
@@ -76,6 +77,7 @@ public class StopWatchService extends Ability {
             HiLog.info(LABEL_LOG, "StopWatchService.resetTime!");
             lap_times.clear(); 
             millisecond = 0;
+            locations.clear();
         }
 
         @Override
@@ -117,6 +119,20 @@ public class StopWatchService extends Ability {
         public double[] getCurrentLocation() throws RemoteException {
             HiLog.info(LABEL_LOG, "StopWatchService.getCurrentLocation!");
             return new double[]{lastLocation.getLatitude(), lastLocation.getLongitude()};
+        }
+
+        @Override
+        public double[] getTrailData() throws RemoteException {
+            if(locations.size() >= 2) {
+                double[] ret = new double[locations.size()];
+                for (int i = 0; i < locations.size(); ++i) {
+                    ret[i] = locations.get(i);
+                }
+                return ret;
+            }
+            else{
+                return null;
+            }
         }
 
         @Override
@@ -201,8 +217,12 @@ public class StopWatchService extends Ability {
         public void onLocationReport(Location location) {
             HiLog.info(LABEL_LOG, "onLocationReport Start!");
             lastLocation = location;
+            if(running) {
+                locations.add(location.getLatitude());
+                locations.add(location.getLongitude());
+            }
             StopWatchServiceConnection.getEventHandler().sendEvent(StopWatchServiceConnection.EVENT_LOCATION_REPORTED);
-              HiLog.info(LABEL_LOG, "onLocationReport End!");
+            HiLog.info(LABEL_LOG, "onLocationReport End!");
         }
 
         @Override

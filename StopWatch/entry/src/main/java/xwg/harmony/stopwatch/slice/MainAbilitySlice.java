@@ -40,7 +40,6 @@ public class MainAbilitySlice extends AbilitySlice {
     private static final String PERM_LOCATION = "ohos.permission.LOCATION";
     private RequestParam requestParam;
 
-
     @Override
     public void onStart(Intent intent) {
         //HiLog.warn(LABEL, "Failed to visit %{private}s, reason:%{public}d.", url, errno);
@@ -69,6 +68,12 @@ public class MainAbilitySlice extends AbilitySlice {
                 if(tab == stopwatchTab) {
                     if(stopWatchState == null) {
                         stopWatchState = new StopWatchState(slice, container);
+                    }
+                    try {
+
+                        stopWatchProxy.setCurrentTab(tab_index);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
                     }
                     current_state = stopWatchState;
                     tab_index = 0;
@@ -202,6 +207,8 @@ public class MainAbilitySlice extends AbilitySlice {
                 try {
                     double[] loc =stopWatchProxy.getCurrentLocation();
                     mapState.setLocation(loc[0], loc[1]);
+                    double[] data = stopWatchProxy.getTrailData();
+                    mapState.setTrailData(data);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
@@ -213,47 +220,9 @@ public class MainAbilitySlice extends AbilitySlice {
 
     private static final String FOREGROUND_SERVICE = "StopWatchService";
 
-    private static final int EVENT_ABILITY_CONNECT_DONE = 0x1000001;
-    private static final int EVENT_ABILITY_DISCONNECT_DONE = 0x1000002;
-
     public StopWatchAgentProxy getStopWatchService(){
         return stopWatchProxy;
     }
-
-    private EventHandler eventHandler = new EventHandler(EventRunner.current()) {
-        @Override
-        protected void processEvent(InnerEvent event) {
-            switch (event.eventId) {
-                case EVENT_ABILITY_CONNECT_DONE:
-                    HiLog.info(LOG_LABEL, "Service connect succeeded");
-                    try {
-                        int tab_idnex = stopWatchProxy.getCurrentTab();
-                        switch(tab_idnex){
-                            case 0:
-                                tabList.selectTab(stopwatchTab);
-                                break;
-                            case 1:
-                                tabList.selectTab(mapTab);
-                                break;
-                            case 2:
-                                tabList.selectTab(settingTab);
-                                break;
-                            default:
-                                tabList.selectTab(stopwatchTab);
-                        }
-                    } catch (RemoteException e) {
-                        tabList.selectTab(stopwatchTab);
-                        e.printStackTrace();
-                    }
-                    break;
-                case EVENT_ABILITY_DISCONNECT_DONE:
-                    HiLog.info(LOG_LABEL, "Service disconnect succeeded");
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
 
     private void startLocalService(String bundleName, String serviceName) {
         Intent intent = getLocalServiceIntent(LOCAL_BUNDLE, FOREGROUND_SERVICE);

@@ -29,16 +29,10 @@ public class MapState extends SliceState {
 
     private TileMap tileMap = null;
     private OrmContext dbContext = null;
-    private StopWatchAgentProxy service = null;
 
     public MapState(AbilitySlice slice, ComponentContainer container, OrmContext context) {
         super(slice, container);
         dbContext = context;
-    }
-
-    public void setStopWatchService(StopWatchAgentProxy proxy){
-        service = proxy;
-        updateLocation();
     }
 
     @Override
@@ -53,6 +47,7 @@ public class MapState extends SliceState {
         // obtain the map object
         tileMap = (TileMap)owner_slice.findComponentById(ResourceTable.Id_map);
         tileMap.setDbContext(dbContext);
+        tileMap.setStopWatchService(((MainAbilitySlice)owner_slice).getStopWatchService());
 
         // zoom in
         Button btnZoomIn = (Button) owner_slice.findComponentById(ResourceTable.Id_btn_zoomin);
@@ -127,11 +122,19 @@ public class MapState extends SliceState {
         }
     }
 
+    public void setTrailData(double[] data){
+        if(tileMap != null){
+            tileMap.setWgs84TrailData(data);
+        }
+    }
+
     private boolean updateLocation(){
-        if(service != null) {
+        StopWatchAgentProxy proxy = ((MainAbilitySlice)owner_slice).getStopWatchService();
+        if(proxy != null) {
             try {
-                double[] loc = service.getCurrentLocation();
+                double[] loc = proxy.getCurrentLocation();
                 setLocation(loc[0], loc[1]);
+                setTrailData(proxy.getTrailData());
                 return true;
             } catch (RemoteException e) {
                 e.printStackTrace();

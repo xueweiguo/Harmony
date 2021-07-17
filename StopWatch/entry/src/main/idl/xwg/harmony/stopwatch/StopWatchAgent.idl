@@ -1,7 +1,6 @@
 // IStopWatchService.idl
 
 // Declare any non-default types here with sequenceable or interface statements
-
 interface xwg.harmony.stopwatch.StopWatchAgent {
     /*
      * Example of a service method that uses some parameters
@@ -18,4 +17,5 @@ interface xwg.harmony.stopwatch.StopWatchAgent {
     String[] getLapTimes();
     void registerLocationEvent();
     double[] getCurrentLocation();
+    double[] getTrailData();
 }
