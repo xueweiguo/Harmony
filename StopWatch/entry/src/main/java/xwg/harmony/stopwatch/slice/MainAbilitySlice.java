@@ -3,6 +3,7 @@ package xwg.harmony.stopwatch.slice;
 import ohos.aafwk.ability.AbilitySlice;
 import ohos.aafwk.ability.IAbilityConnection;
 import ohos.aafwk.content.Intent;
+import ohos.aafwk.content.IntentParams;
 import ohos.aafwk.content.Operation;
 import ohos.agp.components.ComponentContainer;
 import ohos.agp.components.TabList;
@@ -35,7 +36,7 @@ public class MainAbilitySlice extends AbilitySlice {
     TabList.Tab current_tab = null;
     private SliceState current_state = null;
     StopWatchAgentProxy stopWatchProxy = null;
-    StopWatchServiceConnection connection = null;
+    StopWatchServiceConnection stopWatchconnection = null;
 
     private static final String PERM_LOCATION = "ohos.permission.LOCATION";
     private RequestParam requestParam;
@@ -207,11 +208,22 @@ public class MainAbilitySlice extends AbilitySlice {
                 try {
                     double[] loc =stopWatchProxy.getCurrentLocation();
                     mapState.setLocation(loc[0], loc[1]);
-                    double[] data = stopWatchProxy.getTrailData();
-                    mapState.setTrailData(data);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
+            }
+        }
+    };
+
+    /**
+     * handle message from service to ability slice
+     */
+    private EventHandler stopWatchEventHandler = new EventHandler(EventRunner.current()) {
+        @Override
+        protected void processEvent(InnerEvent event) {
+            switch (event.eventId) {
+                case StopWatchService.EVENT_LOCATION_REPORTED:
+                    listener.onLocationReported();
             }
         }
     };
@@ -232,15 +244,15 @@ public class MainAbilitySlice extends AbilitySlice {
     private void connectService() {
         HiLog.info(LOG_LABEL, "MainAbilitySlice.connectService!");
         Intent intent = getLocalServiceIntent(LOCAL_BUNDLE, FOREGROUND_SERVICE);
-        connection = new StopWatchServiceConnection();
-        connection.setStopWatchEventListener(listener);
-        connectAbility(intent, connection);
+        stopWatchconnection = new StopWatchServiceConnection();
+        stopWatchconnection.setStopWatchEventListener(listener);
+        connectAbility(intent, stopWatchconnection);
     }
 
     private void disConnectService() {
         HiLog.info(LOG_LABEL, "MainAbilitySlice.disConnectService!");
-        disconnectAbility(connection);
-        connection = null;
+        disconnectAbility(stopWatchconnection);
+        stopWatchconnection = null;
     }
 
     private void stopService() {

@@ -10,7 +10,7 @@ import xwg.harmony.stopwatch.slice.MainAbilitySlice;
 import xwg.harmony.stopwatch.slice.SettingState;
 
 public class MainAbility extends Ability {
-    static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0x00101, "MainAbility");
+    static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0x00211, "MainAbility");
     private static final String PERM_LOCATION = "ohos.permission.LOCATION";
     @Override
     public void onStart(Intent intent) {

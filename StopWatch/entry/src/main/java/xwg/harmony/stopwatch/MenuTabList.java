@@ -9,7 +9,7 @@ import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
 
 public class MenuTabList extends TabList {
-    static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0x00103, "MenuTabList");
+    static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0x00213, "MenuTabList");
     TabList.Tab stopwatchTab = null;
     TabList.Tab mapTab = null;
     TabList.Tab settingTab = null;

@@ -103,48 +103,47 @@ public class MapState extends SliceState {
 
     @Override
     public void onForeground(Intent intent){
-        HiLog.info(LABEL, "MapState.onForeground");
+        HiLog.info(LABEL, "MapState.onForeground Start!");
         super.onForeground(intent);
         loadLocation();
+        HiLog.info(LABEL, "MapState.onForeground End!");
     }
 
     @Override
     public void onBackground(){
-        HiLog.info(LABEL, "MapState.onBackground");
+        HiLog.info(LABEL, "MapState.onBackground Start");
         super.onBackground();
         saveLocation();
+        HiLog.info(LABEL, "MapState.onBackground End");
     }
 
     public void setLocation(double lat, double lon){
+        HiLog.info(LABEL, "MapState.setLocation Start");
         Location location = new Location(lat, lon);
         if(tileMap != null) {
             tileMap.setWgs84Location(location);
         }
-    }
-
-    public void setTrailData(double[] data){
-        if(tileMap != null){
-            tileMap.setWgs84TrailData(data);
-        }
+        HiLog.info(LABEL, "MapState.setLocation End");
     }
 
     private boolean updateLocation(){
+        HiLog.info(LABEL, "MapState.updateLocation Start");
         StopWatchAgentProxy proxy = ((MainAbilitySlice)owner_slice).getStopWatchService();
         if(proxy != null) {
             try {
                 double[] loc = proxy.getCurrentLocation();
                 setLocation(loc[0], loc[1]);
-                setTrailData(proxy.getTrailData());
                 return true;
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
         }
+        HiLog.info(LABEL, "MapState.updateLocation End");
         return false;
     }
 
     private void loadLocation(){
-        HiLog.info(LABEL, "MapState.loadLocation");
+        HiLog.info(LABEL, "MapState.loadLocation Start");
         DatabaseHelper databaseHelper = new DatabaseHelper(owner_slice); // context入参类型为ohos.app.Context。
         Preferences preferences = databaseHelper.getPreferences("TileMap");
         double latitude = preferences.getFloat("latitude", 0);
@@ -152,14 +151,20 @@ public class MapState extends SliceState {
         if(latitude != 0 && longitude != 0){
             tileMap.setGcj02Location(new Location(latitude, longitude));
         }
+        HiLog.info(LABEL, "MapState.loadLocation Stop");
     }
 
     private void saveLocation(){
-        HiLog.info(LABEL, "MapState.saveLocation");
+        HiLog.info(LABEL, "MapState.saveLocation Start");
         DatabaseHelper databaseHelper = new DatabaseHelper(owner_slice); // context入参类型为ohos.app.Context。
         Preferences preferences = databaseHelper.getPreferences("TileMap");
+        HiLog.info(LABEL, "MapState.saveLocation 1");
         Location location = tileMap.getGcj02Location();
-        preferences.putFloat("latitude", (float)location.getLatitude());
-        preferences.putFloat("longitude", (float)location.getLongitude());
+        HiLog.info(LABEL, "MapState.saveLocation 2");
+        if(location != null) {
+            preferences.putFloat("latitude", (float) location.getLatitude());
+            preferences.putFloat("longitude", (float) location.getLongitude());
+        }
+        HiLog.info(LABEL, "MapState.saveLocation Stop");
     }
 }

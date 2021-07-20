@@ -34,14 +34,19 @@ public class Tile extends PixelMapHolder {
     }
 
     public static Tile createTile(MapSource src, int tile_x, int tile_y, int zoom){
+        HiLog.info(LABEL,"Tile.createTile Start!");
         String urlString = String.format(getMapUrlString(src), tile_x, tile_y, zoom);
         PixelMap map = Tile.getImagePixmap(urlString);
+        HiLog.info(LABEL,"Tile.createTile 1!");
         if(map != null) {
             Tile tile = new Tile(map);
+            HiLog.info(LABEL,"Tile.createTile 2!");
             tile.setTileInfo(tile_x, tile_y, zoom);
+            HiLog.info(LABEL,"Tile.createTile End1!");
             return tile;
         }
         else {
+            HiLog.info(LABEL,"Tile.createTile End2!");
             return null;
         }
     }
@@ -121,7 +126,7 @@ public class Tile extends PixelMapHolder {
         int offset_x = (to_x - from_x) * image_size + (int)(to_offset_x - from_offset_x);
         int offset_y = (to_y - from_y) * image_size + (int)(to_offset_y - from_offset_y);
         //HiLog.info(LABEL,"calculateOffset: x=%{public}d,y=%{public}d,offset_x=%{public}d,offset_y=%{public}d", x, y, offset_x, offset_y);
-        HiLog.info(LABEL,"calculateOffset: x=%{public}d,y=%{public}d", offset_x, offset_y);
+        //HiLog.info(LABEL,"calculateOffset: x=%{public}d,y=%{public}d", offset_x, offset_y);
         return new Size(offset_x, offset_y);
     }
 
@@ -171,17 +176,24 @@ public class Tile extends PixelMapHolder {
      */
     static PixelMap getImagePixmap(String urlString) {
         try {
+            HiLog.info(LABEL,"Tile.getImagePixmap Start!");
             URL url = new URL(urlString);
             URLConnection con = url.openConnection();
             con.setConnectTimeout(5*1000);
+            HiLog.info(LABEL,"Tile.getImagePixmap 1!");
             InputStream is = con.getInputStream();
             ImageSource source = ImageSource.create(is, new ImageSource.SourceOptions());
+            HiLog.info(LABEL,"Tile.getImagePixmap 2!");
             ImageSource.DecodingOptions options = new ImageSource.DecodingOptions();
             options.desiredSize = new Size(512,512);
+            HiLog.info(LABEL,"Tile.getImagePixmap 3!");
             PixelMap pixelMap = source.createPixelmap(options);
+            HiLog.info(LABEL,"Tile.getImagePixmap 4!");
             is.close();
+            HiLog.info(LABEL,"Tile.getImagePixmap 5!");
             return pixelMap;
         } catch (Exception e) {
+            HiLog.info(LABEL,"Tile.getImagePixmap Exception!");
             return null;
         }
     }

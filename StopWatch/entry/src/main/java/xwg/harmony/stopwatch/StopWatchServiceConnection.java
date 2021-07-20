@@ -26,7 +26,6 @@ public class StopWatchServiceConnection  implements IAbilityConnection {
     public static final int EVENT_CONNECT_DONE = 0x1000001;
     public static final int EVENT_DISCONNECT_DONE = 0x1000002;
     public static final int EVENT_LOCATION_REPORTED = 0x1000003;
-
     /**
      * handle message from service to ability slice
      */
