@@ -1,4 +1,4 @@
-package xwg.harmony.stopwatch;
+package xwg.harmony.stopwatch.db;
 
 import ohos.data.orm.Blob;
 import ohos.data.orm.OrmObject;
@@ -26,43 +26,43 @@ public class TileData extends OrmObject {
     private Integer tileY;
     private Blob data;
 
-    Integer getTileId(){
+    public Integer getTileId(){
         return tileId;
     }
 
-    void setTileId(Integer id){
+    public void setTileId(Integer id){
         tileId = id;
     }
 
-    Integer getType(){
+    public Integer getType(){
         return type;
     }
 
-    void setType(Integer t){
+    public void setType(Integer t){
         type = t;
     }
 
-    Integer getZoom(){
+    public Integer getZoom(){
         return zoom;
     }
 
-    void setZoom(int z){
+    public void setZoom(int z){
         zoom = z;
     }
 
-    Integer getTileX(){
+    public Integer getTileX(){
         return tileX;
     }
 
-    void setTileX(Integer x){
+    public void setTileX(Integer x){
         tileX = x;
     }
 
-    Integer getTileY(){
+    public Integer getTileY(){
         return tileY;
     }
 
-    void setTileY(Integer y){
+    public void setTileY(Integer y){
         tileY = y;
     }
 
@@ -74,7 +74,7 @@ public class TileData extends OrmObject {
         data = _data;
     }
 
-    void setPixelMap(PixelMap image){
+    public void setPixelMap(PixelMap image){
         ImagePacker imagePacker = ImagePacker.create();
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         ImagePacker.PackingOptions packingOptions = new ImagePacker.PackingOptions();
@@ -86,7 +86,7 @@ public class TileData extends OrmObject {
         setData(blob);
     }
 
-    PixelMap getPixelMap(){
+    public PixelMap getPixelMap(){
         InputStream is = getData().getBinaryStream();
         ImageSource source = ImageSource.create(is, new ImageSource.SourceOptions());
         ImageSource.DecodingOptions options = new ImageSource.DecodingOptions();

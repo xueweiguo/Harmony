@@ -30,11 +30,11 @@ public class StopWatchService extends Ability {
     private long start_time = 0;    //计时开始时刻，毫秒单位
     private long millisecond = 0;   //计时时间，毫秒单位
     ArrayList<String> lap_times = new ArrayList<>();
-    ArrayList<Double> locations = new ArrayList<>();
+    ArrayList<Long> trailData = new ArrayList<>();
 
     final private MyLocatorCallback locatorCallback = new MyLocatorCallback();
     private Locator locator;
-    Location lastLocation;
+    long[] lastLocation = null;
     private static final String PERM_LOCATION = "ohos.permission.LOCATION";
 
     StopWatchAgentStub remoteAgentStub = new StopWatchAgentStub(DESCRIPTOR) {
@@ -72,7 +72,15 @@ public class StopWatchService extends Ability {
             HiLog.info(LABEL_LOG, "StopWatchService.resetTime!");
             lap_times.clear(); 
             millisecond = 0;
-            locations.clear();
+            trailData.clear();
+        }
+
+        @Override
+        public boolean start() throws RemoteException{
+            HiLog.info(LABEL_LOG, "StopWatchService.Start!");
+            start_time = Calendar.getInstance().getTimeInMillis();
+            running = true;
+            return running;
         }
 
         @Override
@@ -103,27 +111,18 @@ public class StopWatchService extends Ability {
         }
 
         @Override
-        public boolean start() throws RemoteException{
-            HiLog.info(LABEL_LOG, "StopWatchService.Start!");
-            start_time = Calendar.getInstance().getTimeInMillis();
-            running = true;
-            return running;
+        public long[] getCurrentLocation() throws RemoteException {
+            HiLog.info(LABEL_LOG, "onLocationReport getCurrentLocation=%{public}d,%{public}d,%{public}d!",
+                    lastLocation[0], lastLocation[1], lastLocation[2]);
+            return lastLocation;
         }
 
         @Override
-        public double[] getCurrentLocation() throws RemoteException {
-            HiLog.info(LABEL_LOG, "StopWatchService.getCurrentLocation Start!");
-            double[] location = new double[]{lastLocation.getLatitude(), lastLocation.getLongitude()};
-            HiLog.info(LABEL_LOG, "StopWatchService.getCurrentLocation End!");
-            return location;
-        }
-
-        @Override
-        public double[] getTrailData() throws RemoteException {
-            if(locations.size() > 0) {
-                double[] ret = new double[locations.size()];
-                for (int i = 0; i < locations.size(); ++i) {
-                    ret[i] = locations.get(i);
+        public long[] getTrailData() throws RemoteException {
+            if(trailData.size() > 0) {
+                long[] ret = new long[trailData.size()];
+                for (int i = 0; i < trailData.size(); ++i) {
+                    ret[i] = trailData.get(i);
                 }
                 return ret;
             }
@@ -141,7 +140,7 @@ public class StopWatchService extends Ability {
     @Override
     public void onStart(Intent intent) {
         HiLog.info(LABEL_LOG, "StopWatchService.onStart!");
-        //startForeground();
+        startForeground();
         super.onStart(intent);
         registerLocationEvent();
     }
@@ -168,7 +167,7 @@ public class StopWatchService extends Ability {
     public void onStop() {
         HiLog.info(LABEL_LOG, "StopWatchService.onStop()<<<<<<<<<<<<<<<<<!");
         super.onStop();
-        //cancelBackgroundRunning();
+        cancelBackgroundRunning();
     }
 
     private void startForeground() {
@@ -185,7 +184,8 @@ public class StopWatchService extends Ability {
         if (hasPermissionGranted(PERM_LOCATION)) {
             HiLog.info(LABEL_LOG, "hasPermissionGranted = true");
             locator = new Locator(this);
-            RequestParam requestParam = new RequestParam(RequestParam.SCENE_NAVIGATION);
+            //RequestParam requestParam = new RequestParam(RequestParam.SCENE_NAVIGATION);
+            RequestParam requestParam = new RequestParam(RequestParam.SCENE_TRAJECTORY_TRACKING);
             locator.startLocating(requestParam, locatorCallback);
         }else{
             HiLog.info(LABEL_LOG, "hasPermissionGranted = false");
@@ -214,12 +214,19 @@ public class StopWatchService extends Ability {
         @Override
         public void onLocationReport(Location location) {
             HiLog.info(LABEL_LOG, "onLocationReport Start!");
-            lastLocation = location;
-            if(!running) {
-                locations.clear();
+            lastLocation = new long[3];
+            lastLocation[0] = Calendar.getInstance().getTimeInMillis();
+            lastLocation[1] = (long)(location.getLatitude() * 100000);
+            lastLocation[2] = (long)(location.getLongitude() * 100000);
+            //lastLocation[1] += 1000 + 200 * Math.sin((double)trailData.size() / 10);
+            //lastLocation[2] += 2000 + trailData.size() * 10;
+            if(running) {
+                trailData.add(lastLocation[0]);
+                trailData.add(lastLocation[1]);
+                trailData.add(lastLocation[2]);
             }
-            locations.add(location.getLatitude());
-            locations.add(location.getLongitude());
+            //HiLog.info(LABEL_LOG, "onLocationReport lastLocation=%{public}d,%{public}d,%{public}d!",
+            //        lastLocation[0], lastLocation[1], lastLocation[2]);
             StopWatchServiceConnection.getEventHandler().sendEvent(EVENT_LOCATION_REPORTED);
             HiLog.info(LABEL_LOG, "onLocationReport End!");
         }

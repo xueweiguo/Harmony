@@ -1,16 +1,10 @@
 package xwg.harmony.stopwatch.slice;
 
 import ohos.aafwk.ability.AbilitySlice;
-import ohos.aafwk.ability.IAbilityConnection;
 import ohos.aafwk.content.Intent;
-import ohos.aafwk.content.IntentParams;
 import ohos.aafwk.content.Operation;
 import ohos.agp.components.ComponentContainer;
 import ohos.agp.components.TabList;
-import ohos.agp.window.dialog.ToastDialog;
-import ohos.app.Context;
-import ohos.bundle.ElementName;
-import ohos.bundle.IBundleManager;
 import ohos.data.DatabaseHelper;
 import ohos.data.orm.OrmContext;
 import ohos.eventhandler.EventHandler;
@@ -19,10 +13,10 @@ import ohos.eventhandler.InnerEvent;
 import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
 import ohos.location.RequestParam;
-import ohos.rpc.IRemoteObject;
 import ohos.rpc.RemoteException;
 import xwg.harmony.stopwatch.*;
 import xwg.harmony.stopwatch.MainAbility.IRequestPermissionListener;
+import xwg.harmony.stopwatch.db.StopWatchDB;
 
 public class MainAbilitySlice extends AbilitySlice {
     static final HiLogLabel LOG_LABEL = new HiLogLabel(HiLog.LOG_APP, 0x00201, "MainAbilitySlice");
@@ -206,8 +200,8 @@ public class MainAbilitySlice extends AbilitySlice {
         public void onLocationReported() {
             if(tabList.getSelectedTab() == mapTab){
                 try {
-                    double[] loc =stopWatchProxy.getCurrentLocation();
-                    mapState.setLocation(loc[0], loc[1]);
+                    long[] loc =stopWatchProxy.getCurrentLocation();
+                    mapState.setLocation(loc[0], (double)loc[1]/100000, (double)loc[2]/100000);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }

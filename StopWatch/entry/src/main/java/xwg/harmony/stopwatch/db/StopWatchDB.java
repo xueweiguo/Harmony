@@ -1,4 +1,4 @@
-package xwg.harmony.stopwatch;
+package xwg.harmony.stopwatch.db;
 
 import ohos.data.orm.OrmDatabase;
 import ohos.data.orm.annotation.Database;

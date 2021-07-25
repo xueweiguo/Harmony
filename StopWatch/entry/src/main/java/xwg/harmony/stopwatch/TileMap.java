@@ -8,6 +8,8 @@ import ohos.agp.utils.Color;
 import ohos.agp.utils.Point;
 import ohos.agp.utils.Rect;
 import ohos.app.Context;
+import ohos.app.dispatcher.TaskDispatcher;
+import ohos.app.dispatcher.task.Revocable;
 import ohos.app.dispatcher.task.TaskPriority;
 import ohos.data.orm.OrmContext;
 import ohos.global.icu.util.Calendar;
@@ -15,20 +17,18 @@ import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
 import ohos.location.Location;
 import ohos.media.image.common.Size;
-import ohos.multimodalinput.event.MmiPoint;
-import ohos.multimodalinput.event.TouchEvent;
 import ohos.rpc.RemoteException;
 import ohos.utils.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import static java.lang.Math.abs;
 
 public class TileMap extends Component implements Component.DrawTask{
     static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0x00205, "TileMap");
+    static final int operationTimeout = 5000;
     TileDataStorage mapData = new TileDataStorage();
     Tile.MapSource mapSource = Tile.MapSource.GAODE_VECTOR;
     int zoom = 15;
@@ -36,7 +36,7 @@ public class TileMap extends Component implements Component.DrawTask{
     Location location = null;
     Location firstLocation = null;
     Location lastLocation = null;
-    ArrayList<Size> trail_point = new ArrayList<Size>();
+    ArrayList<TrailPoint> trail_point = new ArrayList<>();
 
     StopWatchAgentProxy stopWatchService = null;
     boolean loading = false;
@@ -74,6 +74,7 @@ public class TileMap extends Component implements Component.DrawTask{
             canvas.drawLine(getWidth() / 2, getHeight() / 2 - line_size,
                     getWidth() / 2, getHeight() / 2 + line_size,
                     linePaint);
+            visibleAreaCheck();
             //HiLog.info(LABEL, "TileMap.onDraw 5!");
         }
         //HiLog.info(LABEL, "TileMap.onDraw End!");
@@ -124,28 +125,27 @@ public class TileMap extends Component implements Component.DrawTask{
             int first_y = getHeight() / 2 + first_offset.height;
             int from_x = 0;
             int from_y = 0;
+            long from_m = 0;
             int to_x = 0;
             int to_y = 0;
+            long to_m = 0;
             for (int index = 0; index < trail_point.size(); index++) {
+                TrailPoint point = trail_point.get(index);
                 if (index == 0) {
                     from_x = first_x;
                     from_y = first_y;
+                    from_m = point.millisecond;
                 } else {
-                    Size offset = trail_point.get(index);
-                    to_x = first_x + offset.width;
-                    to_y = first_y + offset.height;
-                    if(bound.isInclude(from_x, from_y) || bound.isInclude(to_x, to_y)) {
+                    to_x = first_x + point.x;
+                    to_y = first_y + point.y;
+                    to_m = point.millisecond;
+                    if(((to_m - from_m) < 60000)
+                            &&(bound.isInclude(from_x, from_y) || bound.isInclude(to_x, to_y))) {
                         canvas.drawLine(from_x, from_y, to_x, to_y, paint);
                     }
                     from_x = to_x;
                     from_y = to_y;
-                }
-            }
-            //如果最新位置超出显示位置
-            if (lastLocation != null && isOperationTimeout()){
-                if(!bound.isInclude(to_x, to_y)) {
-                    location = lastLocation;
-                    invalidate();
+                    from_m = to_m;
                 }
             }
             //HiLog.info(LABEL, "TileMap.onDraw 3!");
@@ -153,7 +153,6 @@ public class TileMap extends Component implements Component.DrawTask{
     }
 
     Component.DraggedListener dragListener = new Component.DraggedListener(){
-
         @Override
         public void onDragDown(Component component, DragInfo dragInfo) {
             HiLog.info(LABEL, "TileMap.onDragDown!");
@@ -186,6 +185,7 @@ public class TileMap extends Component implements Component.DrawTask{
         public void onDragEnd(Component component, DragInfo dragInfo) {
             HiLog.info(LABEL, "TileMap.onDragEnd!");
             resetOperationTimer();
+            reserveInvalidate();
         }
 
         @Override
@@ -209,31 +209,31 @@ public class TileMap extends Component implements Component.DrawTask{
         invalidate();
     }
 
-    public void setWgs84Location(Location loc){
+    public void setWgs84Location(long millis, double lat, double lon){
         HiLog.info(LABEL, "TileMap.setWgs84Location Start!");
-        double ret[] = GpsUtil.toGCJ02Point(loc.getLatitude(), loc.getLongitude());
-        loc = new Location(ret[0], ret[1]);
+        double ret[] = GpsUtil.toGCJ02Point(lat, lon);
+        Location loc = new Location(ret[0], ret[1]);
         try {
             if (stopWatchService != null && stopWatchService.isRunning()) {
                 if(trail_point.size() == 0) {
                     loadTrailData();
                 }
                 else{
-                    trail_point.add(Tile.calculateOffset(512, zoom, firstLocation, loc));
+                    Size offset = Tile.calculateOffset(512, zoom, firstLocation, loc);
+                    trail_point.add(new TrailPoint(millis, offset.width, offset.height));
                     lastLocation = loc;
                 }
                 if(location == null){
                     location = lastLocation;
                 }
             }
-            else{
+            if(location == null){
                 location = loc;
             }
             invalidate();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-
         HiLog.info(LABEL, "TileMap.setWgs84Location End!");
     }
 
@@ -244,18 +244,20 @@ public class TileMap extends Component implements Component.DrawTask{
         lastLocation = null;
         if(stopWatchService != null) {
             try {
-                double[] data = stopWatchService.getTrailData();
-                int data_count = data.length / 2;
+                long[] data = stopWatchService.getTrailData();
+                int data_count = data.length / 3;
                 if(data_count > 0) {
                     for(int index = 0; index < data_count; index++) {
-                        double ret[] = GpsUtil.toGCJ02Point(data[index * 2], data[index * 2 + 1]);
+                        double ret[] = GpsUtil.toGCJ02Point((double)data[index * 3 + 1]/100000,
+                                (double)data[index * 3 + 2]/100000);
                         Location current = new Location(ret[0], ret[1]);
                         if(index == 0){
                             firstLocation = current;
-                            trail_point.add(new Size(0, 0));
+                            trail_point.add(new TrailPoint(data[index * 3], 0, 0));
                         }
                         else{
-                            trail_point.add(Tile.calculateOffset(512, zoom, firstLocation, current));
+                            Size offset = Tile.calculateOffset(512, zoom, firstLocation, current);
+                            trail_point.add(new TrailPoint(data[index * 3], offset.width, offset.height));
                         }
                         if(index == data_count - 1){
                             lastLocation = current;
@@ -277,8 +279,8 @@ public class TileMap extends Component implements Component.DrawTask{
             double lon_min = 0;
             double lon_max = 0;
             for(int index = 0; index < trail_point.size(); index++) {
-                double lat = trail_point.get(index).height;
-                double lon = trail_point.get(index).width;
+                double lat = trail_point.get(index).y;
+                double lon = trail_point.get(index).x;
                 if(index == 0){
                     lat_min = lat_max = lat;
                     lon_min = lon_max = lon;
@@ -320,6 +322,7 @@ public class TileMap extends Component implements Component.DrawTask{
             zoom++;
             loadTrailData();
             invalidate();
+            reserveInvalidate();
          }
         HiLog.info(LABEL, "TileMap.zoomIn,zoom=%{public}d", zoom);
     }
@@ -330,6 +333,7 @@ public class TileMap extends Component implements Component.DrawTask{
             zoom--;
             loadTrailData();
             invalidate();
+            reserveInvalidate();
          }
         HiLog.info(LABEL, "TileMap.zoomOut,zoom=%{public}d", zoom);
     }
@@ -391,6 +395,30 @@ public class TileMap extends Component implements Component.DrawTask{
     }
 
     boolean isOperationTimeout(){
-        return (Calendar.getInstance().getTimeInMillis() - lastOperation) > 5000;
+        return (Calendar.getInstance().getTimeInMillis() - lastOperation) > operationTimeout;
+    }
+
+    void reserveInvalidate(){
+        TaskDispatcher uiTaskDispatcher = mContext.getUITaskDispatcher();
+        Revocable revocable = uiTaskDispatcher.delayDispatch(new Runnable() {
+            @Override
+            public void run() {
+                invalidate();
+            }
+        }, operationTimeout);
+    }
+
+    void visibleAreaCheck(){
+        //如果最新位置超出显示位置
+        if (lastLocation != null && isOperationTimeout()){
+            Rect bound = new Rect(0, 0, getWidth(), getHeight());
+            Size offset = Tile.calculateOffset(512, zoom, location, lastLocation);
+            int x = getWidth() / 2 + offset.width;
+            int y = getHeight() / 2 + offset.height;
+            if(!bound.isInclude(x, y)) {
+                location = lastLocation;
+                invalidate();
+            }
+        }
     }
 }

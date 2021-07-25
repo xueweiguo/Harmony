@@ -117,11 +117,10 @@ public class MapState extends SliceState {
         HiLog.info(LABEL, "MapState.onBackground End");
     }
 
-    public void setLocation(double lat, double lon){
+    public void setLocation(long millis, double lat, double lon){
         HiLog.info(LABEL, "MapState.setLocation Start");
-        Location location = new Location(lat, lon);
         if(tileMap != null) {
-            tileMap.setWgs84Location(location);
+            tileMap.setWgs84Location(millis, lat, lon);
         }
         HiLog.info(LABEL, "MapState.setLocation End");
     }
@@ -131,8 +130,8 @@ public class MapState extends SliceState {
         StopWatchAgentProxy proxy = ((MainAbilitySlice)owner_slice).getStopWatchService();
         if(proxy != null) {
             try {
-                double[] loc = proxy.getCurrentLocation();
-                setLocation(loc[0], loc[1]);
+                long[] loc = proxy.getCurrentLocation();
+                setLocation(loc[0], (double)loc[1]/100000, (double)loc[2]/100000);
                 return true;
             } catch (RemoteException e) {
                 e.printStackTrace();
