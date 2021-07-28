@@ -9,8 +9,7 @@ import ohos.agp.components.*;
 import ohos.agp.components.element.ShapeElement;
 import ohos.agp.components.element.StateElement;
 import ohos.agp.window.dialog.CommonDialog;
-import ohos.agp.window.dialog.IDialog;
-import ohos.agp.window.dialog.ListDialog;
+import ohos.bundle.AbilityInfo;
 import ohos.global.resource.NotExistException;
 import ohos.global.resource.WrongTypeException;
 import ohos.hiviewdfx.HiLog;
@@ -18,16 +17,29 @@ import ohos.hiviewdfx.HiLogLabel;
 
 import java.io.IOException;
 
+import static ohos.bundle.AbilityInfo.DisplayOrientation.LANDSCAPE;
+import static ohos.bundle.AbilityInfo.DisplayOrientation.PORTRAIT;
+
 
 public class MainAbilitySlice extends AbilitySlice {
     static final HiLogLabel label = new HiLogLabel(HiLog.LOG_APP, 0x00201, "MainAbilitySlice");
     private CalculateEngine calculator = null;
     private boolean finished = false;
+    private int DisplayOrientation;
+
     @Override
     public void onStart(Intent intent) {
         super.onStart(intent);
-        super.setUIContent(ResourceTable.Layout_ability_main);
-        HiLog.warn(label, "AbilitySlice onStart!");
+        /*
+        int orientation = getContext().getDisplayOrientation();
+        HiLog.warn(label, "AbilitySlice onStart,orientation=%d", orientation);
+        if(PORTRAIT.equals(orientation))
+            onOrientationChanged(PORTRAIT);
+        else
+            onOrientationChanged(LANDSCAPE);
+         */
+        onOrientationChanged(LANDSCAPE);
+
 
         ShapeElement elementButtonOn = new ShapeElement();
         elementButtonOn.setRgbColor(RgbPalette.GREEN);
@@ -87,6 +99,14 @@ public class MainAbilitySlice extends AbilitySlice {
                 calculate();
             }
         });
+    }
+
+    protected void onOrientationChanged​(AbilityInfo.DisplayOrientation displayOrientation)
+    {
+        if(displayOrientation.equals(PORTRAIT))
+            super.setUIContent(ResourceTable.Layout_ability_portrait);
+        else
+            super.setUIContent(ResourceTable.Layout_ability_landscape);
     }
 
     private void showCommonDialog()

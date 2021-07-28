@@ -21,7 +21,7 @@
             ohos:height="10vp"
             ohos:width="0"
             ohos:weight="1"/>
-        <xwg.harmony.stopwatch.ColorSwitch
+        <xwg.stopwatch.ColorSwitch
             ohos:id="$+id:btn_switch"
             ohos:height="30vp"
             ohos:width="80vp"

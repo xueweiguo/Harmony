@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DependentLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:id="$+id:ability_main_landscape"
+    ohos:height="match_parent"
+    ohos:width="match_parent"
+    ohos:orientation="vertical">
+
+    <DirectionalLayout
+        ohos:id="$+id:appBar"
+        ohos:height="$float:height_appBar"
+        ohos:width="match_parent"
+        ohos:orientation="horizontal">
+
+        <DirectionalLayout
+            ohos:id="$+id:appBar_backButton_touchTarget"
+            ohos:height="$float:height_appBar_backButton_touchTarget"
+            ohos:width="$float:width_appBar_backButton_touchTarget"
+            ohos:alignment="center"
+            ohos:start_margin="$float:leftMargin_appBar_backButton_touchTarget">
+
+            <Image
+                ohos:id="$+id:appBar_backButton"
+                ohos:height="$float:size_appBar_backButton"
+                ohos:width="$float:size_appBar_backButton"
+                ohos:image_src="$graphic:back"
+                ohos:layout_direction="locale"/>
+        </DirectionalLayout>
+
+        <Text
+            ohos:id="$+id:appBar_title"
+            ohos:height="match_parent"
+            ohos:width="match_content"
+            ohos:start_margin="$float:leftMargin_appBar_title"
+            ohos:text="$string:title"
+            ohos:text_size="$float:textSize_title"/>
+    </DirectionalLayout>
+
+    <DependentLayout
+        ohos:id="$+id:aboutPageMain"
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:min_height="$float:aboutPage_minHeight"
+        ohos:orientation="vertical">
+
+        <DirectionalLayout
+            ohos:id="$+id:aboutPageUpperPart"
+            ohos:height="$float:height_aboutPage_upperPart"
+            ohos:width="match_parent"
+            ohos:align_parent_top="true"
+            ohos:alignment="horizontal_center"
+            ohos:orientation="vertical">
+
+            <DirectionalLayout
+                ohos:id="$+id:aboutPageIconBackground"
+                ohos:height="$float:size_aboutPage_iconBackground"
+                ohos:width="$float:size_aboutPage_iconBackground"
+                ohos:alignment="center"
+                ohos:background_element="$graphic:icon_background"
+                ohos:top_margin="$float:topMargin_aboutPage_iconBackground">
+
+                <Image
+                    ohos:id="$+id:aboutPageIcon"
+                    ohos:height="match_content"
+                    ohos:width="match_content"
+                    ohos:image_src="$media:icon"/>
+            </DirectionalLayout>
+
+            <Text
+                ohos:id="$+id:aboutPageTitlePrimary"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:text="$string:aboutPage_title_primary"
+                ohos:text_color="$color:color_aboutPage_title_primary"
+                ohos:text_size="$float:size_aboutPage_title_primary"
+                ohos:top_margin="$float:topMargin_aboutPage_title_primary"/>
+
+            <Text
+                ohos:id="$+id:aboutPageTitleSecondary"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:text="$string:aboutPage_title_secondary"
+                ohos:text_color="$color:color_aboutPage_title_secondary"
+                ohos:text_size="$float:size_aboutPage_title_secondary"/>
+        </DirectionalLayout>
+
+        <DirectionalLayout
+            ohos:id="$+id:aboutPageBottomPart"
+            ohos:height="match_content"
+            ohos:width="match_parent"
+            ohos:align_parent_bottom="true"
+            ohos:alignment="horizontal_center"
+            ohos:below="$+id:aboutPageUpperPart"
+            ohos:bottom_padding="$float:default_padding_bottom_fixed"
+            ohos:end_padding="$float:maxPadding_end"
+            ohos:orientation="vertical"
+            ohos:start_padding="$float:maxPadding_start">
+
+            <Text
+                ohos:id="$+id:openSourceNoticeText"
+                ohos:height="match_content"
+                ohos:width="match_parent"
+                ohos:text_alignment="center"
+                ohos:text_size="$float:textSize_body3"/>
+
+            <Text
+                ohos:id="$+id:protocolPrivacyText"
+                ohos:height="match_content"
+                ohos:width="match_parent"
+                ohos:multiple_lines="true"
+                ohos:text_alignment="center"
+                ohos:text_size="$float:textSize_body3"/>
+
+            <Text
+                ohos:id="$+id:copyrightText"
+                ohos:height="match_content"
+                ohos:width="match_parent"
+                ohos:text="$string:copyright_text"
+                ohos:text_alignment="center"
+                ohos:text_color="$color:textColor_secondary"
+                ohos:text_size="$float:textSize_body3"/>
+
+            <Text
+                ohos:id="$+id:technicalSupportText"
+                ohos:height="match_content"
+                ohos:width="match_parent"
+                ohos:text="$string:technicalSupport_text"
+                ohos:text_alignment="center"
+                ohos:text_color="$color:textColor_secondary"
+                ohos:text_size="$float:textSize_body3"/>
+        </DirectionalLayout>
+    </DependentLayout>
+</DependentLayout>

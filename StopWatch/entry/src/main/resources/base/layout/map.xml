@@ -4,7 +4,7 @@
     ohos:height="match_parent"
     ohos:width="match_parent"
     ohos:orientation="vertical">
-    <xwg.harmony.stopwatch.TileMap
+    <xwg.stopwatch.map.TileMap
         ohos:id="$+id:map"
         ohos:layout_alignment="center"
         ohos:height="300vp"

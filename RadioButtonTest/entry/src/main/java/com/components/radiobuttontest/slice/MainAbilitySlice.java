@@ -17,7 +17,6 @@ public class MainAbilitySlice extends AbilitySlice {
                 absButton.setClickable(!b);
             }
         };
-        //假设有三个按钮
         RadioButton rb1 = (RadioButton)findComponentById(ResourceTable.Id_radio_huawei);
         rb1.setCheckedStateChangedListener(listener);
         RadioButton rb2 = (RadioButton)findComponentById(ResourceTable.Id_radio_xiaomi);

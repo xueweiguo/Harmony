@@ -82,7 +82,7 @@ public class DialogAbilitySlice extends AbilitySlice {
 
     private void showStdCommon(){
         CommonDialog dlg = new CommonDialog(this);
-        dlg.setContentImage(ResourceTable.Media_icon);
+        //dlg.setContentImage(ResourceTable.Media_icon);
         dlg.setTitleText("CommonDialog");
         dlg.setTitleSubText("Standard Demo");
         dlg.setContentText("This is a CommonDialog Test!");
@@ -93,6 +93,8 @@ public class DialogAbilitySlice extends AbilitySlice {
                 dlg.destroy();
             }
         });
+        dlg.setDuration(10000);
+        dlg.show();
     }
 
 
@@ -122,7 +124,9 @@ public class DialogAbilitySlice extends AbilitySlice {
         ListDialog dlg = new ListDialog(this);
         dlg.setTitleText("Select Color:");
         String []items = {"Red", "Green", "Blue", "Light Red", "Light Green", "Light Blue"};
-        dlg.setItems(items);
+        //dlg.setItems(items);
+        int current = 2;
+        dlg.setSingleSelectItems(items, current);
         dlg.setButton(1, "OK", new IDialog.ClickedListener() {
             @Override
             public void onClick(IDialog iDialog, int i) {

@@ -1,0 +1,128 @@
+{
+  "float": [
+    {
+      "name": "height_appBar",
+      "value": "56vp"
+    },
+    {
+      "name": "width_appBar_backButton_touchTarget",
+      "value": "48vp"
+    },
+    {
+      "name": "height_appBar_backButton_touchTarget",
+      "value": "56vp"
+    },
+    {
+      "name": "size_appBar_backButton",
+      "value": "24vp"
+    },
+    {
+      "name": "leftMargin_appBar_backButton_touchTarget",
+      "value": "14vp"
+    },
+    {
+      "name": "leftMargin_appBar_title",
+      "value": "6vp"
+    },
+    {
+      "name": "textSize_title",
+      "value": "20vp"
+    },
+    {
+      "name": "height_aboutPage_upperPart",
+      "value": "242vp"
+    },
+    {
+      "name": "size_aboutPage_iconBackground",
+      "value": "72vp"
+    },
+    {
+      "name": "topMargin_aboutPage_iconBackground",
+      "value": "62vp"
+    },
+    {
+      "name": "size_aboutPage_title_primary",
+      "value": "16vp"
+    },
+    {
+      "name": "topMargin_aboutPage_title_primary",
+      "value": "8vp"
+    },
+    {
+      "name": "size_aboutPage_title_secondary",
+      "value": "14vp"
+    },
+    {
+      "name": "aboutPage_minHeight",
+      "value": "707vp"
+    },
+    {
+      "name": "maxPadding_start",
+      "value": "24vp"
+    },
+    {
+      "name": "maxPadding_end",
+      "value": "24vp"
+    },
+    {
+      "name": "default_padding_bottom_fixed",
+      "value": "24vp"
+    },
+    {
+      "name": "default_padding_top_fixed",
+      "value": "48vp"
+    },
+    {
+      "name": "textSize_body1",
+      "value": "16vp"
+    },
+    {
+      "name": "textSize_body2",
+      "value": "14vp"
+    },
+    {
+      "name": "textSize_body3",
+      "value": "12vp"
+    },
+    {
+      "name": "bottomMargin_doubleLineList",
+      "value": "4vp"
+    },
+    {
+      "name": "topMargin_doubleLineList",
+      "value": "4vp"
+    },
+    {
+      "name": "height_doubleLineList",
+      "value": "64vp"
+    },
+    {
+      "name": "bottomMargin_primaryText",
+      "value": "2vp"
+    },
+    {
+      "name": "height_divider",
+      "value": "1vp"
+    },
+    {
+      "name": "height_doubleLineList_icon",
+      "value": "24vp"
+    },
+    {
+      "name": "width_doubleLineList_icon",
+      "value": "12vp"
+    },
+    {
+      "name": "icon_radius",
+      "value": "8vp"
+    },
+    {
+      "name": "card_margin_start",
+      "value": "12vp"
+    },
+    {
+      "name": "card_margin_end",
+      "value": "12vp"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "app": {
-    "bundleName": "xwg.harmony.stopwatch",
+    "bundleName": "xwg.stopwatch",
     "vendor": "harmony",
     "version": {
       "code": 1000000,
@@ -14,7 +14,7 @@
   },
   "deviceConfig": {},
   "module": {
-    "package": "xwg.harmony.stopwatch",
+    "package": "xwg.stopwatch",
     "name": ".MyApplication",
     "deviceType": [
       "phone"
@@ -39,7 +39,7 @@
         ],
         "orientation": "unspecified",
         "visible": true,
-        "name": "xwg.harmony.stopwatch.MainAbility",
+        "name": "xwg.stopwatch.MainAbility",
         "icon": "$media:icon",
         "description": "$string:mainability_description",
         "label": "$string:app_name",
@@ -54,16 +54,21 @@
           "dataTransfer",
           "location"
         ],
-        "name": "xwg.harmony.stopwatch.StopWatchService",
+        "name": "xwg.stopwatch.StopWatchService",
         "icon": "$media:icon",
         "description": "$string:stopwatchservice_description",
         "type": "service",
-        "visible": false,
+        "visible": true,
         "permissions": [
           "ohos.permission.KEEP_BACKGROUND_RUNNING",
           "ohos.permission.LOCATION_IN_BACKGROUND",
           "ohos.permission.LOCATION"
         ]
+      },
+      {
+        "name": "xwg.stopwatch.TestService",
+        "type": "service",
+        "visible": true
       }
     ],
     "reqPermissions": [
@@ -72,8 +77,8 @@
         "reason": "$string:reason_location",
         "usedScene": {
           "ability": [
-            "xwg.harmony.stopwatch.MainAbility",
-            "xwg.harmony.stopwatch.StopWatchService"
+            "xwg.stopwatch.MainAbility",
+            "xwg.stopwatch.StopWatchService"
           ],
           "when": "inuse"
         }
@@ -83,7 +88,7 @@
         "reason": "$string:reason_location",
         "usedScene": {
           "ability": [
-            "xwg.harmony.stopwatch.StopWatchService"
+            "xwg.stopwatch.StopWatchService"
           ],
           "when": "inuse"
         }
@@ -93,7 +98,7 @@
         "reason": "$string:reason_location",
         "usedScene": {
           "ability": [
-            "xwg.harmony.stopwatch.StopWatchService"
+            "xwg.stopwatch.StopWatchService"
           ],
           "when": "inuse"
         }

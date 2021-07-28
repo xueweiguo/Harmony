@@ -45,5 +45,17 @@
         "launchType": "standard"
       }
     ]
-  }
+  },
+  "reqPermissions": [
+    {
+      "name": "ohos.permission.SENSOR_TYPE_SCREEN_ROTATION",
+      "reason": "",
+      "usedScene": {
+        "ability": [
+          ".MainAbility"
+        ],
+        "when": "inuse"
+      }
+    }
+  ]
 }

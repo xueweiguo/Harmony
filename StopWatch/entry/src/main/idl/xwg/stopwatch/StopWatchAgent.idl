@@ -1,0 +1,21 @@
+// IStopWatchService.idl
+
+// Declare any non-default types here with sequenceable or interface statements
+interface xwg.stopwatch.StopWatchAgent {
+    /*
+     * Example of a service method that uses some parameters
+     */
+    void setCurrentTab([in] int index);
+    int getCurrentTab();
+    boolean start();
+    void stop();
+    boolean isRunning();
+    long getStartTime();
+    long getTime();
+    void resetTime();
+    void recordTime();
+    String[] getLapTimes();
+    void registerLocationEvent();
+    long[] getCurrentLocation();
+    long[] getTrailData();
+}

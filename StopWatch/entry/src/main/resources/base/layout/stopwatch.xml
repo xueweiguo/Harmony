@@ -7,7 +7,7 @@
     ohos:alignment="top"
     ohos:padding="20vp"
     ohos:background_element="#EFEFEF">
-    <xwg.harmony.stopwatch.AnalogStopWatch
+    <xwg.stopwatch.AnalogStopWatch
         ohos:id="$+id:analog_stop_watch"
         ohos:height="300vp"
         ohos:width="match_parent"

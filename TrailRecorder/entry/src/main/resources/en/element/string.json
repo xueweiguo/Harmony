@@ -1,0 +1,32 @@
+{
+  "string": [
+    {
+      "name": "entry_MainAbility",
+      "value": "entry_MainAbility"
+    },
+    {
+      "name": "mainability_description",
+      "value": "Java_Phone_Empty Feature Ability"
+    },
+    {
+      "name": "title",
+      "value": "About"
+    },
+    {
+      "name": "aboutPage_title_primary",
+      "value": "AboutPageFA"
+    },
+    {
+      "name": "aboutPage_title_secondary",
+      "value": "Version: 0.0.0"
+    },
+    {
+      "name": "copyright_text",
+      "value": "XXXXXX All rights reserved. ©2011-2019"
+    },
+    {
+      "name": "technicalSupport_text",
+      "value": "Technical support: XXXXXXX"
+    }
+  ]
+}

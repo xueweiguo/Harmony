@@ -1,4 +1,4 @@
-package xwg.harmony.stopwatch;
+package xwg.stopwatch;
 
 import org.junit.Test;
 

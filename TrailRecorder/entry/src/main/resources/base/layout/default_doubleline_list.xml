@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:id="$+id:default_doubleLine_list"
+    ohos:height="match_content"
+    ohos:width="match_parent"
+    ohos:end_padding="$float:maxPadding_end"
+    ohos:orientation="vertical"
+    ohos:start_padding="$float:maxPadding_start">
+
+    <DependentLayout
+        ohos:id="$+id:doubleLineList"
+        ohos:height="$float:height_doubleLineList"
+        ohos:width="match_parent"
+        ohos:bottom_margin="$float:bottomMargin_doubleLineList"
+        ohos:top_margin="$float:topMargin_doubleLineList">
+
+        <DirectionalLayout
+            ohos:id="$+id:doubleLineList_text"
+            ohos:height="match_parent"
+            ohos:width="match_content"
+            ohos:align_parent_start="true"
+            ohos:alignment="vertical_center"
+            ohos:orientation="vertical">
+
+            <Text
+                ohos:id="$+id:doubleLineList_text_primary"
+                ohos:height="match_content"
+                ohos:width="match_parent"
+                ohos:bottom_margin="$float:bottomMargin_primaryText"
+                ohos:text_alignment="start"
+                ohos:text_color="$color:textColor_primary"
+                ohos:text_size="$float:textSize_body1"/>
+
+            <Text
+                ohos:id="$+id:doubleLineList_text_secondary"
+                ohos:height="match_content"
+                ohos:width="match_parent"
+                ohos:layout_direction="locale"
+                ohos:text_alignment="start"
+                ohos:text_color="$color:textColor_secondary"
+                ohos:text_size="$float:textSize_body2"/>
+        </DirectionalLayout>
+        <DirectionalLayout
+            ohos:id="$+id:doubleLineListIconContainer"
+            ohos:height="match_parent"
+            ohos:width="match_content"
+            ohos:align_parent_end="true"
+            ohos:alignment="vertical_center">
+            <Image
+                ohos:id="$+id:doubleLineList_icon"
+                ohos:height="$float:height_doubleLineList_icon"
+                ohos:width="$float:width_doubleLineList_icon"
+                ohos:image_src="$graphic:right_grey"
+                ohos:layout_direction="locale"/>
+        </DirectionalLayout>
+    </DependentLayout>
+
+    <Image
+        ohos:id="$+id:divider"
+        ohos:height="$float:height_divider"
+        ohos:width="match_parent"
+        ohos:background_element="$graphic:divider"/>
+</DirectionalLayout>

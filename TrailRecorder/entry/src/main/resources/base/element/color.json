@@ -1,0 +1,36 @@
+{
+  "color": [
+    {
+      "name": "color_aboutPage_title_primary",
+      "value": "#191919"
+    },
+    {
+      "name": "color_aboutPage_title_secondary",
+      "value": "#99000000"
+    },
+    {
+      "name": "textColor_secondary",
+      "value": "#99000000"
+    },
+    {
+      "name": "textColor_primary",
+      "value": "#E6000000"
+    },
+    {
+      "name": "divider_color",
+      "value": "#10000000"
+    },
+    {
+      "name": "touched_background_color",
+      "value": "#f1f3f5"
+    },
+    {
+      "name": "normal_background_color",
+      "value": "#ffffff"
+    },
+    {
+      "name": "grey_background",
+      "value": "#F5F5F5"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "string": [
+    {
+      "name": "entry_MainAbility",
+      "value": "entry_MainAbility"
+    },
+    {
+      "name": "mainability_description",
+      "value": "Java_Phone_Empty Feature Ability"
+    },
+    {
+      "name": "title",
+      "value": "关于"
+    },
+    {
+      "name": "aboutPage_title_primary",
+      "value": "关于页"
+    },
+    {
+      "name": "aboutPage_title_secondary",
+      "value": "版本: 0.0.0"
+    },
+    {
+      "name": "copyright_text",
+      "value": "版权所有 ©2011-2019 XXXX有限公司保留一切权利"
+    },
+    {
+      "name": "technicalSupport_text",
+      "value": "技术支持: XXXXXXX"
+    }
+  ]
+}
