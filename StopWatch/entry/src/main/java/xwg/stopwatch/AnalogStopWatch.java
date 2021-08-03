@@ -211,6 +211,7 @@ public class AnalogStopWatch extends Component implements Component.DrawTask {
     //归零处理
     void onResetTimer(){
         final long delayTime = 50L;
+        millisecond %= 3600 * 1000;
         long second_value = millisecond / 1000 % 60;
         long minute_value = millisecond / 1000 / 60;
         if(second_value > 0){

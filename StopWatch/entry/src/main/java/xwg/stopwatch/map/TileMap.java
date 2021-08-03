@@ -29,11 +29,12 @@ import static java.lang.Math.abs;
 public class TileMap extends Component implements Component.DrawTask{
     static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0x00205, "TileMap");
     static final int operationTimeout = 5000;
+    OrmContext dbContext = null;
     TileDataStorage mapData = new TileDataStorage();
     Tile.MapSource mapSource = Tile.MapSource.GAODE_VECTOR;
     int zoom = 15;
 
-    TrailPoint location = null;
+    TrailPoint location = new TrailPoint(38.91459, 121.618622);
     ArrayList<TrailPoint> trail_point = new ArrayList<>();
 
     StopWatchAgentProxy stopWatchService = null;
@@ -50,6 +51,7 @@ public class TileMap extends Component implements Component.DrawTask{
 
     public void setDbContext(OrmContext context){
         mapData.setDbContext(context);
+        dbContext = context;
     }
 
     public void setStopWatchService(StopWatchAgentProxy proxy){
@@ -58,7 +60,7 @@ public class TileMap extends Component implements Component.DrawTask{
 
     @Override
     public void onDraw(Component component, Canvas canvas) {
-        //HiLog.info(LABEL, "TileMap.onDraw Start!");
+        HiLog.info(LABEL, "TileMap.onDraw Start!");
         if(location != null) {
             drawTiles(canvas);
             drawTrailPoints(canvas);
@@ -76,7 +78,7 @@ public class TileMap extends Component implements Component.DrawTask{
             visibleAreaCheck();
             //HiLog.info(LABEL, "TileMap.onDraw 5!");
         }
-        //HiLog.info(LABEL, "TileMap.onDraw End!");
+        HiLog.info(LABEL, "TileMap.onDraw End!");
     }
 
     private void drawTiles(Canvas canvas){
@@ -313,10 +315,7 @@ public class TileMap extends Component implements Component.DrawTask{
     public void zoomIn(){
         HiLog.info(LABEL, "TileMap.zoomIn Start,zoom=%{public}d", zoom);
         if(zoom < 17) {
-            zoom++;
-            loadTrailData();
-            invalidate();
-            reserveInvalidate();
+            setZoom(zoom+1);
          }
         HiLog.info(LABEL, "TileMap.zoomIn,zoom=%{public}d", zoom);
     }
@@ -324,12 +323,20 @@ public class TileMap extends Component implements Component.DrawTask{
     public void zoomOut(){
         HiLog.info(LABEL, "TileMap.zoomIn!");
         if(zoom > 3) {
-            zoom--;
-            loadTrailData();
-            invalidate();
-            reserveInvalidate();
+            setZoom(zoom - 1);
          }
         HiLog.info(LABEL, "TileMap.zoomOut,zoom=%{public}d", zoom);
+    }
+
+    public void setZoom(int z){
+        zoom = z;
+        loadTrailData();
+        invalidate();
+        reserveInvalidate();
+    }
+
+    public int getZoom(){
+        return zoom;
     }
 
     public void loadMapTile(Map<Pair<Integer,Integer>, Tile> missingTile){

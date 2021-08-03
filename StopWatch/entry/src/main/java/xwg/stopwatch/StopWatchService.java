@@ -14,12 +14,12 @@ import ohos.location.Locator;
 import ohos.location.LocatorCallback;
 import ohos.location.RequestParam;
 import ohos.rpc.IRemoteObject;
-import ohos.rpc.RemoteException;
 
 import java.util.ArrayList;
 
 public class StopWatchService extends Ability {
     private static final int NOTIFICATION_ID = 0XD0000002;
+    private static final String PERM_LOCATION = "ohos.permission.LOCATION";
     private static final String TAG = StopWatchService.class.getSimpleName();
     private static final HiLogLabel LABEL_LOG = new HiLogLabel(3, 0x00209, TAG);
     private static final String DESCRIPTOR = "xwg.stopwatch.StopWatchService";
@@ -33,34 +33,34 @@ public class StopWatchService extends Ability {
     ArrayList<Long> trailData = new ArrayList<>();
 
     final private MyLocatorCallback locatorCallback = new MyLocatorCallback();
-    private Locator locator;
-    long[] lastLocation = null;
-    private static final String PERM_LOCATION = "ohos.permission.LOCATION";
+    private Locator locator = null;
+    long[] lastLocation = new long[]{0, 0, 0, 0};
+
 
     StopWatchAgentStub remoteAgentStub = new StopWatchAgentStub(DESCRIPTOR) {
         @Override
-        public void setCurrentTab(int index) throws RemoteException {
+        public void setCurrentTab(int index){
             current_tab = index;
         }
 
         @Override
-        public int getCurrentTab() throws RemoteException {
+        public int getCurrentTab(){
             return current_tab;
         }
 
         @Override
-        public boolean isRunning() throws RemoteException {
+        public boolean isRunning(){
             //HiLog.info(LABEL_LOG, "StopWatchService.isRunning=%{public}b!", running);
             return running;
         }
 
         @Override
-        public long getStartTime() throws RemoteException {
+        public long getStartTime(){
             return start_time;
         }
 
         @Override
-        public long getTime() throws RemoteException {
+        public long getTime() {
             if(isRunning()){
                 millisecond = Calendar.getInstance().getTimeInMillis() - start_time;
             }
@@ -68,7 +68,7 @@ public class StopWatchService extends Ability {
         }
 
         @Override
-        public void resetTime() throws RemoteException {
+        public void resetTime() {
             HiLog.info(LABEL_LOG, "StopWatchService.resetTime!");
             lap_times.clear(); 
             millisecond = 0;
@@ -76,7 +76,7 @@ public class StopWatchService extends Ability {
         }
 
         @Override
-        public boolean start() throws RemoteException{
+        public boolean start() {
             HiLog.info(LABEL_LOG, "StopWatchService.Start!");
             start_time = Calendar.getInstance().getTimeInMillis();
             running = true;
@@ -84,13 +84,13 @@ public class StopWatchService extends Ability {
         }
 
         @Override
-        public void stop() throws RemoteException {
+        public void stop() {
             HiLog.info(LABEL_LOG, "StopWatchService.Stop!");
             running = false;
         }
 
         @Override
-        public void recordTime() throws RemoteException {
+        public void recordTime() {
             long milliseconds = getTime();
             String current_time = String.format("Lap%02d %02dh:%02dm%02ds.%03dms\n",
                     lap_times.size(),
@@ -102,23 +102,22 @@ public class StopWatchService extends Ability {
         }
 
         @Override
-        public String[] getLapTimes() throws RemoteException {
-            String[] times = null;
+        public String[] getLapTimes() {
             HiLog.info(LABEL_LOG, "StopWatchService.getLapTimes Start!");
-            times = (String[]) lap_times.toArray(new String[lap_times.size()]);
+            String[] times = lap_times.toArray(new String[lap_times.size()]);
             HiLog.info(LABEL_LOG, "StopWatchService.getLapTimes End!");
             return times;
         }
 
         @Override
-        public long[] getCurrentLocation() throws RemoteException {
-            HiLog.info(LABEL_LOG, "onLocationReport getCurrentLocation=%{public}d,%{public}d,%{public}d,%{public}d!",
-                    lastLocation[0], lastLocation[1], lastLocation[2], lastLocation[3]);
+        public long[] getCurrentLocation() {
+            HiLog.info(LABEL_LOG, "StopWatchService.getCurrentLocation,loc=%{public}d,%{public}d,%{public}d,%{public}d",
+                lastLocation[0], lastLocation[1], lastLocation[2], lastLocation[3]);
             return lastLocation;
         }
 
         @Override
-        public long[] getTrailData() throws RemoteException {
+        public long[] getTrailData() {
             if(trailData.size() > 0) {
                 long[] ret = new long[trailData.size()];
                 for (int i = 0; i < trailData.size(); ++i) {
@@ -132,7 +131,7 @@ public class StopWatchService extends Ability {
         }
 
         @Override
-        public void registerLocationEvent() throws RemoteException {
+        public void registerLocationEvent() {
             StopWatchService.this.registerLocationEvent();
         }
     };
@@ -181,7 +180,7 @@ public class StopWatchService extends Ability {
     }
 
     private void registerLocationEvent() {
-        if (hasPermissionGranted(PERM_LOCATION)) {
+        if (hasPermissionGranted()) {
             HiLog.info(LABEL_LOG, "hasPermissionGranted = true");
             locator = new Locator(this);
             //RequestParam requestParam = new RequestParam(RequestParam.SCENE_NAVIGATION);
@@ -192,21 +191,8 @@ public class StopWatchService extends Ability {
         }
     }
 
-    private void unregisterLocationEvent() {
-        if (locator != null) {
-            locator.stopLocating(locatorCallback);
-        }
-    }
-
-    private boolean hasPermissionGranted(String permission) {
-        return verifySelfPermission(permission) == IBundleManager.PERMISSION_GRANTED;
-    }
-
-    private void requestPermission(String permission) {
-        if (verifySelfPermission(permission) != IBundleManager.PERMISSION_GRANTED) {
-            HiLog.info(LABEL_LOG, "requestPermissionsFromUser!");
-            this.requestPermissionsFromUser(new String[] {permission}, 1);
-        }
+    private boolean hasPermissionGranted() {
+        return verifySelfPermission(StopWatchService.PERM_LOCATION) == IBundleManager.PERMISSION_GRANTED;
     }
 
     public static final int EVENT_LOCATION_REPORTED = 0x1000003;

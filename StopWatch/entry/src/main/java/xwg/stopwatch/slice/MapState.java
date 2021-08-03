@@ -15,6 +15,7 @@ import ohos.aafwk.ability.AbilitySlice;
 import ohos.aafwk.content.Intent;
 import xwg.stopwatch.ResourceTable;
 import xwg.stopwatch.StopWatchAgentProxy;
+import xwg.stopwatch.db.Setting;
 import xwg.stopwatch.map.Tile;
 import xwg.stopwatch.map.TileMap;
 import xwg.stopwatch.map.TrailPoint;
@@ -92,8 +93,9 @@ public class MapState extends SliceState {
         });
 
         if(!updateLocation()){
-            loadLocation();
+            loadSettings();
         }
+        loadLocation();
         HiLog.info(LABEL, "onStart End!");
     }
 
@@ -102,6 +104,7 @@ public class MapState extends SliceState {
         HiLog.info(LABEL, "MapState.onForeground Start!");
         super.onForeground(intent);
         loadLocation();
+        loadSettings();
         HiLog.info(LABEL, "MapState.onForeground End!");
     }
 
@@ -110,6 +113,7 @@ public class MapState extends SliceState {
         HiLog.info(LABEL, "MapState.onBackground Start");
         super.onBackground();
         saveLocation();
+        saveSettings();
         HiLog.info(LABEL, "MapState.onBackground End");
     }
 
@@ -125,11 +129,18 @@ public class MapState extends SliceState {
         HiLog.info(LABEL, "MapState.updateLocation Start");
         StopWatchAgentProxy proxy = ((MainAbilitySlice)owner_slice).getStopWatchService();
         if(proxy != null) {
+            HiLog.info(LABEL, "MapState.updateLocation1");
             try {
                 long[] loc = proxy.getCurrentLocation();
-                setLocation(loc[0], (double)loc[1]/100000, (double)loc[2]/100000, (double)loc[3]/100);
+                HiLog.info(LABEL, "MapState.updateLocation2,loc=%{public}d", loc);
+                if(loc != null) {
+                    HiLog.info(LABEL, "MapState.updateLocation2.1,loc=%{public}d,%{public}d,%{public}d,%{public}",
+                            loc[0], loc[1], loc[2], loc[3]);
+                    setLocation(loc[0], (double) loc[1] / 100000, (double) loc[2] / 100000, (double) loc[3] / 100);
+                }
                 return true;
             } catch (RemoteException e) {
+                HiLog.info(LABEL, "MapState.updateLocation3");
                 e.printStackTrace();
             }
         }
@@ -138,6 +149,42 @@ public class MapState extends SliceState {
     }
 
     private void loadLocation(){
+        HiLog.info(LABEL, "MapState.loadLocation Start");
+        double latitude = Setting.getDoubleValue(dbContext, getClass().getName(), "latitude", 0);
+        double longitude = Setting.getDoubleValue(dbContext, getClass().getName(), "longitude", 0);
+        if(latitude != 0 && longitude != 0){
+            tileMap.setGcj02Location(new TrailPoint(latitude, longitude));
+        }
+        HiLog.info(LABEL, "MapState.loadLocation Stop");
+    }
+
+    private void saveLocation(){
+        HiLog.info(LABEL, "MapState.saveLocation Start");
+        TrailPoint location = tileMap.getGcj02Location();
+        HiLog.info(LABEL, "MapState.saveLocation 2");
+        if(location != null) {
+            Setting.setDoubleValue(dbContext, getClass().getName(), "latitude", location.lat);
+            Setting.setDoubleValue(dbContext, getClass().getName(), "longitude", location.lon);
+        }
+        HiLog.info(LABEL, "MapState.saveLocation Stop");
+    }
+
+    private void loadSettings(){
+        HiLog.info(LABEL, "MapState.loadSettings Start");
+        int zoom = Setting.getIntValue(dbContext, getClass().getName(), "zoom", 0);
+        if(zoom != 0){
+            tileMap.setZoom(zoom);
+        }
+        HiLog.info(LABEL, "MapState.loadSettings Stop");
+    }
+
+    private void saveSettings(){
+        HiLog.info(LABEL, "MapState.saveSettings Start");
+        Setting.setIntValue(dbContext, getClass().getName(), "zoom", tileMap.getZoom());
+        HiLog.info(LABEL, "MapState.saveSettings Stop");
+    }
+
+    private void loadLocationFromDbHelper(){
         HiLog.info(LABEL, "MapState.loadLocation Start");
         DatabaseHelper databaseHelper = new DatabaseHelper(owner_slice); // context入参类型为ohos.app.Context。
         Preferences preferences = databaseHelper.getPreferences("TileMap");
@@ -149,7 +196,7 @@ public class MapState extends SliceState {
         HiLog.info(LABEL, "MapState.loadLocation Stop");
     }
 
-    private void saveLocation(){
+    private void saveLocationToDbHelper(){
         HiLog.info(LABEL, "MapState.saveLocation Start");
         DatabaseHelper databaseHelper = new DatabaseHelper(owner_slice); // context入参类型为ohos.app.Context。
         Preferences preferences = databaseHelper.getPreferences("TileMap");
