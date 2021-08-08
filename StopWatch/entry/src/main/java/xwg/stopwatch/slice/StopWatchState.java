@@ -5,12 +5,14 @@ import ohos.aafwk.content.Intent;
 import ohos.agp.components.*;
 import ohos.agp.utils.Color;
 import ohos.data.DatabaseHelper;
+import ohos.data.orm.OrmContext;
 import ohos.data.preferences.Preferences;
 import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
 import xwg.stopwatch.AnalogStopWatch;
 import xwg.stopwatch.ResourceTable;
 import xwg.stopwatch.StopWatchAgentProxy;
+import xwg.stopwatch.db.TimingInfo;
 
 
 public class StopWatchState extends SliceState {
@@ -21,9 +23,12 @@ public class StopWatchState extends SliceState {
     Button reset_lap = null;
     Text lap_time = null;
 
-    public StopWatchState(AbilitySlice slice, ComponentContainer container) {
+    private OrmContext dbContext = null;
+
+    public StopWatchState(AbilitySlice slice, ComponentContainer container, OrmContext context) {
         super(slice, container);
         stopWatchService = ((MainAbilitySlice)owner_slice).stopWatchProxy;
+        dbContext = context;
     }
 
     void setStopWatchService(StopWatchAgentProxy service){
@@ -57,6 +62,7 @@ public class StopWatchState extends SliceState {
                 if(stopwatch.isRunning()){
                     stopwatch.recordTime();
                     updateLapTimes();
+                    TimingInfo.createTimingRecord(dbContext);
                 }
                 stopwatch.start_stop();
                 updateButton();

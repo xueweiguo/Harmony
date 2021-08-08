@@ -7,6 +7,8 @@ import ohos.agp.components.ComponentContainer;
 import ohos.agp.components.TabList;
 import ohos.data.DatabaseHelper;
 import ohos.data.orm.OrmContext;
+import ohos.data.orm.OrmMigration;
+import ohos.data.rdb.RdbStore;
 import ohos.eventhandler.EventHandler;
 import ohos.eventhandler.EventRunner;
 import ohos.eventhandler.InnerEvent;
@@ -43,8 +45,7 @@ public class MainAbilitySlice extends AbilitySlice {
         HiLog.info(LOG_LABEL, "MainAbilitySlice.onStart");
         super.onStart(intent);
         super.setUIContent(ResourceTable.Layout_ability_main);
-        DatabaseHelper helper = new DatabaseHelper(this);
-        OrmContext dbContext = helper.getOrmContext("StopWatch", "StopWatch.db", StopWatchDB.class);
+        OrmContext dbContext = getOrmContext();
         tabList = (TabList) findComponentById(ResourceTable.Id_tab_list);
         stopwatchTab = tabList.new Tab(getContext());
         stopwatchTab.setText("秒表");
@@ -64,7 +65,7 @@ public class MainAbilitySlice extends AbilitySlice {
                 int tab_index = -1;
                 if(tab == stopwatchTab) {
                     if(stopWatchState == null) {
-                        stopWatchState = new StopWatchState(slice, container);
+                        stopWatchState = new StopWatchState(slice, container, dbContext);
                     }
                     try {
 
@@ -267,5 +268,22 @@ public class MainAbilitySlice extends AbilitySlice {
         Intent intent = new Intent();
         intent.setOperation(operation);
         return intent;
+    }
+
+    private OrmContext getOrmContext(){
+        DatabaseHelper helper = new DatabaseHelper(this);
+        return helper.getOrmContext("StopWatch", "StopWatch.db", StopWatchDB.class,
+                     new TestOrmMigration12());
+
+    }
+
+    private static class TestOrmMigration12 extends OrmMigration {
+        // 此处用于配置数据库版本迁移的开始版本和结束版本，super(startVersion, endVersion)即数据库版本号从1升到2。
+        public TestOrmMigration12() {super(1, 2); }
+        @Override
+        public void onMigrate(RdbStore rdbStore) {
+            rdbStore.executeSql("CREATE TABLE IF NOT EXISTS `TimingInfo` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `startTime` INTEGER , `title` TEXT )");
+            rdbStore.executeSql("CREATE UNIQUE INDEX `index_time_index` ON `TimingInfo` (`startTime`)");
+        }
     }
 }

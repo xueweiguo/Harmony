@@ -6,12 +6,8 @@ import ohos.data.orm.OrmPredicates;
 import ohos.data.orm.annotation.Entity;
 import ohos.data.orm.annotation.Index;
 import ohos.data.orm.annotation.PrimaryKey;
-import ohos.data.rdb.RdbConstraintException;
 import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
-import xwg.stopwatch.map.Tile;
-
-import java.sql.Time;
 import java.util.List;
 
 @Entity(tableName = "setting",
@@ -56,9 +52,8 @@ public class Setting extends OrmObject {
         HiLog.info(LABEL, "Setting.setStringValue,seg=%{public}s, item=%{public}s, v=%{public}s!", seg, i, v);
         OrmPredicates query = db.where(Setting.class).equalTo("segment", seg).and().equalTo("item", i);
         List<Setting> svs = db.query(query);
-        String ret = null;
         if (svs.size() > 0) {
-            Setting sv = (Setting) svs.get(0);
+            Setting sv = svs.get(0);
             sv.value = v;
             db.update(sv);
             HiLog.info(LABEL, "Setting.setStringValue update!");
@@ -79,14 +74,12 @@ public class Setting extends OrmObject {
         //HiLog.info(LABEL, "Setting.getStringValue,seg=%{public}s, item=%{public}s, v=%{public}s!", seg, i, v);
         OrmPredicates query = db.where(Setting.class).equalTo("segment", seg).and().equalTo("item", i);
         List<Setting> svs = db.query(query);
-        String ret = null;
         if (svs.size() > 0) {
-            Setting sv = (Setting) svs.get(0);
-            ret = sv.value;
+            Setting sv = svs.get(0);
+            return sv.value;
         } else {
-            ret = v;
+            return v;
         }
-        return ret;
     }
 
     static public void setIntValue(OrmContext db, String seg, String i, int v){
@@ -96,8 +89,7 @@ public class Setting extends OrmObject {
     static public int getIntValue(OrmContext db, String seg, String i, int v){
         String str_v = String.format("%d", v);
         String str_ret = getStringValue(db, seg, i, str_v);
-        int ret = (int)Double.parseDouble(str_ret);
-        return ret;
+        return (int)Double.parseDouble(str_ret);
     }
 
     static public void setDoubleValue(OrmContext db, String seg, String i, double v){
@@ -111,8 +103,7 @@ public class Setting extends OrmObject {
         HiLog.info(LABEL, "Setting.getDoubleValue,seg=%{public}s, item=%{public}s, v=%{public}f!",
                 seg, i, v);
         String ret = getStringValue(db, seg, i, String.format("%f", v));
-        double d_ret = Double.valueOf(ret).doubleValue();
-        HiLog.info(LABEL, "Setting.getDoubleValue,ret = %{public}f!", d_ret);
-        return d_ret;
+        HiLog.info(LABEL, "Setting.getDoubleValue,ret = %{public}f!", Double.valueOf(ret));
+        return Double.valueOf(ret);
     }
 }
