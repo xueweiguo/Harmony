@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:height="match_parent"
+    ohos:width="match_parent"
+    ohos:orientation="vertical">
+    <xwg.stopwatch.map.TileMap
+        ohos:id="$+id:map"
+        ohos:layout_alignment="center"
+        ohos:height="300vp"
+        ohos:width="match_parent"
+        />
+
+    <Button
+        ohos:id="$+id:btn_zoomin"
+        ohos:height="44vp"
+        ohos:width="match_parent"
+        ohos:layout_alignment="center"
+        ohos:background_element="#BBBBBB"
+        ohos:text_size="24fp"
+        ohos:text="放大"/>
+
+    <Button
+        ohos:id="$+id:btn_zoomout"
+        ohos:height="44vp"
+        ohos:width="match_parent"
+        ohos:layout_alignment="center"
+        ohos:background_element="#BBBBBB"
+        ohos:top_margin="20vp"
+        ohos:text_size="24fp"
+        ohos:text="缩小"/>
+
+    <Button
+        ohos:id="$+id:btn_changebasemaptype"
+        ohos:height="44vp"
+        ohos:width="match_parent"
+        ohos:layout_alignment="center"
+        ohos:background_element="#BBBBBB"
+        ohos:top_margin="20vp"
+        ohos:text_size="24fp"
+        ohos:text="切换地图"/>
+ </DirectionalLayout>

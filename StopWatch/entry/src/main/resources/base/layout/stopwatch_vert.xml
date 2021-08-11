@@ -5,7 +5,7 @@
     ohos:width="match_parent"
     ohos:orientation="vertical"
     ohos:alignment="top"
-    ohos:padding="20vp"
+    ohos:padding="10vp"
     ohos:background_element="#EFEFEF">
     <xwg.stopwatch.AnalogStopWatch
         ohos:id="$+id:analog_stop_watch"
