@@ -5,6 +5,7 @@ import ohos.aafwk.content.Intent;
 import ohos.aafwk.content.Operation;
 import ohos.agp.components.ComponentContainer;
 import ohos.agp.components.TabList;
+import ohos.bundle.AbilityInfo;
 import ohos.data.DatabaseHelper;
 import ohos.data.orm.OrmContext;
 import ohos.data.orm.OrmMigration;
@@ -12,10 +13,15 @@ import ohos.data.rdb.RdbStore;
 import ohos.eventhandler.EventHandler;
 import ohos.eventhandler.EventRunner;
 import ohos.eventhandler.InnerEvent;
+import ohos.global.configuration.Configuration;
 import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
 import ohos.location.RequestParam;
 import ohos.rpc.RemoteException;
+import ohos.sensor.agent.CategoryOrientationAgent;
+import ohos.sensor.bean.CategoryOrientation;
+import ohos.sensor.data.CategoryOrientationData;
+import ohos.sensor.listener.ICategoryOrientationDataCallback;
 import xwg.stopwatch.*;
 import xwg.stopwatch.MainAbility.IRequestPermissionListener;
 import xwg.stopwatch.db.StopWatchDB;
@@ -42,9 +48,16 @@ public class MainAbilitySlice extends AbilitySlice {
     @Override
     public void onStart(Intent intent) {
         //HiLog.warn(LABEL, "Failed to visit %{private}s, reason:%{public}d.", url, errno);
-        HiLog.info(LOG_LABEL, "MainAbilitySlice.onStart");
         super.onStart(intent);
-        super.setUIContent(ResourceTable.Layout_ability_main);
+        HiLog.info(LOG_LABEL, "MainAbilitySlice.onStart!");
+        Configuration config = this.getResourceManager().getConfiguration();
+        if(config.direction == Configuration.DIRECTION_HORIZONTAL){
+            super.setUIContent(ResourceTable.Layout_ability_main_horz);
+        }
+        else{
+            super.setUIContent(ResourceTable.Layout_ability_main_vert);
+        }
+
         OrmContext dbContext = getOrmContext();
         tabList = (TabList) findComponentById(ResourceTable.Id_tab_list);
         stopwatchTab = tabList.new Tab(getContext());
@@ -115,15 +128,20 @@ public class MainAbilitySlice extends AbilitySlice {
         });
         startLocalService();
         connectService();
+        //connectSensor();
     }
     @Override
     public void onActive() {
         super.onActive();
+        int orientation = getAbility().getDisplayOrientation();
+        HiLog.info(LOG_LABEL, "MainAbilitySlice.onActive, Rotation=%{public}d", orientation);
+
     }
 
     @Override
     public void onForeground(Intent intent) {
-        HiLog.info(LOG_LABEL, "MainAbilitySlice.onForeground");
+        int orientation = getAbility().getDisplayOrientation();
+        HiLog.info(LOG_LABEL, "MainAbilitySlice.onForeground, Rotation=%{public}d", orientation);
         super.onForeground(intent);
         tabList.selectTab(current_tab);
         //current_state.onForeground(intent);
@@ -139,6 +157,7 @@ public class MainAbilitySlice extends AbilitySlice {
     @Override
     public void onStop() {
         HiLog.info(LOG_LABEL, "MainAbilitySlice.onStop!");
+        //disconnectSensor();
         super.onStop();
         current_state.onStop();
         try {
@@ -151,7 +170,25 @@ public class MainAbilitySlice extends AbilitySlice {
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+    }
 
+    // Need add follows code to config.json
+    // "configChanges": ["orientation"],
+    protected void onOrientationChanged​(AbilityInfo.DisplayOrientation displayOrientation){
+        switch(displayOrientation){
+            case LANDSCAPE:
+                HiLog.info(LOG_LABEL, "MainAbilitySlice.onOrientationChanged(LANDSCAPE)!");
+                break;
+            case PORTRAIT:
+                HiLog.info(LOG_LABEL, "MainAbilitySlice.onOrientationChanged(PORTRAIT)!");
+                break;
+            case FOLLOWRECENT:
+                HiLog.info(LOG_LABEL, "MainAbilitySlice.onOrientationChanged(FOLLOWRECENT)!");
+                break;
+            case UNSPECIFIED:
+                HiLog.info(LOG_LABEL, "MainAbilitySlice.onOrientationChanged(UNSPECIFIED)!");
+                break;
+        }
     }
 
     StopWatchServiceConnection.StopWatchEventListener listener = new StopWatchServiceConnection.StopWatchEventListener(){
@@ -201,7 +238,7 @@ public class MainAbilitySlice extends AbilitySlice {
 
         @Override
         public void onLocationReported() {
-            HiLog.info(LOG_LABEL, "StopWatchEventListener.onLocationReported Start!");
+            //HiLog.info(LOG_LABEL, "StopWatchEventListener.onLocationReported Start!");
             if(tabList.getSelectedTab() == mapTab){
                 try {
                     long[] loc =stopWatchProxy.getCurrentLocation();
@@ -286,4 +323,57 @@ public class MainAbilitySlice extends AbilitySlice {
             rdbStore.executeSql("CREATE UNIQUE INDEX `index_time_index` ON `TimingInfo` (`startTime`)");
         }
     }
+
+    private static final long INTERVAL = 100000000L;
+
+    private CategoryOrientationAgent categoryOrientationAgent = new CategoryOrientationAgent();
+
+    private ICategoryOrientationDataCallback orientationDataCallback;
+
+    private CategoryOrientation orientationSensor;
+
+    private int matrix_length = 9;
+
+    private int rotationVectorLength = 9;
+
+    private void connectSensor(){
+        // 创建传感器回调对象。
+        orientationDataCallback = new ICategoryOrientationDataCallback() {
+            @Override
+            public void onSensorDataModified(CategoryOrientationData categoryOrientationData) {
+                // 对接收的categoryOrientationData传感器数据对象解析和使用
+                int dim = categoryOrientationData.getSensorDataDim(); // 获取传感器的维度信息
+                float degree = categoryOrientationData.getValues()[0]; // 获取方向类传感器的第一维数据
+                float[] rotationMatrix = new float[matrix_length];
+                CategoryOrientationData.getDeviceRotationMatrix(rotationMatrix, categoryOrientationData.values); // 根据旋转矢量传感器的数据获得旋转矩阵
+                float[] rotationAngle = new float[rotationVectorLength];
+                rotationAngle = CategoryOrientationData.getDeviceOrientation(rotationMatrix, rotationAngle); // 根据计算出来的旋转矩阵获取设备的方向
+            }
+
+            @Override
+            public void onAccuracyDataModified(CategoryOrientation categoryOrientation, int index) {
+                // 使用变化的精度
+            }
+
+            @Override
+            public void onCommandCompleted(CategoryOrientation categoryOrientation) {
+                // 传感器执行命令回调
+            }
+        };
+        // 获取传感器对象，并订阅传感器数据
+        orientationSensor = categoryOrientationAgent.getSingleSensor(
+                CategoryOrientation.SENSOR_TYPE_ORIENTATION);
+        if (orientationSensor != null) {
+            categoryOrientationAgent.setSensorDataCallback(
+                    orientationDataCallback, orientationSensor, INTERVAL);
+        }
+    }
+
+    private void disconnectSensor(){
+        if (orientationSensor != null) {
+            categoryOrientationAgent.releaseSensorDataCallback(
+                    orientationDataCallback, orientationSensor);
+        }
+    }
+
 }

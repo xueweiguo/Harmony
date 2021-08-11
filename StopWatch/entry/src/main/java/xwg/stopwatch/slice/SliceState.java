@@ -17,6 +17,10 @@ public abstract class SliceState {
         component_container = container;
     }
 
+    int getDirection(){
+        return owner_slice.getResourceManager().getConfiguration().direction;
+    }
+
     public abstract int getLayoutId();
 
     public void onStart(Intent intent)

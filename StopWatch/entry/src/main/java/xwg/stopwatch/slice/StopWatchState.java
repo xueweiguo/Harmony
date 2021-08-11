@@ -7,6 +7,7 @@ import ohos.agp.utils.Color;
 import ohos.data.DatabaseHelper;
 import ohos.data.orm.OrmContext;
 import ohos.data.preferences.Preferences;
+import ohos.global.configuration.Configuration;
 import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
 import xwg.stopwatch.AnalogStopWatch;
@@ -41,7 +42,14 @@ public class StopWatchState extends SliceState {
     }
 
     @Override
-    public int getLayoutId(){ return ResourceTable.Layout_stopwatch;};
+    public int getLayoutId() {
+        if (getDirection() == Configuration.DIRECTION_HORIZONTAL) {
+            return ResourceTable.Layout_stopwatch_horz;
+        }
+        else{
+            return ResourceTable.Layout_stopwatch_vert;
+        }
+    }
 
     @Override
     public void onStart(Intent intent) {

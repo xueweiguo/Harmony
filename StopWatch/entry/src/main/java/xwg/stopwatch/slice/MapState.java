@@ -8,6 +8,7 @@ import ohos.agp.window.dialog.ListDialog;
 import ohos.data.DatabaseHelper;
 import ohos.data.orm.OrmContext;
 import ohos.data.preferences.Preferences;
+import ohos.global.configuration.Configuration;
 import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
 import ohos.rpc.RemoteException;
@@ -34,7 +35,12 @@ public class MapState extends SliceState {
 
     @Override
     public int getLayoutId() {
-        return ResourceTable.Layout_map;
+        if (getDirection() == Configuration.DIRECTION_HORIZONTAL) {
+            return ResourceTable.Layout_map_horz;
+        }
+        else{
+            return ResourceTable.Layout_map_vert;
+        }
     }
     @Override
     public void onStart(Intent intent) {

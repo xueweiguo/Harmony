@@ -1,5 +1,6 @@
 package xwg.stopwatch;
 
+import ohos.bundle.AbilityInfo;
 import ohos.bundle.IBundleManager;
 import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
@@ -14,7 +15,8 @@ public class MainAbility extends Ability {
     private static final String PERM_LOCATION = "ohos.permission.LOCATION";
     @Override
     public void onStart(Intent intent) {
-        HiLog.info(LABEL, "MainAbility.onStart");
+        HiLog.info(LABEL, "MainAbility.onStart, orientation=%{public}d", getDisplayOrientation());
+
         super.onStart(intent);
         super.setMainRoute(MainAbilitySlice.class.getName());
         addActionRoute("action.setting", SettingState.class.getName());
