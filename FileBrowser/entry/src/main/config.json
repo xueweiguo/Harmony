@@ -1,0 +1,46 @@
+{
+  "app": {
+    "bundleName": "xwg.filebrowser",
+    "vendor": "filebrowser",
+    "version": {
+      "code": 1000000,
+      "name": "1.0.0"
+    }
+  },
+  "deviceConfig": {},
+  "module": {
+    "package": "xwg.filebrowser",
+    "name": ".MyApplication",
+    "mainAbility": "xwg.filebrowser.MainAbility",
+    "deviceType": [
+      "phone"
+    ],
+    "distro": {
+      "deliveryWithInstall": true,
+      "moduleName": "entry",
+      "moduleType": "entry",
+      "installationFree": false
+    },
+    "abilities": [
+      {
+        "skills": [
+          {
+            "entities": [
+              "entity.system.home"
+            ],
+            "actions": [
+              "action.system.home"
+            ]
+          }
+        ],
+        "orientation": "portrait",
+        "name": "xwg.filebrowser.MainAbility",
+        "icon": "$media:icon",
+        "description": "$string:mainability_description",
+        "label": "$string:MainAbilityTitle",
+        "type": "page",
+        "launchType": "standard"
+      }
+    ]
+  }
+}

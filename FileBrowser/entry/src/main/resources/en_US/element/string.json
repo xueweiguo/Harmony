@@ -1,0 +1,88 @@
+{
+  "string": [
+    {
+      "name": "entry_MainAbility",
+      "value": "entry_MainAbility"
+    },
+    {
+      "name": "title_text",
+      "value": "Gestures"
+    },
+    {
+      "name": "double_line_0",
+      "value": "Gesture Navigation"
+    },
+    {
+      "name": "item_description_0",
+      "value": "Enable it to enjoy a wider screen"
+    },
+    {
+      "name": "double_line_1",
+      "value": "Prompt bar"
+    },
+    {
+      "name": "item_description_1",
+      "value": "The bar will be displayed when you press"
+    },
+    {
+      "name": "double_line_2",
+      "value": "Gesture switching app"
+    },
+    {
+      "name": "item_description_2",
+      "value": "Swipe left or right across the bottom edge to switch applications"
+    },
+    {
+      "name": "double_line_3",
+      "value": "Gesture Navigation Improvement"
+    },
+    {
+      "name": "item_description_3",
+      "value": "To improve user experience, we may record your swiping habits."
+    },
+    {
+      "name": "double_line_4",
+      "value": "Try Gesture Navigation"
+    },
+    {
+      "name": "item_description_4",
+      "value": "You can experience the gesture navigation function in person."
+    },
+    {
+      "name": "double_line",
+      "value": "double-line list"
+    },
+    {
+      "name": "item_description",
+      "value": "auxiliary text"
+    },
+    {
+      "name": "page_description",
+      "value": "Text description, Text description, Text description, Text description, Text description "
+    },
+    {
+      "name": "page_description_0",
+      "value": "Go back"
+    },
+    {
+      "name": "page_description_bot_0",
+      "value": "Swipe right from the left edge"
+    },
+    {
+      "name": "page_description_1",
+      "value": "Go back"
+    },
+    {
+      "name": "page_description_bot_1",
+      "value": "Swipe left from the right edge"
+    },
+    {
+      "name": "page_description_2",
+      "value": "Return to the home screen"
+    },
+    {
+      "name": "page_description_bot_2",
+      "value": "Swipe up from the bottom of the screen"
+    }
+  ]
+}

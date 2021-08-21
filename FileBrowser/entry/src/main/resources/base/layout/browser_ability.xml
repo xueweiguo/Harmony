@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xwg.filebrowser.DynamicLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:height="match_parent"
+    ohos:width="match_parent"
+    ohos:background_element="$graphic:main_ability_title_background"
+    ohos:orientation="vertical">
+    <include
+        ohos:id="$id:app_bar"
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:layout="$layout:app_bar_layout"/>
+    <Text
+        ohos:id="$+id:text1"
+        ohos:width="match_parent"
+        ohos:height="0"
+        ohos:weight = "200"
+        ohos:text="Text1"
+        ohos:text_size="28fp"
+        ohos:text_color="#0000FF"
+        ohos:right_padding="15vp"
+        ohos:left_padding="15vp"
+        ohos:background_element="#FFFFDF"/>
+    <xwg.filebrowser.LayoutSeparator
+        ohos:id="$+id:seperator"
+        ohos:height="20vp"
+        ohos:width="match_parent"
+        ohos:background_element="#EFEFEF"/>
+    <Text
+        ohos:id="$+id:text2"
+        ohos:width="match_parent"
+        ohos:height="0"
+        ohos:weight = "300"
+        ohos:text="Text2"
+        ohos:text_size="28fp"
+        ohos:text_color="#0000FF"
+        ohos:right_padding="15vp"
+        ohos:left_padding="15vp"
+        ohos:background_element="#DFFFFF"/>
+    <xwg.filebrowser.LayoutSeparator
+        ohos:id="$+id:seperator2"
+        ohos:height="20vp"
+        ohos:width="match_parent"
+        ohos:background_element="#EFEFEF"/>
+    <Text
+        ohos:id="$+id:text3"
+        ohos:width="match_parent"
+        ohos:height="0"
+        ohos:weight = "300"
+        ohos:text="Text3"
+        ohos:text_size="28fp"
+        ohos:text_color="#0000FF"
+        ohos:right_padding="15vp"
+        ohos:left_padding="15vp"
+        ohos:background_element="#FFEFEF"/>
+</xwg.filebrowser.DynamicLayout>

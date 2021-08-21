@@ -1,0 +1,32 @@
+{
+  "string": [
+    {
+      "name": "MainAbilityTitle",
+      "value": "FileBrowser"
+    },
+    {
+      "name": "mainability_description",
+      "value": "Java_Navigation Ability"
+    },
+    {
+      "name": "second_ability_description",
+      "value": "hap sample empty page"
+    },
+    {
+      "name": "title_text",
+      "value": "title"
+    },
+    {
+      "name": "double_line",
+      "value": "double line"
+    },
+    {
+      "name": "item_description",
+      "value": "item description"
+    },
+    {
+      "name": "page_description",
+      "value": "page description，page description，page description，page description "
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:height="match_parent"
+    ohos:width="match_parent"
+    ohos:orientation="vertical">
+    <!-- different with [ image_src="$media:chatu"] -->
+    <Image
+        ohos:id="$+id:image1"
+        ohos:height="$float:view_page_image_height"
+        ohos:width="$float:view_page_image_width"
+        ohos:layout_alignment="horizontal_center"
+        ohos:left_margin="$float:view_page_left_margin"
+        ohos:right_margin="$float:view_page_right_margin"/>
+    <Text
+        ohos:id="$+id:index_text_top"
+        ohos:height="match_content"
+        ohos:width="$float:view_page_text_width"
+        ohos:layout_alignment="horizontal_center"
+        ohos:multiple_lines="true"
+        ohos:text_alignment="center"
+        ohos:text_size="$float:view_page_text_size"/>
+    <Text
+        ohos:id="$+id:index_text_bot"
+        ohos:height="match_content"
+        ohos:width="$float:view_page_text_width"
+        ohos:layout_alignment="horizontal_center"
+        ohos:multiple_lines="true"
+        ohos:text_alignment="center"
+        ohos:text_color="$color:view_page_text_bot_color"
+        ohos:text_size="$float:view_page_text_bot_size"
+        ohos:top_margin="$float:margin_between_texts_top"/>
+</DirectionalLayout>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:id="$+id:item_parent"
+    ohos:height="match_content"
+    ohos:width="match_parent"
+    ohos:orientation="vertical">
+
+
+    <Component
+        ohos:id="$+id:item_divider"
+        ohos:height="$float:breadth_divider"
+        ohos:width="match_parent"
+        ohos:background_element="$graphic:list_divider"/>
+
+</DirectionalLayout>

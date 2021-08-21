@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:height="match_content"
+    ohos:width="match_parent"
+    ohos:background_element="$graphic:main_ability_title_background"
+    ohos:orientation="vertical">
+
+    <include
+        ohos:id="$id:app_bar"
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:layout="$layout:app_bar_layout"/>
+
+    <PageSlider
+        ohos:id="$+id:page_view"
+        ohos:height="match_content"
+        ohos:width="match_parent"/>
+
+    <PageSliderIndicator
+        ohos:id="$+id:page_indicator"
+        ohos:height="$float:page_indicator_height"
+        ohos:width="match_parent"
+        ohos:bottom_margin="$float:margin_page_slider_indicator"
+        ohos:layout_alignment="center"
+        ohos:top_margin="$float:margin_page_slider_indicator"/>
+
+    <ListContainer
+        ohos:id="$+id:list_view"
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:background_element="$graphic:item_background"
+        ohos:top_margin="$float:breadth_common"/>
+
+</DirectionalLayout>

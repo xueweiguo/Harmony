@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:id="$+id:item_parent"
+    ohos:height="56vp"
+    ohos:width="match_parent"
+    ohos:orientation="horizontal">
+    <DependentLayout
+        ohos:height="match_parent"
+        ohos:width="match_parent"
+        ohos:weight="1">
+        <DirectionalLayout
+            ohos:height="48vp"
+
+            ohos:width="match_parent"
+            ohos:align_parent_left="true"
+            ohos:bottom_margin="4vp"
+            ohos:left_margin="12vp"
+            ohos:orientation="horizontal"
+            ohos:right_margin="12vp"
+            ohos:top_margin="4vp">
+            <Text
+                ohos:id="$+id:item_content_text"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:layout_alignment="vertical_center"
+                ohos:text_size="18fp"/>
+        </DirectionalLayout>
+    </DependentLayout>
+    <DependentLayout
+        ohos:id="$+id:de"
+        ohos:height="match_parent"
+        ohos:width="match_parent"
+        ohos:weight="1">
+        <DirectionalLayout
+            ohos:height="$float:breadth_list_item"
+            ohos:width="match_content"
+            ohos:align_parent_right="true"
+            ohos:bottom_margin="$float:margin_common"
+            ohos:orientation="horizontal"
+            ohos:top_margin="$float:margin_common">
+            <Text
+                ohos:id="$+id:right_text"
+                ohos:height="match_content"
+                ohos:width="match_content"
+                ohos:bottom_margin="$float:margin_common2"
+                ohos:layout_alignment="vertical_center"
+                ohos:left_margin="$float:margin_item_text"
+                ohos:right_margin="$float:margin_item_text"
+                ohos:text_size="15fp"
+                ohos:top_margin="$float:margin_common2"/>
+            <Image
+                ohos:id="$+id:item_right_tab"
+                ohos:height="match_content"
+                ohos:width="$float:breadth_common"
+                ohos:image_src="$media:Enabled"
+                ohos:layout_alignment="vertical_center"
+                ohos:right_margin="$float:breadth_item_image"/>
+        </DirectionalLayout>
+    </DependentLayout>
+
+
+</DirectionalLayout>

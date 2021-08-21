@@ -1,0 +1,176 @@
+{
+  "float": [
+    {
+      "name": "title_layout_height",
+      "value": "112vp"
+    },
+    {
+      "name": "title_text_background_height",
+      "value": "41vp"
+    },
+    {
+      "name": "title_text_size",
+      "value": "24vp"
+    },
+    {
+      "name": "title_text_left_padding",
+      "value": "24vp"
+    },
+    {
+      "name": "head_button_layout_height",
+      "value": "56vp"
+    },
+    {
+      "name": "head_button_layout_right_margin",
+      "value": "12vp"
+    },
+    {
+      "name": "head_button_height",
+      "value": "24vp"
+    },
+    {
+      "name": "head_button_width",
+      "value": "24vp"
+    },
+    {
+      "name": "head_button_left_margin",
+      "value": "12vp"
+    },
+    {
+      "name": "head_button_right_margin",
+      "value": "12vp"
+    },
+    {
+      "name": "head_button_image_height",
+      "value": "18vp"
+    },
+    {
+      "name": "head_button_image_width",
+      "value": "18vp"
+    },
+    {
+      "name": "list_layout_left_margin",
+      "value": "26vp"
+    },
+    {
+      "name": "list_layout_right_margin",
+      "value": "24vp"
+    },
+    {
+      "name": "view_page_image_width",
+      "value": "360vp"
+    },
+    {
+      "name": "view_page_image_height",
+      "value": "310vp"
+    },
+    {
+      "name": "view_page_left_margin",
+      "value": "12vp"
+    },
+    {
+      "name": "view_page_right_margin",
+      "value": "12vp"
+    },
+    {
+      "name": "view_page_text_width",
+      "value": "360vp"
+    },
+    {
+      "name": "view_page_text_height",
+      "value": "56vp"
+    },
+    {
+      "name": "view_page_text_size",
+      "value": "25vp"
+    },
+    {
+      "name": "view_page_text_bot_size",
+      "value": "15vp"
+    },
+    {
+      "name": "page_indicator_height",
+      "value": "32vp"
+    },
+    {
+      "name": "margin_common",
+      "value": "4vp"
+    },
+    {
+      "name": "margin_common2",
+      "value": "10vp"
+    },
+    {
+      "name": "margin_page_slider_indicator",
+      "value": "8vp"
+    },
+    {
+      "name": "margin_checkbox_image",
+      "value": "16vp"
+    },
+    {
+      "name": "margin_item_text",
+      "value": "20vp"
+    },
+    {
+      "name": "breadth_divider",
+      "value": "1vp"
+    },
+    {
+      "name": "breadth_common",
+      "value": "12vp"
+    },
+    {
+      "name": "breadth_item_image",
+      "value": "11vp"
+    },
+    {
+      "name": "breadth_checkbox",
+      "value": "11vp"
+    },
+    {
+      "name": "breadth_list_item",
+      "value": "48vp"
+    },
+    {
+      "name": "height_checkbox_1",
+      "value": "48vp"
+    },
+    {
+      "name": "breadth_checkbox_image_margin",
+      "value": "20vp"
+    },
+    {
+      "name": "height_checkbox_image",
+      "value": "20vp"
+    },
+    {
+      "name": "width_checkbox_image",
+      "value": "36vp"
+    },
+    {
+      "name": "breadth_checkbox_image",
+      "value": "24vp"
+    },
+    {
+      "name": "height_checkbox",
+      "value": "64vp"
+    },
+    {
+      "name": "checkbox_main_text_size",
+      "value": "18fp"
+    },
+    {
+      "name": "checkbox_minor_text_size",
+      "value": "14fp"
+    },
+    {
+      "name": "margin_between_texts",
+      "value": "2vp"
+    },
+    {
+      "name": "margin_between_texts_top",
+      "value": "7vp"
+    }
+  ]
+}

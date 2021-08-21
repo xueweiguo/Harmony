@@ -4,7 +4,11 @@ import ohos.aafwk.ability.AbilitySlice;
 import ohos.aafwk.content.Intent;
 import ohos.aafwk.content.Operation;
 import ohos.agp.components.ComponentContainer;
+import ohos.agp.components.Image;
 import ohos.agp.components.TabList;
+import ohos.agp.components.element.ElementScatter;
+import ohos.agp.components.element.PixelMapElement;
+import ohos.agp.window.service.WindowManager;
 import ohos.bundle.AbilityInfo;
 import ohos.data.DatabaseHelper;
 import ohos.data.orm.OrmContext;
@@ -14,6 +18,9 @@ import ohos.eventhandler.EventHandler;
 import ohos.eventhandler.EventRunner;
 import ohos.eventhandler.InnerEvent;
 import ohos.global.configuration.Configuration;
+import ohos.global.resource.Element;
+import ohos.global.resource.NotExistException;
+import ohos.global.resource.WrongTypeException;
 import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
 import ohos.location.RequestParam;
@@ -27,6 +34,8 @@ import xwg.stopwatch.MainAbility.IRequestPermissionListener;
 import xwg.stopwatch.db.StopWatchDB;
 import xwg.stopwatch.StopWatchService;
 import xwg.stopwatch.StopWatchServiceConnection;
+
+import java.io.IOException;
 
 public class MainAbilitySlice extends AbilitySlice {
     static final HiLogLabel LOG_LABEL = new HiLogLabel(HiLog.LOG_APP, 0x00201, "MainAbilitySlice");
@@ -50,6 +59,10 @@ public class MainAbilitySlice extends AbilitySlice {
         //HiLog.warn(LABEL, "Failed to visit %{private}s, reason:%{public}d.", url, errno);
         super.onStart(intent);
         HiLog.info(LOG_LABEL, "MainAbilitySlice.onStart!");
+        // hide status bar
+        //this.getWindow().addFlags(WindowManager.LayoutConfig.MARK_ALLOW_EXTEND_LAYOUT);
+        //this.getWindow().addFlags(WindowManager.LayoutConfig.MARK_FULL_SCREEN);
+
         Configuration config = this.getResourceManager().getConfiguration();
         if(config.direction == Configuration.DIRECTION_HORIZONTAL){
             super.setUIContent(ResourceTable.Layout_ability_main_horz);
@@ -61,13 +74,16 @@ public class MainAbilitySlice extends AbilitySlice {
         OrmContext dbContext = getOrmContext();
         tabList = (TabList) findComponentById(ResourceTable.Id_tab_list);
         stopwatchTab = tabList.new Tab(getContext());
-        stopwatchTab.setText("秒表");
+        //stopwatchTab.setText("秒表");
+        setTabImage(stopwatchTab, ResourceTable.Media_dark_stopwatch);
         tabList.addTab(stopwatchTab);
         mapTab = tabList.new Tab(getContext());
-        mapTab.setText("地图");
+        //mapTab.setText("地图");
+        setTabImage(mapTab, ResourceTable.Media_dark_map);
         tabList.addTab(mapTab);
         settingTab = tabList.new Tab(getContext());
-        settingTab.setText("设定");
+        settingTab.setText(" ");
+        setTabImage(settingTab, ResourceTable.Media_dark_setting);
         tabList.addTab(settingTab);
         AbilitySlice slice = this;
         tabList.addTabSelectedListener(new TabList.TabSelectedListener() {
@@ -77,34 +93,33 @@ public class MainAbilitySlice extends AbilitySlice {
                 ComponentContainer container = (ComponentContainer) findComponentById(ResourceTable.Id_tab_container);
                 int tab_index = -1;
                 if(tab == stopwatchTab) {
-                    if(stopWatchState == null) {
+                    if (stopWatchState == null) {
                         stopWatchState = new StopWatchState(slice, container, dbContext);
                     }
-                    try {
-
-                        stopWatchProxy.setCurrentTab(tab_index);
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
-                    }
+                    if(stopWatchState == current_state) return;
+                    setTabImage(tab, ResourceTable.Media_stopwatch);
                     current_state = stopWatchState;
                     tab_index = 0;
                 }
                 else if(tab == mapTab) {
-                    if(mapState == null) {
+                    if (mapState == null) {
                         mapState = new MapState(slice, container, dbContext);
                     }
+                    if(mapState == current_state) return;
+                    setTabImage(tab, ResourceTable.Media_map);
                     current_state = mapState;
                     tab_index = 1;
                 }
                 else
                 {
-                    if(settingState == null) {
+                    if (settingState == null) {
                         settingState = new SettingState(slice, container);
                     }
+                    if(settingState == current_state) return;
+                    setTabImage(tab, ResourceTable.Media_setting);
                     current_state = settingState;
                     tab_index = 2;
                 }
-                HiLog.info(LOG_LABEL, "MainAbilitySlice.current_state.onStart(intent);");
                 current_state.onStart(intent);
                 current_state.onForeground(intent);
                 current_tab = tab;
@@ -113,10 +128,21 @@ public class MainAbilitySlice extends AbilitySlice {
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
+                HiLog.info(LOG_LABEL, "MainAbilitySlice.current_state.onStart(intent);");
             }
 
             @Override
             public void onUnselected(TabList.Tab tab) {
+                if(tab == stopwatchTab) {
+                    setTabImage(tab, ResourceTable.Media_dark_stopwatch);
+                }
+                else if(tab == mapTab) {
+                    setTabImage(tab, ResourceTable.Media_dark_map);
+                }
+                else
+                {
+                    setTabImage(tab, ResourceTable.Media_dark_setting);
+                }
                 current_state.onBackground();
                 current_state = null;
             }
@@ -373,6 +399,16 @@ public class MainAbilitySlice extends AbilitySlice {
         if (orientationSensor != null) {
             categoryOrientationAgent.releaseSensorDataCallback(
                     orientationDataCallback, orientationSensor);
+        }
+    }
+
+    void setTabImage(TabList.Tab tab, int image_id){
+        try {
+            tab.setIconElement(new PixelMapElement(getResourceManager().getResource(image_id)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NotExistException e) {
+            e.printStackTrace();
         }
     }
 

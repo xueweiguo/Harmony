@@ -62,9 +62,11 @@ public class TileMap extends Component implements Component.DrawTask{
     public void onDraw(Component component, Canvas canvas) {
         HiLog.info(LABEL, "TileMap.onDraw Start!");
         if(location != null) {
+            HiLog.info(LABEL, "TileMap.onDraw 1!");
             drawTiles(canvas);
+            HiLog.info(LABEL, "TileMap.onDraw 2!");
             drawTrailPoints(canvas);
-            //HiLog.info(LABEL, "TileMap.onDraw 4!");
+            HiLog.info(LABEL, "TileMap.onDraw 4!");
             Paint linePaint = new Paint();
             linePaint.setColor(Color.RED);
             linePaint.setStrokeWidth(2);
@@ -76,23 +78,27 @@ public class TileMap extends Component implements Component.DrawTask{
                     getWidth() / 2, getHeight() / 2 + line_size,
                     linePaint);
             visibleAreaCheck();
-            //HiLog.info(LABEL, "TileMap.onDraw 5!");
+            HiLog.info(LABEL, "TileMap.onDraw 5!");
         }
         HiLog.info(LABEL, "TileMap.onDraw End!");
     }
 
     private void drawTiles(Canvas canvas){
-        //HiLog.info(LABEL, "TileMap.onDraw 0!");
+        HiLog.info(LABEL, "TileMap.drawTiles 0!");
         int tileCol = Tile.getTileX(location.lon, zoom);
         int tileRow = Tile.getTileY(location.lat, zoom);
         Map<Pair<Integer,Integer>, Tile> missingTile = new HashMap<Pair<Integer,Integer>, Tile>();
         Paint paint = new Paint();
+        HiLog.info(LABEL, "TileMap.drawTiles 2!");
         for (int col = tileCol - 1; col <= tileCol + 1; col++) {
             for (int row = tileRow - 1; row <= tileRow + 1; row++) {
-                //HiLog.info(LABEL, "TileMap.onDraw col=%{public}d, row=%{public}d Start!", col, row);
+                HiLog.info(LABEL, "TileMap.onDraw col=%{public}d, row=%{public}d Start!", col, row);
                 Tile tile = mapData.getData(mapSource, zoom, col, row);
+                HiLog.info(LABEL, "TileMap.drawTiles 3!");
                 if (tile != null) {
+                    HiLog.info(LABEL, "TileMap.drawTiles 4!");
                     Size offset = tile.calculateOffset(location);
+                    HiLog.info(LABEL, "TileMap.drawTiles 5!");
                     //HiLog.info(LABEL,"onDraw, tile!=null: zoom=%{public}d,row=%{public}d,col=%{public}d, " +
                     //                "offset.width=%{public}d, offset.height=%{public}d",
                     //                zoom, row, col, offset.width, offset.height);
@@ -100,17 +106,20 @@ public class TileMap extends Component implements Component.DrawTask{
                             getWidth() / 2 + offset.width,
                             getHeight() / 2 + offset.height,
                             paint);
+                    HiLog.info(LABEL, "TileMap.drawTiles 6!");
                 } else {
                     //HiLog.info(LABEL,"onDraw,need:zoom=%{public}d,row=%{public}d,col=%{public}d", zoom, row, col);
+                    HiLog.info(LABEL, "TileMap.drawTiles 7!");
                     missingTile.put(new Pair<Integer, Integer>(row, col), null);
                 }
-                //HiLog.info(LABEL, "TileMap.onDraw col=%{public}d, row=%{public}d! End", col, row);
+                HiLog.info(LABEL, "TileMap.onDraw col=%{public}d, row=%{public}d! End", col, row);
             }
         }
-        //HiLog.info(LABEL, "TileMap.onDraw 1!");
+        HiLog.info(LABEL, "TileMap.drawTiles 10!");
         if (missingTile.size() > 0) {
             loadMapTile(missingTile);
         }
+        HiLog.info(LABEL, "TileMap.drawTiles 11");
     }
 
     void drawTrailPoints(Canvas canvas){

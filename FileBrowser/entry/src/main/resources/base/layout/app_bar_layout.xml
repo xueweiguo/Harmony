@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<DirectionalLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:id="$+id:app_bar"
+    ohos:height="match_content"
+    ohos:width="match_parent"
+    ohos:background_element="$color:title_layout_background_color"
+    ohos:orientation="horizontal">
+
+    <DirectionalLayout
+        ohos:id="$+id:title_layout"
+        ohos:height="56vp"
+        ohos:width="match_content"
+        ohos:orientation="horizontal"
+        ohos:weight="1">
+        <Image
+            ohos:id="$+id:left_arrow"
+            ohos:height="24vp"
+            ohos:width="24vp"
+            ohos:layout_alignment="center"
+            ohos:start_margin="24vp"/>
+        <DirectionalLayout
+            ohos:height="match_content"
+            ohos:width="match_content"
+            ohos:bottom_margin="1vp"
+            ohos:layout_alignment="center"
+            ohos:orientation="horizontal"
+            ohos:start_margin="16vp">
+            <Text
+                ohos:id="$+id:title"
+                ohos:height="$float:title_text_background_height"
+                ohos:width="match_content"
+                ohos:text="$string:title_text"
+                ohos:text_alignment="vertical_center"
+                ohos:text_color="$color:title_text_color"
+                ohos:text_size="$float:title_text_size"
+                />
+        </DirectionalLayout>
+    </DirectionalLayout>
+
+    <DirectionalLayout
+        ohos:id="$+id:head_button_layout"
+        ohos:height="$float:head_button_layout_height"
+        ohos:width="match_content"
+        ohos:layout_alignment="right"
+        ohos:orientation="horizontal"
+        ohos:start_margin="$float:head_button_layout_right_margin">
+
+        <DirectionalLayout
+            ohos:id="$+id:first_item_layout"
+            ohos:height="$float:head_button_height"
+            ohos:width="$float:head_button_width"
+            ohos:end_margin="$float:head_button_right_margin"
+            ohos:layout_alignment="vertical_center"
+            ohos:orientation="horizontal"
+            ohos:start_margin="$float:head_button_left_margin">
+
+            <Image
+                ohos:id="$+id:first_item"
+                ohos:height="$float:head_button_image_height"
+                ohos:width="$float:head_button_image_width"
+                ohos:alpha="0.9"
+                ohos:foreground_element="$media:add64"/>
+
+        </DirectionalLayout>
+
+        <DirectionalLayout
+            ohos:id="$+id:second_item_layout"
+            ohos:height="$float:head_button_height"
+            ohos:width="$float:head_button_width"
+            ohos:end_margin="$float:head_button_right_margin"
+            ohos:layout_alignment="vertical_center"
+            ohos:orientation="horizontal"
+            ohos:start_margin="$float:head_button_left_margin">
+
+            <Image
+                ohos:id="$+id:second_item"
+                ohos:height="$float:head_button_image_height"
+                ohos:width="$float:head_button_image_width"
+                ohos:alpha="0.9"
+                ohos:foreground_element="$media:add64"/>
+        </DirectionalLayout>
+
+        <DirectionalLayout
+            ohos:id="$+id:third_item_layout"
+            ohos:height="$float:head_button_height"
+            ohos:width="$float:head_button_width"
+            ohos:end_margin="$float:head_button_right_margin"
+            ohos:layout_alignment="vertical_center"
+            ohos:orientation="horizontal"
+            ohos:start_margin="$float:head_button_left_margin">
+
+            <Image
+                ohos:id="$+id:third_item"
+                ohos:height="$float:head_button_image_height"
+                ohos:width="$float:head_button_image_width"
+                ohos:alpha="0.9"
+                ohos:foreground_element="$media:more"/>
+        </DirectionalLayout>
+
+    </DirectionalLayout>
+
+</DirectionalLayout>

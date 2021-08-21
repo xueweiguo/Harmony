@@ -1,0 +1,16 @@
+{
+  "color": [
+    {
+      "name": "title_layout_background_color",
+      "value": "#F2FFFFFF"
+    },
+    {
+      "name": "title_text_color",
+      "value": "#E6000000"
+    },
+    {
+      "name": "view_page_text_bot_color",
+      "value": "#FFAAAAAA"
+    }
+  ]
+}

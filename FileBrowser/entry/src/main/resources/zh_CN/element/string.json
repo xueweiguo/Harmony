@@ -1,0 +1,88 @@
+{
+  "string": [
+    {
+      "name": "entry_MainAbility",
+      "value": "entry_MainAbility"
+    },
+    {
+      "name": "title_text",
+      "value": "手势导航"
+    },
+    {
+      "name": "double_line_0",
+      "value": "手势导航"
+    },
+    {
+      "name": "item_description_0",
+      "value": "启用手势导航，享受更宽阔的手机屏幕"
+    },
+    {
+      "name": "double_line_1",
+      "value": "提示条"
+    },
+    {
+      "name": "item_description_1",
+      "value": "启用后，将在按下时显示滑动提示条"
+    },
+    {
+      "name": "double_line_2",
+      "value": "手势切换应用"
+    },
+    {
+      "name": "item_description_2",
+      "value": "在底部边缘横向左右滑动，可以切换应用"
+    },
+    {
+      "name": "double_line_3",
+      "value": "手势导航改进计划"
+    },
+    {
+      "name": "item_description_3",
+      "value": "为改善用户产品体验，“手势导航”可能会记录您的滑动习惯"
+    },
+    {
+      "name": "double_line_4",
+      "value": "试用手势导航"
+    },
+    {
+      "name": "item_description_4",
+      "value": "您可以亲自体验一下手势导航功能"
+    },
+    {
+      "name": "double_line",
+      "value": "双行列表"
+    },
+    {
+      "name": "item_description",
+      "value": "辅助文本"
+    },
+    {
+      "name": "page_description",
+      "value": "文本描述，文本描述，文本描述，文本描述，文本描述，文本描述，文本描述 "
+    },
+    {
+      "name": "page_description_0",
+      "value": "返回上一级"
+    },
+    {
+      "name": "page_description_bot_0",
+      "value": "从屏幕左边缘向右滑动"
+    },
+    {
+      "name": "page_description_1",
+      "value": "返回上一级"
+    },
+    {
+      "name": "page_description_bot_1",
+      "value": "从屏幕右边缘向左滑动"
+    },
+    {
+      "name": "page_description_2",
+      "value": "回到桌面"
+    },
+    {
+      "name": "page_description_bot_2",
+      "value": "从屏幕底部中间向上滑动"
+    }
+  ]
+}
