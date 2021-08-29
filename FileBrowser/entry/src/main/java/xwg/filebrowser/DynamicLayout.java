@@ -26,17 +26,6 @@ public class DynamicLayout extends ComponentContainer
     int total_weight = 0;
     double weight_rate = 0;
 
-    public class LayoutConfig extends ComponentContainer.LayoutConfig{
-        int weight = 0;
-        LayoutConfig(Context context, AttrSet attrSet){
-            super(context, attrSet);
-            Optional<Attr> attr = attrSet.getAttr("weight");
-            if(attr.isPresent()){
-                weight = attr.get().getIntegerValue();
-            }
-        }
-    }
-
     public DynamicLayout(Context context) {
         super(context);
     }
@@ -106,10 +95,7 @@ public class DynamicLayout extends ComponentContainer
         public void onDragEnd(Component component, DragInfo dragInfo) {
             //HiLog.info(LABEL, "DynamicLayout.onDragEnd!");
             if(draggedSeparator != null){
-                ShapeElement bg = new ShapeElement();
-                bg.setRgbColor(RgbPalette.LIGHT_GRAY);
-                bg.setShape(ShapeElement.RECTANGLE);
-                draggedSeparator.setBackground(bg);
+                draggedSeparator.setActive(false);
             }
             draggedSeparator = null;
         }
@@ -166,7 +152,6 @@ public class DynamicLayout extends ComponentContainer
                     adjustHeight(getComponentAt(idx - 1), getComponentAt(idx + 1), offset.height);
                     break;
                 }
-
             }
         }
     }
@@ -258,7 +243,7 @@ public class DynamicLayout extends ComponentContainer
 
     private void measureChildrenWithWeight(int widthEstimatedConfig, int heightEstimatedConfig) {
         int layout_height = getEstimatedHeight();
-        int weight_height = layout_height - yy;
+        int weight_height = layout_height - maxHeight;
         weight_rate = (double)weight_height / total_weight;
         for (int idx = 0; idx < getChildCount(); idx++) {
             Component childView = getComponentAt(idx);
@@ -381,13 +366,22 @@ public class DynamicLayout extends ComponentContainer
         layout.width = component.getEstimatedWidth();
         layout.height = component.getEstimatedHeight();
         xx = 0;
-        layout.positionX = xx + component.getMarginLeft();
-        layout.positionY = yy + component.getMarginTop();
         axis.put(id, layout);
         yy += Math.max(lastHeight, layout.height + component.getMarginBottom());
         //xx += layout.width + component.getMarginRight();
         maxWidth = Math.max(maxWidth, layout.positionX + layout.width + component.getMarginRight());
         maxHeight = Math.max(maxHeight, layout.positionY + layout.height + component.getMarginBottom());
+    }
+
+    public class LayoutConfig extends ComponentContainer.LayoutConfig{
+        int weight = 0;
+        LayoutConfig(Context context, AttrSet attrSet){
+            super(context, attrSet);
+            Optional<Attr> attr = attrSet.getAttr("weight");
+            if(attr.isPresent()){
+                weight = attr.get().getIntegerValue();
+            }
+        }
     }
 
     public ComponentContainer.LayoutConfig createLayoutConfig​(Context context, AttrSet attrSet){
