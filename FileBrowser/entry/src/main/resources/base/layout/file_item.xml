@@ -5,22 +5,13 @@
     ohos:width="match_parent"
     ohos:left_margin="16vp"
     ohos:right_margin="16vp"
-    ohos:orientation="horizontal">
+    ohos:orientation="vertical">
     <Text
         ohos:id="$+id:item_name"
         ohos:height="match_content"
-        ohos:width="0"
-        ohos:weight="100"
+        ohos:width="match_parent"
         ohos:padding="4vp"
         ohos:text="Item0"
         ohos:text_size="20fp"
         ohos:layout_alignment="left"/>
-    <Button
-        ohos:id="$+id:extend"
-        ohos:height="match_content"
-        ohos:width="match_content"
-        ohos:padding="4vp"
-        ohos:text=">>"
-        ohos:text_size="20fp"
-        ohos:layout_alignment="center"/>
 </DirectionalLayout>

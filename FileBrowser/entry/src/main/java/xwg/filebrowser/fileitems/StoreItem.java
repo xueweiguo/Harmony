@@ -1,5 +1,6 @@
 package xwg.filebrowser.fileitems;
 
+import ohos.agp.components.Component;
 import ohos.agp.components.ComponentContainer;
 import ohos.agp.components.LayoutScatter;
 import ohos.agp.components.ListContainer;
@@ -14,6 +15,11 @@ public class StoreItem extends BrowserItem{
     public StoreItem(Context context, FileStore s) {
         super(context, s.name());
         store = s;
+    }
+
+    @Override
+    public Component createUiComponent(){
+        return LayoutScatter.getInstance(context).parse(ResourceTable.Layout_dir_item, null, false);
     }
 
     @Override
