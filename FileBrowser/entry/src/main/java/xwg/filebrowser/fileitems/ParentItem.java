@@ -3,11 +3,14 @@ package xwg.filebrowser.fileitems;
 import ohos.agp.components.*;
 import ohos.agp.utils.Color;
 import ohos.app.Context;
+import ohos.hiviewdfx.HiLog;
+import ohos.hiviewdfx.HiLogLabel;
 import xwg.filebrowser.ResourceTable;
 
 import java.io.File;
 
 public class ParentItem extends BrowserItem {
+    static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0x00106, "ParentItem");
     File dir = null;
     ItemListener listener = null;
     public ParentItem(Context context, File dir, ItemListener listener) {
@@ -16,7 +19,12 @@ public class ParentItem extends BrowserItem {
         this.listener = listener;
     }
     @Override
+    public int getComponentId(){
+        return ResourceTable.Id_parent_layout;
+    }
+    @Override
     public Component createUiComponent(){
+        HiLog.info(LABEL, "ParentItem.createUiComponent of %{public}s", name);
         Component comp =  LayoutScatter.getInstance(context).parse(ResourceTable.Layout_parent_item, null, false);
         Button back = (Button) comp.findComponentById(ResourceTable.Id_extend);
         if(listener != null && dir.listFiles() != null){

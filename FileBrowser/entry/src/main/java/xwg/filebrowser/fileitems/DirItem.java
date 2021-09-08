@@ -3,32 +3,37 @@ package xwg.filebrowser.fileitems;
 import ohos.agp.components.*;
 import ohos.agp.utils.Color;
 import ohos.app.Context;
+import ohos.hiviewdfx.HiLog;
+import ohos.hiviewdfx.HiLogLabel;
 import xwg.filebrowser.ResourceTable;
 
 import java.io.File;
 
 public class DirItem extends BrowserItem {
+    static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0x00105, "DirItem");
     File dir = null;
     ItemListener listener = null;
     public DirItem(Context context, File dir, ItemListener listener) {
-        super(context, dir.toString());
+        super(context, dir.getName());
         this.dir = dir;
         this.listener = listener;
     }
-
+    @Override
+    public int getComponentId(){
+        return ResourceTable.Id_dir_layout;
+    }
     @Override
     public Component createUiComponent(){
+        HiLog.info(LABEL, "DirItem.createUiComponent of %{public}s", name);
         Component comp =  LayoutScatter.getInstance(context).parse(ResourceTable.Layout_dir_item, null, false);
         Button extend = (Button) comp.findComponentById(ResourceTable.Id_extend);
-        if(listener != null && dir.listFiles() != null){
+        if(listener != null){
             extend.setClickedListener(new Component.ClickedListener() {
                 @Override
                 public void onClick(Component component) {
                     listener.changeDir(DirItem.this.dir);
                 }
             });
-        }else{
-            extend.setTextColor(Color.LTGRAY);
         }
         return comp;
     }

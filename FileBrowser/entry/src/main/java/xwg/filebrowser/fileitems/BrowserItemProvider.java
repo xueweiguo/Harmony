@@ -3,6 +3,8 @@ package xwg.filebrowser.fileitems;
 import ohos.aafwk.ability.AbilitySlice;
 import ohos.agp.components.*;
 import ohos.app.Context;
+import ohos.hiviewdfx.HiLog;
+import ohos.hiviewdfx.HiLogLabel;
 import xwg.filebrowser.ResourceTable;
 
 import java.io.File;
@@ -14,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BrowserItemProvider extends BaseItemProvider {
+    static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0x00103, "BrowserItemProvider");
     private List<BrowserItem> list = new ArrayList<>();
     private Context context;
     private File currentDir = null;
@@ -48,8 +51,9 @@ public class BrowserItemProvider extends BaseItemProvider {
 
     @Override
     public Component getComponent(int i, Component component, ComponentContainer componentContainer) {
+        HiLog.info(LABEL, "getComponent, i=%{public}d!", i);
         BrowserItem item = list.get(i);
-        final Component cpt;
+        Component cpt = null;
         if (component == null) {
             cpt = item.createUiComponent();
         } else {
@@ -59,14 +63,33 @@ public class BrowserItemProvider extends BaseItemProvider {
         text.setText(item.getName());
         return cpt;
     }
-
+/*
+    public Component getComponent(int i, Component component, ComponentContainer componentContainer) {
+        HiLog.info(LABEL, "getComponent, i=%{public}d!", i);
+        BrowserItem item = list.get(i);
+        Component cpt = null;
+        if (component == null) {
+            cpt = item.createUiComponent();
+        } else {
+            if(component.getId() == item.getComponentId()) {
+                cpt = component;
+            }
+            else{
+                cpt = item.createUiComponent();
+            }
+        }
+        Text text = (Text) cpt.findComponentById(ResourceTable.Id_item_name);
+        text.setText(item.getName());
+        return cpt;
+    }
+*/
     public void setCurrentDir(File dir) {
         list.clear();
+        if(dir.getParent() != null){
+            list.add(new ParentItem(context, dir.getParentFile(), itemListener));
+        }
         File[] files = dir.listFiles();
         if(files != null) {
-            if(dir.getParent() != null){
-                list.add(new ParentItem(context, dir.getParentFile(), itemListener));
-            }
             for (File file : files) {
                 if (file.isDirectory()) {
                     list.add(new DirItem(context, file, itemListener));

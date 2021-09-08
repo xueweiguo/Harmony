@@ -24,6 +24,8 @@ public abstract class BrowserItem {
     public void setName(String name) {
         this.name = name;
     }
+    //获取项目组件ID
+    abstract public int getComponentId();
     //生成项目列表项
     abstract public Component createUiComponent();
     //生成详情表示画面
