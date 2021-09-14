@@ -7,7 +7,6 @@
     ohos:width="match_parent"
     ohos:background_element="$color:title_layout_background_color"
     ohos:orientation="horizontal">
-
     <DirectionalLayout
         ohos:id="$+id:title_layout"
         ohos:height="56vp"

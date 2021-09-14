@@ -10,6 +10,7 @@ import xwg.filebrowser.fileitems.BrowserItem;
 import xwg.filebrowser.fileitems.BrowserItemProvider;
 import xwg.filebrowser.fileitems.FileListContainer;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,11 +19,18 @@ import java.util.List;
  */
 public class MainAbilitySlice extends AbilitySlice {
     static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0x00101, "MainAbilitySlice");
-    private ViewCreateHelper viewCreateHelper;
-
     @Override
     public void onStart(Intent intent) {
         setUIContent(ResourceTable.Layout_browser_ability);
+        Image leftArrow = (Image) findComponentById(ResourceTable.Id_left_arrow);
+        leftArrow.setPixelMap(ResourceTable.Media_return_gray50);
+        leftArrow.setClickedListener(new Component.ClickedListener() {
+            @Override
+            public void onClick(Component component) {
+                FileListContainer listContainer = (FileListContainer) findComponentById(ResourceTable.Id_list_container);
+                listContainer.backToParent();
+            }
+        });
         initListContainer();
     }
 
@@ -50,5 +58,18 @@ public class MainAbilitySlice extends AbilitySlice {
     private void initListContainer() {
         FileListContainer listContainer = (FileListContainer) findComponentById(ResourceTable.Id_list_container);
         listContainer.setSelectedListener(listener);
+        listContainer.setDirChangeListener(new BrowserItem.DirChangeListener() {
+            @Override
+            public void dirChanged(File dir) {
+                String parent = dir.getParent();
+                Image leftArrow = (Image) findComponentById(ResourceTable.Id_left_arrow);
+                if(parent != null){
+                    leftArrow.setPixelMap(ResourceTable.Media_return_black50);
+                }
+                else{
+                    leftArrow.setPixelMap(ResourceTable.Media_return_gray50);
+                }
+            }
+        });
     }
 }

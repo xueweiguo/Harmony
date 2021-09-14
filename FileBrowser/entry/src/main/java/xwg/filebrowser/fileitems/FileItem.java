@@ -16,8 +16,8 @@ import java.nio.file.Path;
 public class FileItem extends BrowserItem {
     static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0x00104, "FileItem");
     File file = null;
-    public FileItem(Context context, File file) {
-        super(context, file.getName());
+    public FileItem(Context context, File file, int index) {
+        super(context, file.getName(), index);
         this.file = file;
     }
     @Override

@@ -1,7 +1,6 @@
 package xwg.filebrowser.fileitems;
 
 import ohos.agp.components.*;
-import ohos.agp.utils.Color;
 import ohos.app.Context;
 import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
@@ -12,9 +11,9 @@ import java.io.File;
 public class DirItem extends BrowserItem {
     static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0x00105, "DirItem");
     File dir = null;
-    ItemListener listener = null;
-    public DirItem(Context context, File dir, ItemListener listener) {
-        super(context, dir.getName());
+    DirChangeListener listener = null;
+    public DirItem(Context context, File dir, int index, DirChangeListener listener) {
+        super(context, dir.getName(), index);
         this.dir = dir;
         this.listener = listener;
     }
@@ -31,7 +30,7 @@ public class DirItem extends BrowserItem {
             extend.setClickedListener(new Component.ClickedListener() {
                 @Override
                 public void onClick(Component component) {
-                    listener.changeDir(DirItem.this.dir);
+                    listener.dirChanged(DirItem.this.dir);
                 }
             });
         }

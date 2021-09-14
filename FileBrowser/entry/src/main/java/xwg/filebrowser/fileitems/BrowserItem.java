@@ -7,14 +7,16 @@ import ohos.app.Context;
 import java.io.File;
 
 public abstract class BrowserItem {
-    interface ItemListener{
-        public void changeDir(File dir);
+    public interface DirChangeListener {
+        public void dirChanged(File dir);
     }
     String name;
     Context context;
-    public BrowserItem(Context context, String name) {
+    int index;
+    public BrowserItem(Context context, String name, int index) {
         this.context = context;
         this.name = name;
+        this.index = index;
     }
     //取得项目名
     public String getName() {

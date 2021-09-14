@@ -11,6 +11,8 @@ import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileListContainer extends ListContainer {
     static final HiLogLabel LABEL = new HiLogLabel(HiLog.LOG_APP, 0x00102, "FileListContainer");
@@ -19,6 +21,10 @@ public class FileListContainer extends ListContainer {
     }
     SelectedListener selectedListener = null;
     BrowserItemProvider sampleItemProvider = null;
+
+    File currentDir = null;
+    List<Integer> entryPointList = new ArrayList<>();
+    BrowserItem.DirChangeListener dirChangeListener = null;
 
     public FileListContainer(Context context, AttrSet attrSet) {
         super(context, attrSet);
@@ -29,16 +35,48 @@ public class FileListContainer extends ListContainer {
         setScrollbarBackgroundColor(Color.LTGRAY);
         setScrollbarColor(Color.DKGRAY);
         disableFadeEffect(FadeEffectEnum.FADEEFFECT_SCROLLBAR);
-        sampleItemProvider = new BrowserItemProvider(context, new BrowserItem.ItemListener() {
+        sampleItemProvider = new BrowserItemProvider(context, new BrowserItem.DirChangeListener() {
             @Override
-            public void changeDir(File dir) {
-                setSelectedItemIndex(-1);
-                sampleItemProvider.setCurrentDir(dir);
-                setItemProvider(sampleItemProvider);
+            public void dirChanged(File dir) {
+                changeDir(dir);
             }
         });
         setItemProvider(sampleItemProvider);
         setItemSelectedListener(itemSelectedListener);
+    }
+
+    void changeDir(File dir){
+        int firstVisible = getItemPosByVisibleIndex(0);
+        setSelectedItemIndex(-1);
+        sampleItemProvider.setCurrentDir(dir);
+        setItemProvider(sampleItemProvider);
+        if(currentDir == null
+                || dir.getAbsolutePath().length() > currentDir.getAbsolutePath().length()){
+            entryPointList.add(firstVisible);
+        }
+        else{
+            int listSize = entryPointList.size();
+            if(listSize > 0){
+                int last = entryPointList.remove(listSize - 1);
+                scrollTo(last);
+            }
+        }
+        currentDir = dir;
+        if(dirChangeListener != null){
+            dirChangeListener.dirChanged(dir);
+        }
+    }
+
+    public void backToParent(){
+        if(currentDir == null) return;
+        File parent = currentDir.getParentFile();
+        if(parent != null) {
+            changeDir(parent);
+        }
+    }
+
+    public void setDirChangeListener(BrowserItem.DirChangeListener listener){
+        dirChangeListener = listener;
     }
 
     public void setSelectedListener(SelectedListener listener){
@@ -74,4 +112,6 @@ public class FileListContainer extends ListContainer {
             component.setBackground(getBackgroundElement());
         }
     }
+
+
 }
